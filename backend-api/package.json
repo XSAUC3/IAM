@@ -1,0 +1,18 @@
+{
+  "name": "resource-mapping",
+  "version": "1.0.0",
+  "description": "mapping of resources with the resource type",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "*",
+    "mongoose": "*",
+    "cors": "*",
+    "body-parser": "*"
+  },
+  "author": "Chinmay",
+  "license": "ISC"
+}
