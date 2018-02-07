@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","tt",{AU:"Бит бүлгече",toolbar:"Бастыру өчен бит бүлгечен өстәү"});

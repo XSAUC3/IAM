@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","ug",{AU:"بەت ئايرىغۇچ",toolbar:"بەت ئايرىغۇچ قىستۇر"});

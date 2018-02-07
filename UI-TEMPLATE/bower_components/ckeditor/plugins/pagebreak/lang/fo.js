@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","fo",{AU:"Síðuskift",toolbar:"Ger síðuskift"});

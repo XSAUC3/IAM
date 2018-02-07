@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","fa",{AU:"شکستن صفحه",toolbar:"گنجاندن شکستگی پایان برگه"});

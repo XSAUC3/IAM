@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("bidi","fi",{ltr:"Tekstin suunta vasemmAUa oikealle",rtl:"Tekstin suunta oikeAUa vasemmalle"});

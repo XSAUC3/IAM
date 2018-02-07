@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","ka",{AU:"გვერდის წყვეტა",toolbar:"გვერდის წყვეტა ბეჭდვისთვის"});

@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","hr",{AU:"Prijelom stranice",toolbar:"Ubaci prijelom stranice"});

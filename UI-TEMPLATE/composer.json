@@ -1,0 +1,30 @@
+{
+  "name": "almasaeed2010/AuroUniversity",
+  "description": "AuroUniversity - Auro control panel and dashboard that's based on Bootstrap 3",
+  "homepage": "http://iamharshthakkar.com/",
+  "type": "template",
+  "keywords": [
+    "css",
+    "js",
+    "less",
+    "responsive",
+    "back-end",
+    "template",
+    "theme",
+    "web",
+    "Auro"
+  ],
+  "authors": [
+    {
+      "name": "Abdullah Almsaeed",
+      "email": "abdullah@almsaeedstudio.com"
+    }
+  ],
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/almasaeed2010/AuroUniversity/issues"
+  },
+  "require": {
+    "composer/installers": "1.*"
+  }
+}
