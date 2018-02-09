@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","de-ch",{AU:"Seitenumbruch",toolbar:"Seitenumbruch zum Drucken einfügen"});

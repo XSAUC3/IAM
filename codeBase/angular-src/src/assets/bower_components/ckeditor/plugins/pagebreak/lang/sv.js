@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","sv",{AU:"Sidbrytning",toolbar:"Infoga sidbrytning för utskrift"});

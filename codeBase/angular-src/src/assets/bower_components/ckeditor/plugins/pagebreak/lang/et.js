@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","et",{AU:"Lehevahetuskoht",toolbar:"Lehevahetuskoha sisestamine"});

@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","cy",{AU:"Toriad Tudalen",toolbar:"Mewnosod Toriad Tudalen i Argraffu"});

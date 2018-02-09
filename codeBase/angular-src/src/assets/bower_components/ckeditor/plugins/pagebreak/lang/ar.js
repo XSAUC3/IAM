@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","ar",{AU:"فاصل الصفحة",toolbar:"إدخال صفحة جديدة"});

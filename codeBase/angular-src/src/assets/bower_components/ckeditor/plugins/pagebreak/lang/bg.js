@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","bg",{AU:"Разделяне на страници",toolbar:"Вмъкване на нова страница при печат"});

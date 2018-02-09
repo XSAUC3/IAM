@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","nb",{AU:"Sideskift",toolbar:"Sett inn sideskift for utskrift"});

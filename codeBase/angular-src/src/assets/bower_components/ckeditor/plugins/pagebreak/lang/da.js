@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","da",{AU:"Sideskift",toolbar:"Indsæt sideskift"});

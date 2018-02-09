@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","eo",{AU:"Paĝavanco",toolbar:"Enmeti Paĝavancon por Presado"});

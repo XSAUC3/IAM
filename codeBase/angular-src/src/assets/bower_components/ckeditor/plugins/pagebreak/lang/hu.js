@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","hu",{AU:"OldAUörés",toolbar:"OldAUörés beillesztése"});

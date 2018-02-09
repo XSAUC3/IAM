@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","af",{AU:"Bladsy-einde",toolbar:"Bladsy-einde invoeg"});

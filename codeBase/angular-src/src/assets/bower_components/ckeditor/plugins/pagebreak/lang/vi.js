@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","vi",{AU:"Ngắt trang",toolbar:"Chèn ngắt trang"});

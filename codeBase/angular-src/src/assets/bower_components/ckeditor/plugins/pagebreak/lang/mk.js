@@ -1,0 +1,1 @@
+﻿CKEDITOR.plugins.setLang("pagebreak","mk",{AU:"Page Break",toolbar:"Insert Page Break for Printing"});
