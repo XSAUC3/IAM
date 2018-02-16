@@ -1,3 +1,319 @@
-<p>
-  attributes works!
-</p>
+
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Attributes
+      <small>View Attributes</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li class="active"><b><a style="color:blue; cursor: pointer;" (click)="getApplications()"  data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
+      <li class="Reload"><b><a style="color:green; cursor: pointer;" (click)="refresh()"><i class="fa fa-repeat" ></i>&nbsp;&nbsp;Releod</a></b></li>
+      <li class="Reload"><b><a style="color:red; cursor: pointer;" [routerLink]="['/dashboard']"><i class="	fa fa-arrow-circle-left" ></i>&nbsp;&nbsp;Back</a></b></li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+ 
+    <div class="box">
+     
+      <!-- /.box-header -->
+      <div class="box-body">
+        <div class="table-responsive">
+
+            <table id="dt" class="table table-bordered table-hover" >
+              
+              <thead class="thead-inverse">
+                <tr >
+                  <th colspan="7">
+                      <div class="col-sm-1"><label style="margin-top:5px;">Filters:&nbsp;&nbsp;&nbsp;&nbsp;</label></div>
+                      <div class="col-sm-11">
+                    <form role="form" #filterData = "ngForm"  (ngSubmit)="addFilters(filterData.value); filterData.reset()">
+                            <div class="form-group" style="display:inline-block">
+                                
+                                <label for="Name">Name</label>
+                                <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter Attribute Name" ngModel>
+                            </div>
+                            <div class="form-group" style="display:inline-block">
+                                  <label>&nbsp;&nbsp;</label>
+                                  <label for="Type">Type</label>
+                                  <input type="text" class="form-control" name="Type" id="Type" placeholder="Enter Attribute Type" ngModel>
+                            </div>
+                            <div class="form-group" style="display:inline-block">
+                                    <label>&nbsp;&nbsp;</label>
+                                    <label for="DataType">DataType</label>
+                                    <input type="text" class="form-control" name="DataType" id="DataType" placeholder="Enter Attribute DataType" ngModel>
+                            </div>
+                            <label>&nbsp;&nbsp;</label>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                    </form>
+                  </div>
+                  <div class="clearfix"></div>
+                  <hr style="border-top: 1px solid #000;">
+                    <div>
+                      <div class="col-sm-1"><label>Applied Filters:&nbsp;&nbsp;</label></div>
+                      <div class="col-sm-11" style="border-style: solid;">
+                          <div class="col-sm-1" style="display:inline-block;padding-left:0; border-right-style: solid;">
+                            <label>Name</label>
+                          <br>
+                            <label>Type</label>
+                          <br>
+                            <label>DataType</label>
+                          </div>
+                          
+                          <div class="col-sm-7" style="display:inline-block;">
+                              <div *ngIf="filterName != null && filterName != undefined; then Name" style="display:inline-block"></div>
+                              <ng-template #Name><label>{{filterName}}</label></ng-template>
+                           
+                            <br>
+                                <div *ngIf="filterType != null && filterType != undefined; then Type" style="display:inline-block"></div>
+                                <ng-template #Type><label>{{filterType}}</label></ng-template>
+                          
+                            <br>
+
+                            <div *ngIf="filterDataType != null && filterDataType != undefined; then DataType" style="display:inline-block"></div>
+                            <ng-template #DataType><label>{{filterDataType}}</label></ng-template>
+                          </div>
+                          
+                          <div class="col-sm-4" style="display:inline-block;"></div>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+                
+                <tr>
+                  <!-- <th style="width: 10%;">#Id</th> -->
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Data Type</th>
+                  <th>Description</th>
+                  <th>Application Name</th>
+                  <th>Single | Multiple</th>
+                  <th>Operations</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div *ngIf="filterApplied == false; then thenBlock else elseBlock"></div>
+                <ng-template  #thenBlock>
+                    <tr *ngFor="let attribute of attributes">
+                      <!-- <td>{{app._id}}</td> -->
+                      
+                      <td>{{attribute.Name}}</td>
+                      <td>{{attribute.Type}}</td>
+                      <td>{{attribute.DataType}}</td>
+                      <td>{{attribute.Description}}</td>
+                      <ng-container *ngFor="let application of applications">
+                          <ng-container *ngIf="attribute.Application_Id == application._id; then thenBlockApp"></ng-container>
+                          <ng-template #thenBlockApp>
+                           <td>{{application.app_name}}</td>
+                          </ng-template>
+                      </ng-container>
+                      <td>{{attribute.Single_Multiple}}</td>
+                      <td><span   (click)="editAttribute(attribute._id)" data-toggle="modal" data-target="#updateModal"  ><i  style="cursor: pointer; color:green;" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(attribute._id, attribute.Name)" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash" style="cursor: pointer; color:red;"></i></span></td>
+                    </tr>
+                </ng-template>
+                
+                <ng-template #elseBlock>
+                    <tr *ngFor="let attribute of filteredAttributes">
+                        <!-- <td>{{app._id}}</td> -->
+                        
+                        <td>{{attribute.Name}}</td>
+                        <td>{{attribute.Type}}</td>
+                        <td>{{attribute.DataType}}</td>
+                        <td>{{attribute.Description}}</td>
+                        <ng-container *ngFor="let application of applications">
+                            <ng-container *ngIf="attribute.Application_Id == application._id; then thenBlockApp"></ng-container>
+                            <ng-template #thenBlockApp>
+                             <td>{{application.app_name}}</td>
+                            </ng-template>
+                        </ng-container>
+                        <td>{{attribute.Single_Multiple}}</td>
+                        <td><span   (click)="editAttribute(attribute._id)" data-toggle="modal" data-target="#updateModal"  ><i  style="cursor: pointer; color:green;" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(attribute._id, attribute.Name)" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash" style="cursor: pointer; color:red;"></i></span></td>
+                      </tr>
+                </ng-template>
+                
+
+                <!-- [routerLink]="['/viewApplication',app._id]" -->
+                </tbody>
+                
+              </table>
+
+        </div>
+      </div>
+      <!-- /.box-body -->
+    </div>
+
+    <!-- /.box -->
+  
+
+        <!-- Add modal -->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" style="color:red;" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                <h4 class="modal-title" id="exampleModalLabel">Create Attribute</h4>
+                <hr style="border-top: 1px solid #000; margin-bottom:0;">
+                
+              </div>
+              <div class="modal-body" style="padding-top:0;">
+                <form role="form" #attributeData = "ngForm"  (ngSubmit)="addNewAttribute(attributeData.value); attributeData.reset()">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="Name">Attribute Name</label>
+                      <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter Attribute Name" ngModel>
+                    </div>
+                    <div class="form-group">
+                      <label for="Type">Attribute Type</label>
+                      <select class="form-control" name="Type" id="Type"  ngModel>
+                          <option>Fixed</option>
+                          <option>Dynamic</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="DataType">DataType</label>
+                      <select class="form-control" name="DataType" id="DataType" ngModel>
+                          <option>String</option>
+                          <option>Boolean</option>
+                          <option>Date</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="Application_Id">Application Name</label>
+                      <select class="form-control" name="Application_Id" id="Application_Id" ngModel>
+                          <option *ngFor="let application of applications" value="{{application._id}}">{{application.app_name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="Description">Description</label>
+                      <textarea rows="5" style="resize: vertical;" class="form-control" name="Description" id="Description" placeholder="Enter Attribute Description" ngModel></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="Single_Multiple">Single | Multiple</label>
+                        <select class="form-control" name="Single_Multiple" id="Single_Multiple" ngModel>
+                            <option>Single</option>
+                            <option>Multiple</option>
+                        </select>
+                    </div>
+                   
+                  </div>
+                  <!-- /.box-body -->
+      
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                  </div>
+                </form>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+
+        <!-- End AddModal -->
+
+
+
+             <!-- Update modal -->
+             <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" style="color: red" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                      <h4 class="modal-title" id="updateModalLabel">Update Attribute</h4>
+                      <hr style="border-top: 1px solid #000; margin-bottom:0;">
+                      
+                    </div>
+                    <div class="modal-body" style="padding-top:0;">
+                      <form role="form" #updateData = "ngForm"  (ngSubmit)="updateAttribute(updateData.value,uData._id); updateData.reset()">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="Name">Attribute Name</label>
+                            <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter Attribute Name" [(ngModel)]="uData.Name">
+                          </div>
+                          <div class="form-group">
+                            <label for="Type">Attribute Type</label>
+                            <select class="form-control" name="Type" id="Type"  [(ngModel)]="uData.Type">
+                                <option>Fixed</option>
+                                <option>Dynamic</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="DataType">DataType</label>
+                            <select class="form-control" name="DataType" id="DataType" [(ngModel)]="uData.DataType">
+                                <option>String</option>
+                                <option>Boolean</option>
+                                <option>Date</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="Application_Id">Application ID</label>
+                            <select class="form-control" name="Application_Id" id="Application_Id" [(ngModel)]="uData.Application_Id">
+                              <option *ngFor="let application of applications" value="{{application._id}}">{{application.app_name}}</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="Description">Description</label>
+                            <textarea rows="5" style="resize: vertical;" class="form-control" name="Description" id="Description" placeholder="Enter Attribute Description" [(ngModel)]="uData.Description"></textarea>
+                          </div>
+                          <div class="form-group">
+                              <label for="Single_Multiple">Single | Multiple</label>
+                              <select class="form-control" name="Single_Multiple" id="Single_Multiple" [(ngModel)]="uData.Single_Multiple">
+                                  <option>Single</option>
+                                  <option>Multiple</option>
+                              </select>
+                          </div>
+                         
+                        </div>
+                        <!-- /.box-body -->
+            
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                          
+                        </div>
+                      </form>
+                    </div>
+                  
+                  </div>
+                </div>
+              </div>
+      
+              <!-- End UpdateModal -->
+
+              <!-- Delete modal -->
+              <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" style="color: red" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                      <h4 class="modal-title" id="exampleModalLabel">Delete Attribute</h4>
+                      <hr style="border-top: 1px solid #000; margin-bottom:0;">
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                          <h5>Are You Sure You Want To Delete {{attributeNameToBeDeleted}} Attribute?</h5>
+                        </div>
+                        
+                        <div class="modal-footer">
+                          <button type="button" (click)="deleteAttribute(attributeIdToBeDeleted)" class="btn btn-primary">Yes</button>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                  
+                  </div>
+                </div>
+              </div>
+
+              <!-- End AddModal -->
+
+
+        </section>
+       
+        

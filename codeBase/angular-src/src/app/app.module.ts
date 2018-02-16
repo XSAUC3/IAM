@@ -21,6 +21,9 @@ import { ResourceTypesComponent } from './components/resource-types/resource-typ
 import { ResourcesComponent } from './components/resources/resources.component';
 import { PoliciesComponent } from './components/policies/policies.component';
 
+
+import { AttributeDataService } from './components/attributes/services/attribute-data.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,12 +51,18 @@ import { PoliciesComponent } from './components/policies/policies.component';
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
        {path: "application",component:ApplicationComponent},
        {path: "dashboard",component:DashboardComponent},
-       {path: "application/:id",component:ApplicationComponent},
+       {path: "resourceTypes",component:ResourceTypesComponent},
+       {path: 'attributes', component: AttributesComponent},
+       {path: 'attributes/:id', component: AttributesComponent},
+       {path: "roles",component:RolesComponent},
+       {path: "resources",component:ResourcesComponent},
+       {path: 'adminUsers', component: AdministrativeUsersComponent},
+       {path: 'policies', component: PoliciesComponent}
 
       
     ])
   ],
-  providers: [],
+  providers: [AttributeDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

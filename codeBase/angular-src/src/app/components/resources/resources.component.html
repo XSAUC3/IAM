@@ -1,3 +1,194 @@
-<p>
-  resources works!
-</p>
+
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Resources
+      <small>View Resources</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li class="active"><b><a href="" style="color:blue" data-toggle="modal" (click)="fetchResourceType();fetchApplications();fetchAttribute();" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
+      <li class="Reload"><b><a href="" style="color:red" (click)="refresh()"><i class="fa fa-repeat" ></i>&nbsp;&nbsp;Releod</a></b></li>
+      <li class="Reload"><b><a href="" style="color:green" [routerLink]="['/dashboard']"><i class="	fa fa-home" ></i>&nbsp;&nbsp;Home</a></b></li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+ 
+    <div class="box">
+     
+      <!-- /.box-header -->
+      <div class="box-body">
+        <div class="table-responsive">
+        <table id="dt" class="table table-bordered table-hover" >
+          <thead class="thead-inverse">
+          <tr>
+            <th>#</th>
+            <th >Name</th>
+            <th>Display name</th>
+            <th>Resource Type name</th>
+            <th>Application name</th>
+            <th>Attribute name</th>
+            <th>Attribute value</th>
+            <th >Description</th>
+            <th >Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let res of resource; let i=index">
+            <td>{{i+1}}</td>
+            <td>{{res.res_name}}</td>
+            <td>{{res.res_displayname}}</td>
+            <td>{{res.Resource_typeid}}</td>
+            <td>{{res.application_id}}</td>
+            <td>{{res.attribute_id}}</td>
+            <td>{{res.attribute_value}}</td>
+            <td>{{res.res_descrpition}}</td>
+            <td><span (click)="editRes(res._id);fetchResourceType();fetchApplications();fetchAttribute();" data-toggle="modal" data-target="#updateModal"  ><i  style="color:green" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="deleteRes(res._id)"><i class="fa fa-trash" style="color:red"></i></span></td>
+          </tr>
+          <!-- [routerLink]="['/viewApplication',app._id]" -->
+          </tbody>
+          
+        </table>
+        </div>
+      </div>
+      <!-- /.box-body -->
+    </div>
+
+    <!-- /.box -->
+  
+
+        <!-- Add modal -->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Resources</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form role="form" #aData = "ngForm"  (ngSubmit)="addNewRes(aData.value); aData.reset()">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="res_name">Resource Name</label>
+                      <input type="text" class="form-control" name="res_name" id="res_name" placeholder="Enter name" ngModel>
+                    </div>
+                    <div class="form-group">
+                      <label for="res_displayname">Resource Display name</label>
+                      <input type="text" class="form-control" name="res_displayname" id="res_displayname" placeholder="Enter display name" ngModel>
+                    </div>
+                    <div class="form-group">
+                      <label for="Resource_typeid">Resource Type</label>
+                      <select class="form-control" name="Resource_typeid" id="Resource_typeid" placeholder="Select Resource Type name" ngModel>
+                        <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.resourceType_name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="application_id">Application Name</label>
+                      <select class="form-control" name="application_id" id="application_id" placeholder="Select Application name" ngModel>
+                        <option *ngFor="let app of applications" value={{app._id}}>{{app.app_name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="attribute_id">Attribute Name</label>
+                      <select class="form-control" name="attribute_id" id="attribute_id" placeholder="Select Attribute name" ngModel>
+                        <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="attribute_value">Attribute Value</label>
+                      <input type="text" class="form-control" name="attribute_value" id="attribute_value" placeholder="Enter Attribute value" ngModel>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Resource Description</label>
+                      <textarea class="form-control" name="res_descrpition" id="res_descrpition" placeholder="Enter description" ngModel></textarea>
+                    </div>
+                   
+                  </div>
+                  <!-- /.box-body -->
+      
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                  </div>
+                </form>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+
+        <!-- End AddModal -->
+
+
+
+             <!-- Update modal -->
+             <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateModalLabel">Update Application</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form role="form" #updateData = "ngForm"  (ngSubmit)="updateRes(updateData.value,uData._id); updateData.reset()">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="res_name">Resource Name</label>
+                            <input type="text" class="form-control" name="ures_name" id="ures_name" placeholder="Enter name" [(ngModel)]="uData.res_name">
+                          </div>
+                          <div class="form-group">
+                            <label for="res_displayname">Resource Display name</label>
+                            <input type="text" class="form-control" name="ures_displayname" id="ures_displayname" placeholder="Enter display name" [(ngModel)]="uData.res_displayname">
+                          </div>
+                          <div class="form-group">
+                            <label for="Resource_typeid">Resource Type name</label>
+                            <select class="form-control" name="uResource_typeid" id="uResource_typeid" placeholder="Select Resource Type name" [(ngModel)]="uData.Resource_typeid">
+                              <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.ResourceType_name}}</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="application_id">Application name</label>
+                            <select class="form-control" name="uapplication_id" id="uapplication_id" placeholder="Select Application Type name" [(ngModel)]="uData.application_id">
+                            <option *ngFor="let app of applications" value={{app._id}}>{{app.app_name}}</option>
+                            </select>
+                            </div>
+                          <div class="form-group">
+                            <label for="attribute_id">Attribute Name</label>
+                            <select class="form-control" name="uattribute_id" id="uattribute_id" placeholder="Select Attribute name" [(ngModel)]="uData.attribute_id">
+                            <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
+                          </select>
+                          </div>
+                          <div class="form-group">
+                            <label for="attribute_value">Attribtue value</label>
+                            <input type="text" class="form-control" name="uattribute_value" id="uattribute_value" placeholder="Enter Attribute value" [(ngModel)]="uData.attribute_value">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Resource Description</label>
+                            <textarea class="form-control" name="ures_descrpition" id="ures_descrpition" placeholder="Enter description" [(ngModel)]="uData.res_descrpition"></textarea>
+                          </div>
+                         
+                        </div>
+                        <!-- /.box-body -->
+            
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                          
+                        </div>
+                      </form>
+                    </div>
+                  
+                  </div>
+                </div>
+              </div>
+      
+              <!-- End UpdateModal -->
+
+        </section>
+       
+        

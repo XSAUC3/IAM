@@ -33,6 +33,7 @@ export class ApplicationComponent implements OnInit {
   uExist = false;
   private headers = new Headers({ 'Content-Type': 'application/json'});
   apps = [];
+  
   fetchData=function() {
     this.http.get("http://localhost:3000/api/Applications").subscribe(
       (res: Response) => {
@@ -50,7 +51,8 @@ export class ApplicationComponent implements OnInit {
 
    //Del App
    deleteApp = function(id) {
-    
+    var q = confirm("Do you really want to delete?")
+    if(q==true) {
     const url = "http://localhost:3000/api/delApp/" + id;
     return this.http.delete(url, {headers: this.headers}).toPromise()
       .then(() => {
@@ -61,6 +63,7 @@ export class ApplicationComponent implements OnInit {
       })
   
   }
+}
 
 //Add App
   addNewApp = function(a) {
@@ -87,7 +90,7 @@ export class ApplicationComponent implements OnInit {
 
 editApp = function(id) {
  
- this.http.get("http://localhost:3000/api/"+id).subscribe(
+ this.http.get("http://localhost:3000/api/application/"+id).subscribe(
     (res: Response) => {
       this.uApplication = res.json();
       console.log(res.json());
@@ -133,7 +136,6 @@ updateApp = function(updateData,id)
     $(document).ready(function(){
      
       $('#dt').DataTable();
-
   });
     this.fetchData();
     

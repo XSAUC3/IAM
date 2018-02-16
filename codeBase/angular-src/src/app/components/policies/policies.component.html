@@ -1,3 +1,382 @@
-<p>
-  policies works!
-</p>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Policies
+    <small>Select Policy From The Table To Load</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li class="active">
+      <b>
+        <a href="" style="color:blue" data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;
+          <i class="fa fa-plus"></i>&nbsp;&nbsp;Add</a>
+      </b>
+    </li>
+    <li class="Reload">
+      <b>
+        <a href="" style="color:red" (click)="refresh()">
+          <i class="fa fa-repeat"></i>&nbsp;&nbsp;Releod</a>
+      </b>
+    </li>
+    <li class="Reload">
+      <b>
+        <a href="" style="color:green" [routerLink]="['/dashboard']">
+          <i class="	fa fa-home"></i>&nbsp;&nbsp;Home</a>
+      </b>
+    </li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+  <div class="box">
+
+    <!-- /.box-header -->
+    <div class="box-body">
+
+      <div class="table-responsive">
+        <table id="dtbl" class="table row-border hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Policy name</th>
+              <th>Policy Type</th>
+              <th>Policy Constrains</th>
+              <th>Roles</th>
+              <th>Resources</th>
+              <th>info</th>
+              <th>Add Target Actions</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of policies; let i=index">
+              <td>{{i+1}}</td>
+              <td>{{p.policy_name}}</td>
+              <td>{{p.policy_type}}</td>
+              <td>{{p.policy_constrains}}</td>
+              <td>
+                |
+                <span *ngFor="let rol of p.policy_principals">{{rol.role_name}} | </span>
+              </td>
+              <td>
+                |
+                <span *ngFor="let reso of p.policy_targets">{{reso.resource_name}} | </span>
+              </td>
+              <td>
+                  <button class="btn btn-info" style="background:darkgray;border:none;" (click)="loadPolicy(p._id);" data-toggle="modal" data-target="#showpolicyModal">
+                    <i class="fa fa-info"></i>
+                  </button>
+              </td>
+              <td>
+                  <button class="btn btn-primary" (click)="openPolicyta(p._id)" data-toggle="modal" data-target="#addptaModal">
+                    <i class="fa fa-wrench"></i> Target Actions
+                  </button>
+              </td>
+              <td>
+                  <button class="btn btn-warning" (click)="editPolicy(p._id)" data-toggle="modal" data-target="#editModal">
+                    <i class="fa fa-edit"></i>
+                  </button>
+              </td>
+              <td>
+                  <button class="btn btn-danger" (click)="deletePolicy(p._id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Add modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="exampleModalLabel">
+            <b>Create Policy</b>
+          </h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form role="form" #pform="ngForm" (ngSubmit)="addPolicy(pform.value); pform.reset()">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="app_name">Policy Name</label>
+                <input type="text" class="form-control" name="policy_name" id="policy_name" placeholder="Enter name for policy" ngModel>
+              </div>
+              <div class="form-group">
+                <label for="app_displayname">Policy type</label>
+                <input type="text" class="form-control" name="policy_type" id="policy_type" placeholder="Enter policy type" ngModel>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">policy constrains</label>
+                <textarea class="form-control" name="policy_constrains" id="policy_constrains" rows="3" placeholder="Enter policy constrains"
+                  ngModel></textarea>
+              </div>
+              <hr>
+              <div class="form-group">
+                <h4>
+                  <b>Policy Principals</b>
+                </h4>
+                <label>Select Roles to Add to the Policy Principals</label>
+                <br>
+                <div style="display:inline-flex;width: 100%;">
+                  <select class="form-control" style="width:100%;" name="role" [(ngModel)]="role" id="roles">
+                    <option value="2jh3bnl2klkwr5hb,admin">Admin</option>
+                    <option value="678ijyt567hf,Manger">Manger</option>
+                    <option value="5678uhu56yhjy6,Moderator">Moderator</option>
+                  </select>
+                  <!-- <select class="form-control" name="role" id="role" placeholder="Select Role" ngModel>
+                      <option *ngFor="let role of roles" value="{{role._id}}">{{role.Role_name}}</option>
+                    </select> -->
+                  <button type="button" (click)="addpp()" class="input-group-text btn-info" id="basic-addon2">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+                <br>
+                <br>
+                <ul class="list-group">
+                  <li class="list-group-item" *ngFor="let r of rolesnamearr;let i=index">{{r}}
+                    <i class="fa fa-times" (click)="rmpp(index)" style="float:right"></i>
+                  </li>
+                </ul>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <h4>
+                  <b>Policy Targets</b>
+                </h4>
+                <label>Select Resources to Add to the Policy Targets</label>
+                <br>
+                <div style="display:inline-flex;width: 100%;">
+                  <select class="form-control" style="width:100%;" name="resource" id="resource" [(ngModel)]="resource">
+                    <option value="2jh3bnl2klkwr5hb,Major">Major</option>
+                    <option value="678ijyt567hf,Minor">Minor</option>
+                    <option value="5678uhu56yhjy6,General">General</option>
+                  </select>
+
+                  <!-- <select class="form-control" name="resource" id="resource" placeholder="Select Resource name" ngModel>
+                      <option *ngFor="let res of resources" value={{res._id}}>{{res.res_name}}</option>
+                    </select> -->
+
+                  <button type="button" (click)='addpt()' class="input-group-text btn-info" id="basic-addon2">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+                <br>
+                <br>
+                <ul class="list-group ">
+                  <li class="list-group-item" *ngFor="let re of resnamearr;let i=index">{{re}}
+                    <i class="fa fa-times" (click)="rmpt(index)" style="float:right"></i>
+                  </li>
+                </ul>
+              </div>
+
+
+            </div>
+            <!-- /.box-body -->
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- End AddModal -->
+
+  <!-- edit modal -->
+  <div class="modal fade" id="editModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Policy</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form role="form" #peform="ngForm" (ngSubmit)="updatePolicy(peform.value); peform.reset()">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="app_name">Policy Name</label>
+                <input type="text" class="form-control" name="policy_name" id="policy_name" placeholder="Enter name for policy" [(ngModel)]="policy_name">
+              </div>
+              <div class="form-group">
+                <label for="app_displayname">Policy type</label>
+                <input type="text" class="form-control" name="policy_type" id="policy_type" placeholder="Enter policy type" [(ngModel)]="policy_type">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">policy constrains</label>
+                <textarea class="form-control" name="policy_constrains" id="policy_constrains" rows="3" placeholder="Enter policy constrains"
+                  [(ngModel)]="policy_constrains"></textarea>
+              </div>
+              <hr>
+              <div class="form-group">
+                <h4>
+                  <b>Policy Principals</b>
+                </h4>
+                <label>Select Roles to Add to the Policy Principals</label>
+                <br>
+                <div style="display:inline-flex;width: 100%;">
+                  <select class="form-control" style="width:100%;" name="role" [(ngModel)]="role" id="roles">
+                    <option value="2jh3bnl2klkwr5hb,admin">Admin</option>
+                    <option value="678ijyt567hf,Manger">Manger</option>
+                    <option value="5678uhu56yhjy6,Moderator">Moderator</option>
+                  </select>
+                  <button type="button" (click)="addpp()" class="input-group-text btn-info" id="basic-addon2">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+                <br>
+                <br>
+                <ul class="list-group">
+                  <li class="list-group-item" *ngFor="let r of rolesnamearr;let i=index">{{r}}
+                    <i class="fa fa-times" (click)="rmpp(index)" style="float:right"></i>
+                  </li>
+                </ul>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <h4>
+                  <b>Policy Targets</b>
+                </h4>
+                <label>Select Resources to Add to the Policy Targets</label>
+                <br>
+                <div style="display:inline-flex;width: 100%;">
+                  <select class="form-control" style="width:100%;" name="resource" id="resource" [(ngModel)]="resource">
+                    <option value="2jh3bnl2klkwr5hb,Admin">Admin</option>
+                    <option value="678ijyt567hf,Manger">Manger</option>
+                    <option value="5678uhu56yhjy6,Moderator">Moderator</option>
+                  </select>
+                  <button type="button" (click)='addpt()' class="input-group-text btn-info" id="basic-addon2">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+                <br>
+                <br>
+                <ul class="list-group ">
+                  <li class="list-group-item" *ngFor="let re of resnamearr;let i=index">{{re}}
+                    <i class="fa fa-times" (click)="rmpt(index)" style="float:right"></i>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+            <!-- /.box-body -->
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- End editModal -->
+
+  <!-- info Modal -->
+  <div class="modal fade" id="showpolicyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="exampleModalLongTitle">{{policy_name}}
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </h2>
+
+        </div>
+        <div class="modal-body">
+          <span>Policy Type: {{policy_type}}</span>
+          <p class="text-muted">Policy Constrains: {{policy_constrains}}</p>
+          <hr>
+          <h4>Policy Principals</h4>
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let ip of roles">
+              <span class="is-primary">{{ip.role_name}}
+                <kbd style="float:right;">{{ip._id}}</kbd>
+              </span>
+            </li>
+          </ul>
+          <hr>
+          <h4>Policy Targets</h4>
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let ip of resources">
+              <span class="is-primary">{{ip.resource_name}}
+                <kbd style="float:right;">{{ip._id}}</kbd>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- info modal end -->
+
+  <!-- ADD Targets -->
+
+  <div class="modal fade" id="addptaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="exampleModalLongTitle">
+              {{policy_name}}
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </h2>
+            <p class="text-muted">Policy Target actions</p>
+          </div>
+          <div class="modal-body">
+              <h4>Resources</h4>
+              <ul class="list-group">
+                <li class="list-group-item" *ngFor="let ip of resources">
+                  <span class="is-primary">{{ip.resource_name}}
+                  </span>
+                </li>
+              </ul>
+              Show Resources type details here ! <br>
+              <span>Resource Type :</span><br>
+              <h2><kbd>Resource type actions</kbd></h2>
+              <p class="text-muted">Select From Checkbox to enable actions</p>
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                      <input type="text"  aria-label="Text input with checkbox" value="action name" disabled>
+                      <input type="checkbox" aria-label="Checkbox for following text input">
+                    </li>
+                  </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>  
+
+  <!-- ADD Targets end -->
+
+</section>

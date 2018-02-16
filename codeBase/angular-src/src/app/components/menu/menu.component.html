@@ -2,26 +2,8 @@
 <aside class="main-sidebar">
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
-    <!-- Sidebar user panel -->
-
-    <!-- search form -->
-  
-    <!-- /.search form -->
-    <!-- sidebar menu: : style can be found in sidebar.less -->
     <ul class="sidebar-menu" data-widget="tree">
-      <!-- <li class="treeview" [routerLink]="['/']" [routerLinkActive]="['active']">
-        <a>
-          <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-        
-        </a>
-        </li>
-      <li class="treeview" [routerLink]="['application']" [routerLinkActive]="['active']">
-        <a>
-          <i class="fa fa-folder"></i> <span>Applications</span>
-        
-        </a>
-        
-      </li> -->
+      
       <li class="treeview" [routerLink]="['/dashboard']" [routerLinkActive]="['active']">
         <a href="#">
           <i class="fa fa-dashboard"></i> <span>Dashboard</span>
@@ -38,14 +20,16 @@
        
       </li>
      
-      <li  [routerLink]="['']" class="treeview">
+      <li class="treeview" [routerLink]="['/resources']" [routerLinkActive]="['active']">
         <a href="#">
           <i class="fa fa-pie-chart"></i> <span>Resources</span>
          
         </a>
         
       </li>
-      <li class="treeview">
+
+
+      <li class="treeview" [routerLink]="['/resourceTypes']" [routerLinkActive]="['active']">
         <a href="#">
           <i class="fa fa-files-o"></i>
           <span>Resource Type</span>
@@ -53,13 +37,14 @@
         </a>
        
       </li>
-      <li>
-        <a href="../widgets.html">
-          <i class="fa fa-th"></i> <span>Attributes</span>
+      <li class="treeview" [routerLink]="['/attributes']" [routerLinkActive]="['active']">
+        <a href="#">
+          <i class="fa fa-th"></i>
+           <span>Attributes</span>
        
         </a>
       </li>
-      <li class="treeview">
+      <li class="treeview" [routerLink]="['/policies']" [routerLinkActive]="['active']">
         <a href="#">
           <i class="fa fa-book"></i>
           <span>Policies</span>
@@ -67,9 +52,17 @@
         </a>
         
       </li>
-      <li class="treeview">
+      <li class="treeview" [routerLink]="['/roles']" [routerLinkActive]="['active']">
+        <a href="#">
+          <i class="fa fa-user"></i>
+          <span>Roles</span>
+        
+        </a>
+        
+      </li>
+      <li class="treeview" [routerLink]="['/adminUsers']" [routerLinkActive]="['active']">
           <a href="#">
-            <i class="fa fa-user"></i>
+            <i class="fa fa-users"></i>
             <span>Administrative Users</span>
           
           </a>

@@ -1,3 +1,190 @@
-<p>
-  resource-types works!
-</p>
+
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Resource Type
+      <small>View Resource Types</small>
+    </h1>
+    <ol class="breadcrumb" style="background-color:#E8E8E8">
+      <li class="active"><b><a href="" style="color:blue" data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
+      <li class="Reload"><b><a href="" style="color:red" (click)="refresh()"><i class="fa fa-repeat" ></i>&nbsp;&nbsp;Releod</a></b></li>
+      <li class="Reload"><b><a style="color:green" [routerLink]="['/dashboard']"><i class="	fa fa-home" ></i>&nbsp;&nbsp;Home</a></b></li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+ 
+    <div class="box">
+     
+      <!-- /.box-header -->
+      <div class="box-body">
+        <div class="table-responsive">
+        <table id="dt" class="table table-bordered table-hover" >
+          <thead class="thead-inverse">
+          <tr>
+            <!-- <th style="width: 10%;">#Id</th> -->
+            <th>#</th>
+            <th >Name</th>
+            <th>Display name</th>
+            <th >Description</th>
+            <th >Actions</th>
+            <th >Operations</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let rt of resourceTypes; let i=index">
+            <!-- <td>{{app._id}}</td> -->
+            <td>{{i+1}}</td>
+            <td>{{rt.resourceType_name}}</td>
+            <td>{{rt.resourceType_displayname}}</td>
+            <td>{{rt.resourceType_description}}</td>
+            <td><span *ngFor="let rt2 of rt.resourceType_actions">{{rt2.action_name+"|"}}</span></td>
+            <td><span  (click)="editRt(rt._id)" data-toggle="modal" data-target="#updateModal"  ><i  style="color:green" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="deleteRt(rt._id)"><i class="fa fa-trash" style="color:red"></i></span></td>
+          </tr>
+          </tbody>
+          
+        </table>
+        </div>
+      </div>
+      <!-- /.box-body -->
+    </div>
+
+    <!-- /.box -->
+  
+
+        <!-- Add modal -->
+        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+          
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Resource-Type</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form role="form" #rtData = "ngForm"  (ngSubmit)="addNewRt(rtData.value); rtData.reset()">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="app_name">Resource-Type Name</label>
+                      <input type="text" class="form-control" name="resourceType_name" id="resourceType_name" placeholder="Enter name" ngModel>
+                    </div>
+                    <div class="form-group">
+                      <label for="app_displayname">Resource-Type Display name</label>
+                      <input type="text" class="form-control" name="resourceType_displayname" id="resourceType_displayname" placeholder="Enter display name" ngModel>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Resource-Type Description</label>
+                      <textarea class="form-control" name="resourceType_description" id="resourceType_description" placeholder="Enter description" ngModel></textarea>
+                    </div>
+                   
+                    <div class="col-md-12">
+                      <div class="box box-warning">
+                    
+                    <div class="row">
+                          <div class="col-md-10" >
+                            <input [(ngModel)]="newAction" name="newAction" type="text" placeholder="Add Action" class="form-control">
+          
+                         </div>
+                         <div class="col-md-1" style="text-align:right">
+                           
+                            <a  (click)="pushAction()" class="btn btn-success"><i class="fa fa-plus"></i>Add</a>
+                          </div>
+                        </div>
+                          <div>
+                          <ul style=" height:130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                            <li *ngFor="let action of actions; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
+                              <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
+                              fa-wrench"></i>&nbsp; &nbsp;{{action.action_name}} <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.box-body -->
+      
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- End AddModal -->
+
+
+
+             <!-- Update modal -->
+             <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="updateModalLabel">Update Resource-Type</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form role="form" #updateData = "ngForm"  (ngSubmit)="updateRt(updateData.value,uData._id); updateData.reset()">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label for="app_name"> Resource-Type name</label>
+                            <input type="text" class="form-control" name="uRt_name" id="uRt_name" placeholder="Enter name" [(ngModel)]="uData.resourceType_name">
+                          </div>
+                          <div class="form-group">
+                            <label for="app_displayname">Resource-Type Display name</label>
+                            <input type="text" class="form-control" name="uRt_displayname" id="uRt_displayname" placeholder="Enter display name" [(ngModel)]="uData.resourceType_displayname">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Resource-Type Description</label>
+                            <textarea class="form-control" name="uRt_description" id="uRt_description" placeholder="Enter description" [(ngModel)]="uData.resourceType_description"></textarea>
+                          </div>
+                          <div class="col-md-12">
+                              <div class="box box-warning">
+                            
+                            <div class="row">
+                                  <div class="col-md-10" >
+                                    <input [(ngModel)]="newAction" name="newAction" type="text" placeholder="Add Action" class="form-control">
+                  
+                                 </div>
+                                 <div class="col-md-1" style="text-align:right">
+                                   
+                                    <a  (click)="pushAction()" class="btn btn-success"><i class="fa fa-plus"></i>Add</a>
+                                  </div>
+                                </div>
+                                  <div>
+                                  <ul style=" height:130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                                    <li *ngFor="let action of actions; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
+                                      <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
+                                      fa-wrench"></i>&nbsp; &nbsp;{{action.action_name}} <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+            
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                          
+                        </div>
+                      </form>
+                    </div>
+                  
+                  </div>
+                </div>
+              </div>
+      
+              <!-- End UpdateModal -->
+
+        </section>
+       
+        
