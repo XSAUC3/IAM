@@ -31,7 +31,7 @@ router.get('/Applications', (req, res, next) => {
 
 //fetch single app by id:
 router.get('/application/:id', (req,res,next) =>{
-  App.findById( req.params.id, (err, app) => {  
+  App.findById( {_id:req.params.id}, (err, app) => {  
     if (err) {res.json(err);} 
     res.json(app);
   });
@@ -91,9 +91,9 @@ router.get('/resourceTypes', (req, res, next) => {
 
 //fetch single rt by id:
 router.get('/resourceType/:id', (req,res,next) =>{
-  ResourceType.findById( req.params.id, (err, resourceType) => {  
+  ResourceType.findById( {_id:req.params.id}, (err, resourceType) => {  
     if (err) {res.json(err);} 
-    res.json(resourceType);
+    else{ res.json(resourceType); }
   });
 });
 
@@ -328,7 +328,7 @@ router.get('/role/Roles', (req, res, next) => {
 
 //fetch single role by id:
 router.get('/role/:id', (req,res,next) =>{
-  Role.findById( req.params.id, (err, app) => {  
+  Role.findById( {_id:req.params.id}, (err, app) => {  
   if (err) {res.json(err);} 
   res.json(app);
 });
@@ -402,9 +402,9 @@ newApp.save( (err,createdObj ) => {
 
 //fetch single app by id:
 router.get('/Resource/:id', (req,res,next) =>{
-  Resource.findById( req.params.id, (err, app) => {  
+  Resource.findById({_id: req.params.id}, (err, app) => {  
   if (err) {res.json(err);} 
-  res.json(app);
+  else {res.json(app);}
 });
 });
 
@@ -447,8 +447,8 @@ router.get('/policies', (req, res, next) => {
 });
 
 //fetch single Policy by id:
-router.get('/:id', (req,res,next) =>{
-  Policy.findById( req.params.id, (err, app) => {  
+router.get('/policy/:id', (req,res,next) =>{
+  Policy.findById( { _id : req.params.id}, (err, app) => {  
     if (err) {res.json(err);} 
     res.json(app);
   });
@@ -488,7 +488,7 @@ router.delete('/delPolicy/:id' , (req,res,next) => {
 
 //find policy target action by ID
 router.get('/:id', (req,res,next) =>{
-  PolicyTargetAction.findById( req.params.id, (err, app) => {  
+  PolicyTargetAction.findById({_id: req.params.id}, (err, app) => {  
     if (err) {res.json(err);} 
     res.json(app);
   });
@@ -500,7 +500,7 @@ router.post('/addPolicyTargetActions',(req,res,next)=>{
     policy_Id             :   req.body.policy_Id,
     resourceType_Id       :   req.body.resourceType_Id,
     resourceType_name     :   req.body.resourceType_name,
-    resourceType_actions  :   req.body,resourceType_actions
+    resourceType_actions  :   req.body.resourceType_actions
   })
   pta.save( (err,createdObj ) => {
     if(err)  res.status(500);  
@@ -544,7 +544,7 @@ router.get('/users', (req, res, next) => {
 
 //fetch single user by id:
 router.get('user/:id', (req,res,next) =>{
-  User.findById( req.params.id, (err, user) => {  
+  User.findById( {_id:req.params.id}, (err, user) => {  
     if (err) {res.json(err);} 
     res.json(user);
   });
