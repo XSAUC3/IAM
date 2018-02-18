@@ -7,7 +7,7 @@
   <ol class="breadcrumb">
     <li class="active">
       <b>
-        <a href="" style="color:blue" data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;
+        <a href="" style="color:blue" (click)="emptyarr()" data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;
           <i class="fa fa-plus"></i>&nbsp;&nbsp;Add</a>
       </b>
     </li>
@@ -45,7 +45,6 @@
               <th>Roles</th>
               <th>Resources</th>
               <th>info</th>
-              <th>Add Target Actions</th>
               <th>Edit</th>
               <th>Delete</th>
             </tr>
@@ -67,11 +66,6 @@
               <td>
                   <button class="btn btn-info" style="background:darkgray;border:none;" (click)="loadPolicy(p._id);" data-toggle="modal" data-target="#showpolicyModal">
                     <i class="fa fa-info"></i>
-                  </button>
-              </td>
-              <td>
-                  <button class="btn btn-primary" (click)="openPolicyta(p._id)" data-toggle="modal" data-target="#addptaModal">
-                    <i class="fa fa-wrench"></i> Target Actions
                   </button>
               </td>
               <td>
@@ -113,7 +107,10 @@
               </div>
               <div class="form-group">
                 <label for="app_displayname">Policy type</label>
-                <input type="text" class="form-control" name="policy_type" id="policy_type" placeholder="Enter policy type" ngModel>
+                <select class="form-control" name="policy_type" id="policy_type" ngModel>
+                  <option value="grant" selected="selected" >Grant</option>
+                  <option value="deny">Deny</option>
+                </select>
               </div>
               <div class="form-group">
                 <label for="exampleInputEmail1">policy constrains</label>
@@ -129,13 +126,9 @@
                 <br>
                 <div style="display:inline-flex;width: 100%;">
                   <select class="form-control" style="width:100%;" name="role" [(ngModel)]="role" id="roles">
-                    <option value="2jh3bnl2klkwr5hb,admin">Admin</option>
-                    <option value="678ijyt567hf,Manger">Manger</option>
-                    <option value="5678uhu56yhjy6,Moderator">Moderator</option>
+                    <option *ngFor="let role of allroles" value="{{role._id}},{{role.Role_name}}">{{role.Role_name}}</option>
                   </select>
-                  <!-- <select class="form-control" name="role" id="role" placeholder="Select Role" ngModel>
-                      <option *ngFor="let role of roles" value="{{role._id}}">{{role.Role_name}}</option>
-                    </select> -->
+
                   <button type="button" (click)="addpp()" class="input-group-text btn-info" id="basic-addon2">
                     <i class="fa fa-plus"></i>
                   </button>
@@ -143,8 +136,10 @@
                 <br>
                 <br>
                 <ul class="list-group">
-                  <li class="list-group-item" *ngFor="let r of rolesnamearr;let i=index">{{r}}
-                    <i class="fa fa-times" (click)="rmpp(index)" style="float:right"></i>
+                  <li class="list-group-item" style="background:whitesmoke;" *ngFor="let r of rolesnamearr;let i=index">{{r}}
+                    <div style="float:right">
+                        <i class="fa fa-times" (click)="rmpp(index)"></i>
+                    </div>
                   </li>
                 </ul>
               </div>
@@ -159,15 +154,8 @@
                 <br>
                 <div style="display:inline-flex;width: 100%;">
                   <select class="form-control" style="width:100%;" name="resource" id="resource" [(ngModel)]="resource">
-                    <option value="2jh3bnl2klkwr5hb,Major">Major</option>
-                    <option value="678ijyt567hf,Minor">Minor</option>
-                    <option value="5678uhu56yhjy6,General">General</option>
+                    <option *ngFor="let res of allresources" value="{{res._id}},{{res.res_name}}">{{res.res_name}}</option>
                   </select>
-
-                  <!-- <select class="form-control" name="resource" id="resource" placeholder="Select Resource name" ngModel>
-                      <option *ngFor="let res of resources" value={{res._id}}>{{res.res_name}}</option>
-                    </select> -->
-
                   <button type="button" (click)='addpt()' class="input-group-text btn-info" id="basic-addon2">
                     <i class="fa fa-plus"></i>
                   </button>
@@ -175,8 +163,10 @@
                 <br>
                 <br>
                 <ul class="list-group ">
-                  <li class="list-group-item" *ngFor="let re of resnamearr;let i=index">{{re}}
-                    <i class="fa fa-times" (click)="rmpt(index)" style="float:right"></i>
+                  <li class="list-group-item" style="background:whitesmoke;" *ngFor="let re of resnamearr;let i=index">{{re}}
+                    <div style="float:right">
+                      <i class="fa fa-times" (click)="rmpt(index)" ></i>
+                    </div>
                   </li>
                 </ul>
               </div>
@@ -233,9 +223,7 @@
                 <br>
                 <div style="display:inline-flex;width: 100%;">
                   <select class="form-control" style="width:100%;" name="role" [(ngModel)]="role" id="roles">
-                    <option value="2jh3bnl2klkwr5hb,admin">Admin</option>
-                    <option value="678ijyt567hf,Manger">Manger</option>
-                    <option value="5678uhu56yhjy6,Moderator">Moderator</option>
+                      <option *ngFor="let role of allroles" value="{{role._id}},{{role.Role_name}}">{{role.Role_name}}</option>
                   </select>
                   <button type="button" (click)="addpp()" class="input-group-text btn-info" id="basic-addon2">
                     <i class="fa fa-plus"></i>
@@ -244,8 +232,10 @@
                 <br>
                 <br>
                 <ul class="list-group">
-                  <li class="list-group-item" *ngFor="let r of rolesnamearr;let i=index">{{r}}
+                  <li class="list-group-item" style="background:whitesmoke;" *ngFor="let r of rolesnamearr;let i=index">{{r}}
+                  <div style="float:right">
                     <i class="fa fa-times" (click)="rmpp(index)" style="float:right"></i>
+                  </div>
                   </li>
                 </ul>
               </div>
@@ -260,9 +250,7 @@
                 <br>
                 <div style="display:inline-flex;width: 100%;">
                   <select class="form-control" style="width:100%;" name="resource" id="resource" [(ngModel)]="resource">
-                    <option value="2jh3bnl2klkwr5hb,Admin">Admin</option>
-                    <option value="678ijyt567hf,Manger">Manger</option>
-                    <option value="5678uhu56yhjy6,Moderator">Moderator</option>
+                      <option *ngFor="let res of allresources" value="{{res._id}},{{res.res_name}}">{{res.res_name}}</option>
                   </select>
                   <button type="button" (click)='addpt()' class="input-group-text btn-info" id="basic-addon2">
                     <i class="fa fa-plus"></i>
@@ -271,8 +259,11 @@
                 <br>
                 <br>
                 <ul class="list-group ">
-                  <li class="list-group-item" *ngFor="let re of resnamearr;let i=index">{{re}}
-                    <i class="fa fa-times" (click)="rmpt(index)" style="float:right"></i>
+                  <li class="list-group-item" style="background:whitesmoke;" *ngFor="let re of resources;let i=index">{{re.resource_name}}
+                    <div style="float:right" >
+                        <i class="fa fa-wrench" (click)="openPolicyta(re.resource_id)" data-toggle="modal" data-target="#addptaModal" ></i>&nbsp;    
+                        <i class="fa fa-times" (click)="rmpt(index)" style="float:right"></i>
+                      </div>
                   </li>
                 </ul>
               </div>
@@ -343,7 +334,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h2 class="modal-title" id="exampleModalLongTitle">
-              {{policy_name}}
+              Resource Name : {{fetchedresourcename}}
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -351,27 +342,19 @@
             <p class="text-muted">Policy Target actions</p>
           </div>
           <div class="modal-body">
-              <h4>Resources</h4>
-              <ul class="list-group">
-                <li class="list-group-item" *ngFor="let ip of resources">
-                  <span class="is-primary">{{ip.resource_name}}
-                  </span>
-                </li>
-              </ul>
-              Show Resources type details here ! <br>
-              <span>Resource Type :</span><br>
-              <h2><kbd>Resource type actions</kbd></h2>
+              <h4>Resources Type Name: {{ restypename }}</h4>
               <p class="text-muted">Select From Checkbox to enable actions</p>
+              <form #pta="ngForm" >
                   <ul class="list-group">
-                    <li class="list-group-item">
-                      <input type="text"  aria-label="Text input with checkbox" value="action name" disabled>
-                      <input type="checkbox" aria-label="Checkbox for following text input">
+                    <li class="list-group-item" *ngFor="let rtac of fetchedrestypeactions" >
+                        {{rtac.action_name}} : <input type="checkbox" name="{{rtac.action_name}}" value="false" ngModel >
                     </li>
                   </ul>
+              </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addpolicytargetactions(pta.value)" >Save Target Action</button>
           </div>
         </div>
       </div>

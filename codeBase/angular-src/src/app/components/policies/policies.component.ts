@@ -16,13 +16,24 @@ export class PoliciesComponent implements OnInit {
 
   policiesurl     = 'http://localhost:3000/api/policies'
   addpolicyurl    = 'http://localhost:3000/api/addPolicy'
-  fetchpolicyurl  = 'http://localhost:3000/api/'
+  fetchpolicyurl  = 'http://localhost:3000/api/policy/'
   deletepolicyurl = 'http://localhost:3000/api/delPolicy/'
   updatepolicyurl = 'http://localhost:3000/api/updatePolicy'
   addpolicytargetactionsurl= 'http://localhost:3000/api/addPolicyTargetActions'
   updatepolicytargetactionsurl= 'http://localhost:3000/api/updatePolicyTargetActions'
+  fetchresourcebyidurl = "http://localhost:3000/api/Resource/"
+  fetchresourcetypebyidurl = 'http://localhost:3000/api/resourceType/'
 
   policies = [];
+
+  allresources = [];
+  allroles = [];
+
+  fetchedresourcename ;
+  fetchedrestype ;
+  fetchedrestypeactions = []
+  fetchedrestypeid;
+  restypename;
 
   policy;
   
@@ -68,8 +79,8 @@ export class PoliciesComponent implements OnInit {
   fetchRoles=function() {
     this._http.get("http://localhost:3000/api/role/Roles").subscribe(
       (res: Response) => {
-        this.roles = res.json();
-        console.log(this.roles);
+        this.allroles = res.json();
+        //console.log(this.allroles);
        // console.log(this.role.Application_id)
       }
     )
@@ -78,8 +89,8 @@ export class PoliciesComponent implements OnInit {
 fetchResources=function() {
   this._http.get("http://localhost:3000/api/Fetch/Resource").subscribe(
     (res: Response) => {
-      this.resources = res.json();
-      console.log(this.resources);
+      this.allresources = res.json();
+      //console.log(this.allresources);
     }
   )
  }
@@ -94,6 +105,21 @@ fetchResources=function() {
                   this.policy_name = this.policy.policy_name;
                   this.policy_type = this.policy.policy_type;
                   this.policy_constrains = this.policy.policy_constrains;
+                  this.roles = this.policy.policy_principals;
+                  this.resources = this.policy.policy_targets
+                  var rls = this.policy.policy_principals;
+                  var ress = this.policy.policy_targets;
+                  var i,j ;
+                  for (i=0;i<rls.length;i++)
+                  {
+                    this.rolesnamearr.push(rls[i].role_name);
+                    this.roleidarr.push(rls[i].role_id);
+                  }
+                  for (j=0;j<ress.length;j++)
+                  {
+                    this.resnamearr.push(ress[j].resource_name);
+                    this.residarr.push(ress[j].resource_id);
+                  }
                 });
   }
 
@@ -157,7 +183,7 @@ fetchResources=function() {
       policy_type : data.policy_type,
       policy_constrains : data.policy_constrains
     }
-    if(this.roles == null && this.resources == null)
+    if(this.roles == [] && this.resources == [])
     {
       this._http.put(this.updatepolicyurl, obj , {headers:this.headers})
               .subscribe(
@@ -223,37 +249,72 @@ fetchResources=function() {
   }
 
   rmpt(index){
+    this.resources.splice(index,1)
     this.resnamearr.splice(index,1)
     this.residarr.splice(index,1)
   }
 
+  emptyarr()
+  {
+    this.roleidarr = [];
+    this.rolesnamearr = [];
+    this.residarr = [];
+    this.resnamearr = [];
+  }
+
   //fetch all resources on this function !
   openPolicyta(id){
-    this._http.get(this.fetchpolicyurl + id)
-    .subscribe( 
-      res => { 
-        this.policy = res.json();
-        console.log(this.policy);
-        this.policy_id = this.policy._id;
-        this.policy_name = this.policy.policy_name;
-        this.policy_type = this.policy.policy_type;
-        this.policy_constrains = this.policy.policy_constrains;
-        this.roles = this.policy.policy_principals;
-        this.resources = this.policy.policy_targets;
-      })
-    //fetch res type and load them in strings 
+    console.log(id)
+    this._http.get(this.fetchresourcebyidurl + id)
+    .subscribe( res => {
+      var obj = res.json();
+      this.fetchedrestypeid = obj.Resource_typeid;
+      this.fetchedresourcename = obj.res_name;
+      this._http.get(this.fetchresourcetypebyidurl + this.fetchedrestypeid) 
+      .subscribe(
+        res => {
+          this.fetchedrestype = res.json();
+          this.restypename = this.fetchedrestype.resourceType_name
+          this.fetchedrestypeactions = this.fetchedrestype.resourceType_actions
+          console.log(this.fetchedrestype);
+          console.log(this.fetchedrestypeactions)
+        }
+      )
+    })
   }
 
   //addpolicytargetactions function 
   addpolicytargetactions(data){
-    let ptaobj ={
-      policy_Id : '',
-      resourceType_Id: '' ,
-      resourceType_name: '',
-      resourceType_actions: '',
-
+    var i;
+    var actions = [];
+    var actionsname = []
+    var actionstate = []
+    for (let a of Object.keys(data))
+    {
+      actionsname.push(a)
     }
+    for (let s of Object.values(data))
+    {
+      actionstate.push(s)
+    }
+    for(i=0;i<actionsname.length;i++)
+    {
+      actions.push({action_name:actionsname[i] , action_state : actionstate[i] })
+    }
+
+    let ptaobj ={
+      policy_Id : this.policy_id,
+      resourceType_Id: this.fetchedrestypeid ,
+      resourceType_name: this.restypename,
+      resourceType_actions: actions
+    }
+    console.log(ptaobj)
     this._http.post(this.addpolicytargetactionsurl,ptaobj,{headers:this.headers})
+    .subscribe( res => this.toastr.success("Target Action Saved !"),
+      err => this.toastr.error("ops! Something Went Wrong !")
+  )
   }
+
+
 
 }
