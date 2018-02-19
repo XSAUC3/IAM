@@ -33,7 +33,15 @@
           <tr *ngFor="let role of role; let i= index">
             <td>{{i+1}}</td>
             <td>{{role.Role_name}}</td>
-            <td>{{role.Application_id}}</td>
+            <td>
+                <ng-container *ngFor="let application of applications">
+                    <ng-container *ngIf="role.Application_id == application._id; then thenBlockApp"></ng-container>
+                    <ng-template #thenBlockApp>
+                     <td>{{application.app_name}}</td>
+                    </ng-template>
+                </ng-container>
+              <!-- {{role.Application_id}} -->
+            </td>
             <td><span (click)="editRole(role._id)" data-toggle="modal" data-target="#updateModal"  ><i  style="color:green" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="deleteRole(role._id)"><i class="fa fa-trash" style="color:red"></i></span></td>
           </tr>
           <!-- [routerLink]="['/viewApplication',app._id]" -->
@@ -110,6 +118,10 @@
                           </div>  
                           <div class="form-group">
                             <label for="Application_id">Application Name</label>
+                            <select type="text" class="form-control" name="uApplication_id" id="uApplication_id" placeholder="Enter Application" [(ngModel)]="uData.Application_id">
+                                <option value="" disabled="true" selected="true">Select Application</option>
+                                <option *ngFor="let application of applications" value={{application._id}}>{{application.app_name}}</option>
+                              </select>
                             <input type="text" class="form-control" name="uApplication_id" id="uApplication_id" placeholder="Enter name" [(ngModel)]="uData.Application_id">
                           </div>                       
                         </div>
