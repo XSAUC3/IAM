@@ -6,7 +6,7 @@
       <small>View Resources</small>
     </h1>
     <ol class="breadcrumb">
-      <li class="active"><b><a href="" style="color:blue" data-toggle="modal" (click)="fetchResourceType();fetchApplications();fetchAttribute();" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
+      <li class="active"><b><a href="" style="color:blue" data-toggle="modal" (click)="FetchClick();" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
       <li class="Reload"><b><a href="" style="color:red" (click)="refresh()"><i class="fa fa-repeat" ></i>&nbsp;&nbsp;Releod</a></b></li>
       <li class="Reload"><b><a href="" style="color:green" [routerLink]="['/dashboard']"><i class="	fa fa-home" ></i>&nbsp;&nbsp;Home</a></b></li>
     </ol>
@@ -39,9 +39,33 @@
             <td>{{i+1}}</td>
             <td>{{res.res_name}}</td>
             <td>{{res.res_displayname}}</td>
-            <td>{{res.Resource_typeid}}</td>
-            <td>{{res.application_id}}</td>
-            <td>{{res.attribute_id}}</td>
+            <td>
+                <ng-container *ngFor="let restype of resourcetype">
+                  <ng-container *ngIf="res.Resource_typeid == restype._id; then thenBlockApp"></ng-container>
+                  <ng-template #thenBlockApp>
+                  {{restype.resourceType_name}}
+                  </ng-template>
+                </ng-container>
+            </td>
+            <!-- <td>{{res.Resource_typeid}}</td> -->
+            <td>
+              <ng-container *ngFor="let application of applications">
+                <ng-container *ngIf="res.application_id == application._id; then thenBlockApp"></ng-container>
+                <ng-template #thenBlockApp>
+                {{application.app_name}}
+                </ng-template>
+              </ng-container>
+          </td>
+            <!-- <td>{{res.application_id}}</td> -->
+            <td>
+                <ng-container *ngFor="let att of attribute">
+                  <ng-container *ngIf="res.attribute_id == att._id; then thenBlockApp"></ng-container>
+                  <ng-template #thenBlockApp>
+                  {{att.Name}}
+                  </ng-template>
+                </ng-container>
+            </td>
+            <!-- <td>{{res.attribute_id}}</td> -->
             <td>{{res.attribute_value}}</td>
             <td>{{res.res_descrpition}}</td>
             <td><span (click)="editRes(res._id);fetchResourceType();fetchApplications();fetchAttribute();" data-toggle="modal" data-target="#updateModal"  ><i  style="color:green" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="deleteRes(res._id)"><i class="fa fa-trash" style="color:red"></i></span></td>

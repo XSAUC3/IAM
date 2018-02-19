@@ -5,6 +5,7 @@ import 'rxjs/add/operator/toPromise';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ToastrService } from 'ngx-toastr';
+import { resource } from 'selenium-webdriver/http';
 
 declare var $;
 
@@ -19,6 +20,9 @@ export class ResourcesComponent implements OnInit {
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) {
     this.fetchData();
+    this.fetchResourceType();
+    this.fetchApplications();
+    this.fetchAttribute();
     $(document).ready(function(){
      
       $('#dt').DataTable();
@@ -42,6 +46,7 @@ export class ResourcesComponent implements OnInit {
       (res: Response) => {
         this.resource = res.json();
         console.log(this.resource);
+        
       }
     )
    }
@@ -75,8 +80,11 @@ fetchApplications=function() {
  fetchAttribute=function() {
   this.http.get("http://localhost:3000/api/attributes/allAttributes").subscribe(
     (res: Response) => {
-      this.attribute = res.json();
-      console.log("s"+res.json());
+      let obj = res.json();
+      let att = obj.Attributes;
+      this.attribute = att;
+      console.log(att);
+      
     }
   )
  }
