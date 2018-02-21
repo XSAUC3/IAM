@@ -6,7 +6,7 @@
       <small>View Resources</small>
     </h1>
     <ol class="breadcrumb">
-      <li class="active"><b><a href="" style="color:blue" data-toggle="modal" (click)="FetchClick();" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
+      <li class="active"><b><a href="" style="color:blue" data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
       <li class="Reload"><b><a href="" style="color:red" (click)="refresh()"><i class="fa fa-repeat" ></i>&nbsp;&nbsp;Releod</a></b></li>
       <li class="Reload"><b><a href="" style="color:green" [routerLink]="['/dashboard']"><i class="	fa fa-home" ></i>&nbsp;&nbsp;Home</a></b></li>
     </ol>
@@ -28,8 +28,8 @@
             <th>Display name</th>
             <th>Resource Type name</th>
             <th>Application name</th>
-            <th>Attribute name</th>
-            <th>Attribute value</th>
+            <th>Attributes</th>
+            <!-- <th>Attribute value</th> -->
             <th >Description</th>
             <th >Actions</th>
           </tr>
@@ -56,17 +56,23 @@
                 </ng-template>
               </ng-container>
           </td>
-            <!-- <td>{{res.application_id}}</td> -->
+            <!-- <td>{{res.application_id}}{{att.attribute_id+" | "}}</td> -->
             <td>
-                <ng-container *ngFor="let att of attribute">
-                  <ng-container *ngIf="res.attribute_id == att._id; then thenBlockApp"></ng-container>
+                <span *ngFor="let att of res.attribute_id"><ng-container *ngFor="let attr of attribute">
+                    <ng-container *ngIf="att.attribute_id == attr._id; then thenBlockApp"></ng-container>
+                    <ng-template #thenBlockApp>
+                    {{attr.Name}} &nbsp; : &nbsp; {{att.attribute_value}} <br>
+                    </ng-template>
+                  </ng-container></span>
+                <!-- <ng-container *ngFor="let attr of attribute">
+                  <ng-container *ngIf="att.attribute_id == attr._id; then thenBlockApp"></ng-container>
                   <ng-template #thenBlockApp>
-                  {{att.Name}}
+                  {{attr.Name}}
                   </ng-template>
-                </ng-container>
+                </ng-container> -->
             </td>
             <!-- <td>{{res.attribute_id}}</td> -->
-            <td>{{res.attribute_value}}</td>
+            <!-- <td>{{res.attribute_value}}</td> -->
             <td>{{res.res_descrpition}}</td>
             <td><span (click)="editRes(res._id);fetchResourceType();fetchApplications();fetchAttribute();" data-toggle="modal" data-target="#updateModal"  ><i  style="color:green" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="deleteRes(res._id)"><i class="fa fa-trash" style="color:red"></i></span></td>
           </tr>
@@ -115,16 +121,49 @@
                         <option *ngFor="let app of applications" value={{app._id}}>{{app.app_name}}</option>
                       </select>
                     </div>
+                    
                     <div class="form-group">
                       <label for="attribute_id">Attribute Name</label>
-                      <select class="form-control" name="attribute_id" id="attribute_id" placeholder="Select Attribute name" ngModel>
-                        <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
-                      </select>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <label for="attribute_value">Attribute Value</label>
+                      <div class="row">
+                          <div class="col-md-5" >
+                            <!-- <input [(ngModel)]="newAction" name="newAction" type="text" placeholder="Add Action" class="form-control"> -->
+                            <select class="form-control" name="attribute_id" id="attribute_id" placeholder="Select Attribute name" [(ngModel)]="attribute_id">
+                                <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
+                              </select>
+                          </div>
+                         <div class="col-md-4">
+                             <input type="text" class="form-control" name="attribute_value" id="attribute_value" placeholder="Enter Attribute value" [(ngModel)]="attribute_value">
+                          </div>
+                         <div class="col-md-1" style="text-align:right">
+                           
+                            <a  (click)="pushAction()" class="btn btn-success"><i class="fa fa-plus"></i>Add</a>
+                          </div>
+                        </div>
+                        <br>
+                        <div>
+                            <ul style=" height:130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                              <li *ngFor="let attr of attributes; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
+                                <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
+                                fa-wrench"></i>&nbsp; &nbsp;
+                                <ng-container *ngFor="let att of attribute">
+                                    <ng-container *ngIf="attr.attribute_id == att._id; then thenBlockApp"></ng-container>
+                                    <ng-template #thenBlockApp>
+                                    {{att.Name}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{attr.attribute_value}}
+                                    </ng-template>
+                                  </ng-container>
+                                 
+                                <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                              </li>
+                            </ul>
+                          </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label for="attribute_value">Attribute Value</label>
                       <input type="text" class="form-control" name="attribute_value" id="attribute_value" placeholder="Enter Attribute value" ngModel>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                       <label for="exampleInputEmail1">Resource Description</label>
                       <textarea class="form-control" name="res_descrpition" id="res_descrpition" placeholder="Enter description" ngModel></textarea>
@@ -153,7 +192,7 @@
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="updateModalLabel">Update Application</h5>
+                      <h5 class="modal-title" id="updateModalLabel">Update Resources</h5>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
@@ -172,7 +211,7 @@
                           <div class="form-group">
                             <label for="Resource_typeid">Resource Type name</label>
                             <select class="form-control" name="uResource_typeid" id="uResource_typeid" placeholder="Select Resource Type name" [(ngModel)]="uData.Resource_typeid">
-                              <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.ResourceType_name}}</option>
+                              <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.resourceType_name}}</option>
                             </select>
                           </div>
                           <div class="form-group">
@@ -181,16 +220,52 @@
                             <option *ngFor="let app of applications" value={{app._id}}>{{app.app_name}}</option>
                             </select>
                             </div>
-                          <div class="form-group">
-                            <label for="attribute_id">Attribute Name</label>
-                            <select class="form-control" name="uattribute_id" id="uattribute_id" placeholder="Select Attribute name" [(ngModel)]="uData.attribute_id">
+                            <div class="form-group">
+                                <label for="attribute_id">Attribute Name</label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label for="attribute_value">Attribute Value</label>
+                                <div class="row">
+                                    <div class="col-md-5" >
+                                      <!-- <input [(ngModel)]="newAction" name="newAction" type="text" placeholder="Add Action" class="form-control"> -->
+                                      <select class="form-control" name="attribute_id" id="attribute_id" placeholder="Select Attribute name" [(ngModel)]="attribute_id">
+                                          <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
+                                        </select>
+                                    </div>
+                                   <div class="col-md-4">
+                                       <input type="text" class="form-control" name="attribute_value" id="attribute_value" placeholder="Enter Attribute value" [(ngModel)]="attribute_value">
+                                    </div>
+                                   <div class="col-md-1" style="text-align:right">
+                                     
+                                      <a  (click)="pushAction()" class="btn btn-success"><i class="fa fa-plus"></i>Add</a>
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <div>
+                                      <ul style=" height:130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                                        <li *ngFor="let attr of attributes; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
+                                          <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
+                                          fa-wrench"></i>&nbsp; &nbsp;
+                                          <ng-container *ngFor="let att of attribute">
+                                              <ng-container *ngIf="attr.attribute_id == att._id; then thenBlockApp"></ng-container>
+                                              <ng-template #thenBlockApp>
+                                              {{att.Name}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{attr.attribute_value}}
+                                              </ng-template>
+                                            </ng-container>
+                                           
+                                          <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                                        </li>
+                                      </ul>
+                                    </div>
+                            <!-- <select class="form-control" name="uattribute_id" id="uattribute_id" placeholder="Select Attribute name" [(ngModel)]="uData.attribute_id">
                             <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
-                          </select>
+                          </select> -->
                           </div>
-                          <div class="form-group">
+                          <!-- <div class="form-group">
                             <label for="attribute_value">Attribtue value</label>
                             <input type="text" class="form-control" name="uattribute_value" id="uattribute_value" placeholder="Enter Attribute value" [(ngModel)]="uData.attribute_value">
-                          </div>
+                          </div> -->
                           <div class="form-group">
                             <label for="exampleInputEmail1">Resource Description</label>
                             <textarea class="form-control" name="ures_descrpition" id="ures_descrpition" placeholder="Enter description" [(ngModel)]="uData.res_descrpition"></textarea>

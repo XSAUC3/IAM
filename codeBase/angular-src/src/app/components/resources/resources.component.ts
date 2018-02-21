@@ -40,6 +40,25 @@ export class ResourcesComponent implements OnInit {
   applications = [];
   resourcetype = [];
   attribute = [];
+  attributes = [];
+  attribute_id = "";
+  attribute_value = "";
+  pushAction = function() {
+    if(this.attribute_id != "") {
+      var object = {
+        attribute_id : this.attribute_id,
+        attribute_value:this.attribute_value
+      };
+      this.attributes.push(object);
+      this.attribute_id = "";
+      this.attribute_value = "";
+    }
+    console.log(this.attributes);
+  }
+
+  removeAction = function(index) {
+    this.attributes.splice(index,1);
+  }
 
   fetchData=function() {
     this.http.get("http://localhost:3000/api/Fetch/Resource").subscribe(
@@ -56,6 +75,7 @@ FetchClick=function(){
   this.fetchResourceType();
   this.fetchApplications();
   this.fetchAttribute();
+  //this.addNewRes();
 }
 
 //Fetch Applications
@@ -80,11 +100,17 @@ fetchApplications=function() {
  fetchAttribute=function() {
   this.http.get("http://localhost:3000/api/attributes/allAttributes").subscribe(
     (res: Response) => {
+      let a = [];
       let obj = res.json();
       let att = obj.Attributes;
-      this.attribute = att;
-      console.log(att);
-      
+      for(let i = 0 ; i < att.length ; i++){
+        //console.log(i);
+        if(att[i].Type == "Fixed"){
+          a.push(att[i]);
+        }
+      }
+      console.log(a);
+      this.attribute = a;
     }
   )
  }
@@ -102,7 +128,7 @@ deleteRes = function(id) {
    .then(() => {
    this.fetchData();
    this.toastr.error('Resource Deleted.');
-  this._router.navigate(['/resource']);
+  this._router.navigate(['/resources']);
  
    })
 
@@ -116,8 +142,7 @@ addNewRes = function(a) {
    "res_displayname":a.res_displayname,
    "Resource_typeid":a.Resource_typeid,
    "application_id":a.application_id,
-   "attribute_id":a.attribute_id,
-   "attribute_value":a.attribute_value,
+   "attribute_id":this.attributes,
    "res_descrpition":a.res_descrpition
  }
  console.log(this.aObj);
@@ -143,6 +168,7 @@ this.http.get("http://localhost:3000/api/Resource/"+id).subscribe(
    this.uresource = res.json();
    console.log(res.json());
    this.uData = this.uresource;
+   this.attributes = this.uData.attribute_id;
    console.log(this.uData);
 
 
@@ -164,7 +190,7 @@ updateRes = function(updateData,id)
       "res_displayname":updateData.ures_displayname,
       "Resource_typeid":updateData.uResource_typeid,
       "application_id":updateData.uapplication_id,
-      "attribute_id":updateData.uattribute_id,
+      "attribute_id":this.attributes,
       "attribute_value":updateData.uattribute_value,
       "res_description":updateData.ures_descrpition
     }
@@ -173,7 +199,7 @@ updateRes = function(updateData,id)
     this.http.put("http://localhost:3000/api/UpdateResource/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
       console.log(res);
       $('#updateModal').modal('toggle');
-      this._router.navigate(['/resource']);
+      this._router.navigate(['/resources']);
     this.fetchData();
     this.toastr.info('Resource Updated.');
 
