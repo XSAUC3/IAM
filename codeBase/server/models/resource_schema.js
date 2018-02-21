@@ -22,13 +22,9 @@ const ResourceSchema = mongoose.Schema({
         required:true
      },
      attribute_id:{
-        type:String,
-       // required:true
-     },
-     attribute_value:{
-        type:String,
-        required:true
-     },
+        type:Array,
+       required:true
+    },
     application_id:{
        type:String,
        required:true
