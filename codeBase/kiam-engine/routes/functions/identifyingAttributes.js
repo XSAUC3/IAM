@@ -10,8 +10,49 @@ module.exports.getPolicyConstraintAttributes = (policy) => {
     };
     
 module.exports.retrieveAttributesFromPIP = (pipAttributesToBeFetched) => {
-// CHANDRASHEKAR
+// RONAK
 // Webservice To Be Created And Call to it
+/*
+
+{
+"name": "getusersecuritycontextfull",
+"elements": [
+  {
+"adusername": “AMUNSHI”,
+"teammateId": "009272",
+"firstName": “Amish“,
+"lastName": “Munshi”,
+"businessEntity": “Health Care",
+"titleEntitlementProfileName": null,
+"titleAbbreviation": null,
+"jobCode": null,
+"jobTitle": null,
+"jobDescription": null,
+"jobCodeWorkdayGroup": null,
+"titleLocations": null,
+"licenseLocations": null,
+"championLocations": null,
+"patientLocations": null,
+"supervisorTeammateId": “09876”,
+"supervisorFirstName": “Ralph”,
+"supervisorLastName": “Mitchell”,
+"isClinical": false,
+"zeroAccessIndicator": 1
+}
+
+],
+
+"links": [
+  {
+"rel": "self",
+"href": "http://servername/server/ent_davita/getusersecuritycontextfull/views/getusersecuritycontextfull?application_info=CWOW&facilityid=12345&adusername=AMUNSHI&access_token=TestHToken1"
+}
+
+],
+
+}
+
+*/
     };
     
 //#endregion
