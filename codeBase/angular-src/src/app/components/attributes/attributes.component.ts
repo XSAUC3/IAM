@@ -34,8 +34,6 @@ export class AttributesComponent implements OnInit {
 
   ngOnInit() {
 
-  //  this.fetchData();
-
     $(document).ready(() => {
        $('#dt').DataTable();
   });
@@ -49,8 +47,6 @@ export class AttributesComponent implements OnInit {
     this.attributeDataService.getAllAttributes().subscribe(
       data => {
         this.attributes = data.Attributes;
-        console.log(this.attributes);
-        this.toastr.success('Attributes Fetched Successfully.');
       },
       err => {
         this.toastr.error('Something Went Wrong While Fetching Attributes.');
@@ -98,15 +94,15 @@ export class AttributesComponent implements OnInit {
   // Get All Applications
 
   getApplications = () => {
+    this.applications = [];
     this.attributeDataService.getAllApplications().subscribe(
       data => {
         console.log(data);
         this.applications = data;
-        this.toastr.info('Fetched Apllication List Successfully.');
       },
       err => {
         console.log(err);
-        this.toastr.error('Something Went Wrong.');
+        this.toastr.error('Something Went Wrong While Fetching Applications.');
       }
     );
   }
@@ -117,7 +113,6 @@ export class AttributesComponent implements OnInit {
     if (attribute.Name === (undefined || null) ||
         attribute.Type === (undefined || null) ||
         attribute.DataType === (undefined || null) ||
-        attribute.Description === (undefined || null) ||
         attribute.Application_Id === (undefined || null) ||
         attribute.Single_Multiple === (undefined || null)) {
           this.toastr.error('Please Provide All The Necessary Fields.');
@@ -148,7 +143,7 @@ export class AttributesComponent implements OnInit {
         err => {
             this.fetchData();
             $('#addModal').modal('toggle');
-            this.toastr.error('Something Went Wrong.');
+            this.toastr.error('Something Went Wrong. Please Check For Duplicate Attribute Name');
             console.log(err);
         }
       );
@@ -187,7 +182,6 @@ export class AttributesComponent implements OnInit {
         updateData.Name === (undefined || null) ||
         updateData.Type === (undefined || null) ||
         updateData.DataType === (undefined || null) ||
-        updateData.Description === (undefined || null) ||
         updateData.Application_Id === (undefined || null) ||
         updateData.Single_Multiple === (undefined || null)) {
       this.toastr.error('Please Provide All The Necessary Fields.');
@@ -222,7 +216,7 @@ export class AttributesComponent implements OnInit {
           $('#updateModal').modal('toggle');
           this._router.navigate(['/attributes']);
           this.fetchData();
-          this.toastr.error('Something Went Wrong.');
+          this.toastr.error('Something Went Wrong.  Please Check For Duplicate Attribute Name');
         }
       );
     }
