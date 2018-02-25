@@ -2,301 +2,273 @@ const express = require('express');
 
 const router = express.Router();
 
-//#region Models and Functions
-
-const App = require('../../server/models/App');
-const ResourceType = require('../../server/models/resourceType_schema');
-const Attribute = require('../../server/models/attribute_schema');
-const Role = require('../../server/models/role_schema');
-const Resource = require('../../server/models/resource_schema');
-const Policy = require('../../server/models/policy_schema');
-const PolicyTargetAction = require('../../server/models/PolicyTargetActions_schema');
-const User = require('../../server/models/user_schema');
+const App = require('../models/app_schema');
+const ResourceType = require('../models/resourceType_schema');
+const Attribute = require('../models/attribute_schema');
+const Role = require('../models/role_schema');
+const Resource = require('../models/resource_schema');
+const Policy = require('../models/policy_schema');
+const PolicyTargetAction = require('../models/PolicyTargetActions_schema');
+const User = require('../models/user_schema');
 
 const AuthenticateUser = require('./functions/authenticateUser');
 const PrincipalObjectCreation = require('./functions/principalObjectCreation');
-const IdentifyingApplicablePolicies = require('./functions/identifyingApplicablePolicies');
 const IdentifyingAttributes = require('./functions/identifyingAttributes');
 const EvaluateUserAccess = require('./functions/evaluateUserAccess');
+const GetFinalPolicy = require('./functions/getFinalPolicy');
 
-//#endregion
-/*
-let requestObject = {
-    "username": req.body.username,
-    "password": req.body.password,
-    "resource": req.body.resource,
-    "adusername": req.body.adusername,
-    "teammateId": req.body.teammateId,
-    "firstName": req.body.firstName,
-    "lastName": req.body.lastName,
-    "businessEntity": req.body.businessEntity,
-    "titleEntitlementProfileName": req.body.titleEntitlementProfileName,
-    "titleAbbreviation": req.body.titleAbbreviation,
-    "jobCode": req.body.jobCode,
-    "jobTitle": req.body.jobTitle,
-    "jobDescription": req.body.jobDescription
-}*/
+router.post('/', (req, res) => {
+    let requestObject = req.body;
+    let userAuthenticated = false;
+    let userExistsInLDAP = false;
+    
+    let environmentAttributes = [];
+    let principalUser = requestObject.username;
+    let principalRoles = [];
+    let principalObject = {};
+    
+    let finalPolicies = [];
 
-let requestObject = req.body;
+    let policyAttributes = [];
+    let fixedPolicyAttributes = [];
+    let dynamicPolicyAttributes = [];
 
+    let pipAttributesToBeFetched = [];
+    let pipAttributes = [];
 
-router.get('/', (req, res) => {
+    let filteredApplicablePolicies = [];
 
-//#region CHECKING USER AUTHENTICATION IN KIAM & LDAP + FETCHING USER PROFILE ATTRIBUTES
+    let privilege = false;
+    let finalPrivilege = false;
 
-let userAuthenticated = false;
-let environmentAttributes = [];
-let principalUser = requestObject.username;
-let principalRoles = [];
-let principalObject = {};
+    let responseObject = requestObject;
+    delete responseObject.password;
 
-if(!AuthenticateUser.userExistsInKIAM(requestObject.username)) {
+    let returnVariable = false;
 
-    try{
-        AuthenticateUser.fetchUserDetailsFromUserStore(requestObject.username, requestObject.password);
-        // ALSO SAVE THIS INFO IN MONGO DB
-    }catch(error){
-        // RETUREN USER DOESN'T EXIST
-    }
+//console.log(requestObject);
+    AuthenticateUser.userExistsInKIAM(requestObject['username']).then((resp) => {
+        returnVariable = resp;
+        console.log("RESULT: " + returnVariable);
+    
+    }).then(() => {
+        if(returnVariable == false) {
+            
+            console.log('User Does not Exists');
+            
+            AuthenticateUser.fetchUserDetailsFromUserStore(requestObject.username, requestObject.password).then((resp2) => {
+                
+                console.log("LDAP: " + resp2);
 
-}else {
-    userAuthenticated = AuthenticateUser.AuthenticateUser(requestObject.username, requestObject.password);
+                if(resp2.exists == false){
+                    
+                    console.log('USER DOES NOT EXIST ANYWHERE');
+                    res.send('USER DOES NOT EXIST ANYWHERE');
+                
+                }else if(resp2.exists == true){
+                    
+                    console.log('USER EXISTS IN LDAP');
+                    let userProfileAttributes = [];
+                    userExistsInLDAP = true;
+                    userProfileAttributes = resp2.Attributes;
 
-    if(userAuthenticated == false){
-        // RETUREN User is not Authenticated
-    }else{
-        // RETUREN User is Authenticated
-        
-        let userProfileAttributes = [];
-
-        userProfileAttributes = AuthenticateUser.fetchUserDetailsFromKIAM(requestObject.username);
-
-        for(let i=0; i<userProfileAttributes.length; i++) {
-            let profileAttribute = Object.keys(userProfileAttributes[i]);
-            let key = profileAttribute[0];
-            let value = userProfileAttributes[i][key];
-
-            environmentAttributes.push(
-                {
-                    [key]: value
+                    for(let i=0; i<userProfileAttributes.length; i++) {
+                        let profileAttribute = Object.keys(userProfileAttributes[i]);
+                        let key = profileAttribute[0];
+                        let value = userProfileAttributes[i][key];
+            
+                        environmentAttributes.push(
+                            {
+                                [key]: value
+                            }
+                        );
+                    }
+                        principalRoles = userProfileAttributes.Roles
+                        principalObject['principalUser'] = principalUser;
+                        principalObject['Roles'] = principalRoles;
+                    //res.send('USER EXISTS IN LDAP');
                 }
-            );
+
+            });
+          //  res.json({msg: "User Does Not Exist"});
         }
+        if(returnVariable == true){
+            console.log('User Does Exists');
+            AuthenticateUser.Authenticate(requestObject.username, requestObject.password).then((resp) => {
+                console.log("AUTHENTICATE KIAM: " + resp);
+                
+                if(resp == false){
+                
+                    console.log('USERNAME OR PASSWORD IS WRONG');
+                    res.send('USERNAME OR PASSWORD IS WRONG');
+                
+                }else if(resp == true) {
+                
+                    console.log('USER AUTHENTICATED SUCCESSFULLY IN KIAM');
+                   // res.send('USER AUTHENTICATED SUCCESSFULLY IN KIAM');
+                    userAuthenticated = true;
+                
+                    AuthenticateUser.fetchUserDetailsFromKIAM(requestObject.username).then((resp) => {
+                        console.log("USER DETAILS: " + JSON.stringify(resp));
+                       // res.json({"USER AUTHENTICATED AND USER DETAILS ARE": resp});
 
-        principalRoles = PrincipalObjectCreation.fetchRolesForUser(principalUser);
-        principalObject['principalUser'] = principalUser;
-        principalObject['Roles'] = principalRoles;
-
-    }
-}
-
-//#endregion
-
-//#region CREATING PRINCIPAL OBJECT
-/*
-let principalUser = requestObject.username;
-let principalRoles = [];
-let principalObject = {};
-
-//principalRoles = fetchRolesForUser(principalUser);
-principalRoles = PrincipalObjectCreation.fetchRolesForUser(principalUser);
-
-principalObject['principalUser'] = principalUser;
-
-principalObject['Roles'] = principalRoles;
-*/
-/*
-for(let i=0; i<principalRoles.length; i++){
-    principalObject['Role_'+ i] = principalRoles[i];
-}*/
-/*
-let userProfileAttributes = [];
-let environmentAttributes = [];
-
-userProfileAttributes = PrincipalObjectCreation.fetchUserDetailsFromKIAM(principalUser);
-
-for(let i=0; i<userProfileAttributes.length; i++) {
-    let profileAttribute = userProfileAttributes[i];
-    let value = userProfileAttributes[profileAttribute];
-
-    environmentAttributes.push(
-        {
-            [profileAttribute]: value
-        }
-    );
-}*/
-
-//#endregion
-
-//#region IDENTIFYING APPLICABLE POLICIES FOR ROLES
-
-//let applicablePolicies = [];
-let finalPolicies = [];
-/*
-for(let i=0; i< principalRoles.length; i++){
-    applicablePolicies.push(IdentifyingApplicablePolicies.identifyPoliciesForPrincipalRoles(principalRoles[i]));
-}
-
-for(let i=0; i< requestObject.resource.length; i++){
-    for(let j=0; j< applicablePolicies.length; j++){
-
-        if(applicablePolicies[requestObject.resource[i]]){
-            finalPolicies.push(applicablePolicies[j]);
-        }
-    }
-}
-*/
-requestObject.resource.forEach(resource => {
-    principalRoles.forEach(role => {
-        Policy.find({role_name: role.role_name, resource_name: resource.resource_name}, (error, policy) => {
-            err =>{},
-            policy => {
-                let alreadyExists = false;
-                    for(let i=0; i< finalPolicies.length; i++){
-                        if(finalPolicies[i].policy_name == policy.policy_name){
-                            alreadyExists = true;
-                            break;
-                        }
+                       let userProfileAttributes = [];
+                       userProfileAttributes = resp;
+                       
+                       for(let i=0; i<userProfileAttributes.length; i++) {
+                        let profileAttribute = Object.keys(userProfileAttributes[i]);
+                        let key = profileAttribute[0];
+                        let value = userProfileAttributes[i][key];
+            
+                        environmentAttributes.push(
+                            {
+                                [key]: value
+                            }
+                        );
                     }
-                    if(alreadyExists == false){
-                      finalPolicies.push(policy);
-                    }
+                }).then(() => {
+                    PrincipalObjectCreation.fetchRolesForUser(principalUser).then((resp) => {
+                        principalRoles = resp;
+                        principalObject['principalUser'] = principalUser;
+                        principalObject['Roles'] = principalRoles;
+                    
+                    });
+                })
+                    
+                    
                 }
             });
-        })
-    });
+          //  res.json({msg: "User Does Exist"});
+        }
+    })
+        function f(){
 
+            console.log("THEN NEXT");
+            console.log(userAuthenticated);
+            console.log(userExistsInLDAP);
 
-//#endregion
+            if(userAuthenticated == true || userExistsInLDAP == true){
+                
+                GetFinalPolicy.getFinalPolicies(finalPolicies, principalRoles, requestObject.resource).then((resp) => {
+                    finalPolicies = resp;
+                    console.log('FINAL: ' + resp);
+                }).then(() => {
+                    console.log("GET POLICY CONSTRAINT ATTRIBUTE")
+                    for(let i=0; i< finalPolicies.length; i++){
+                        IdentifyingAttributes.getPolicyConstraintAttributes(finalPolicies[i]).then((resp) => {
+                            
+                            policyAttributes = resp;
+                            console.log('POLICY ATTRIBUTE: ' + JSON.stringify(policyAttributes));
+                            /*let policyConstraintAttributes = resp;
+        
+                            for(let j=0; j< policyConstraintAttributes.length; j++){
+                                policyAttributes.push(policyConstraintAttributes[j]);
+                            }*/
+                            for(i=0; i<policyAttributes.length; i++){
+                                if(policyAttributes[i].Type == 'Dynamic'){
+                                 dynamicPolicyAttributes.push(policyAttributes[i]);
+                                }else if(policyAttributes[i].Type == 'Fixed'){
+                                 fixedPolicyAttributes.push(policyAttributes[i]);
+                                }
+                             }
+                             console.log('DYNAMIC POLICY ATTRIBUTE: ' + JSON.stringify(dynamicPolicyAttributes));
+                             console.log('FIXED POLICY ATTRIBUTE: ' + JSON.stringify(fixedPolicyAttributes));
+                             
+                             for(i=0; i < dynamicPolicyAttributes.length; i++){
+                                 for(j=0; j < environmentAttributes.length; j++){
+                                    let keyToBeChecked = Object.keys(environmentAttributes[j]);
+                                    console.log(keyToBeChecked);
+                                    for(k=0; k<keyToBeChecked.length; k++){
+                                        if(dynamicPolicyAttributes[i].Name = key){
+                                            dynamicPolicyAttributes.pop(dynamicPolicyAttributes[i]);
+                                            break;
+                                        }
+                                    }
+                                 }
+                             }
+                            pipAttributesToBeFetched = dynamicPolicyAttributes;
+                            console.log("PIP ATTRIBUTES TO BE FETCHED: " + JSON.stringify(pipAttributesToBeFetched));
+                            }).then(() => {
+                                IdentifyingAttributes.retrieveAttributesFromPIP(pipAttributesToBeFetched).then((resp) => {
+                                    pipAttributes = resp["elements"];
+                                    console.log("FETCHED PIP ATTRIBUTES: " + JSON.stringify(pipAttributes));
+                                    let keysToBeAdded = Object.keys(pipAttributes[0]);
+            
+                                    for(i=0; i<keysToBeAdded.length; i++){
+                                       let key = keysToBeAdded[i];
+                                       environmentAttributes[key] = pipAttributes[key];
+                                    }
+                                    
+            
+                                }).then(() => {
 
-//#region IDENTIFY ATTRIBUTES REQUIRED FOR FINAL POLICIES
+                                    
+                                    console.log("Final Policies: " + finalPolicies.length);
+                                    filteredApplicablePolicies = [];
+                                    console.log("BEFORE filtered Applicable Policies: " + filteredApplicablePolicies);
 
-let policyAttributes = [];
-let fixedPolicyAttributes = [];
-let dynamicPolicyAttributes = [];
+                                    for(let i=0; i<finalPolicies.length; i++){  
+                                        EvaluateUserAccess.evaluateConstraintForPolicy(finalPolicies[i], fixedPolicyAttributes, environmentAttributes).then((resp) => {
+                                            console.log(resp);
+                                            if(resp){
+                                                console.log("Adding into Final Policies: " + i);
+                                                filteredApplicablePolicies.push(finalPolicies[i]);
+                                            }
+                                        });
+                                        
+                                    }
+                                    console.log("AFTER filtered Applicable Policies: " + filteredApplicablePolicies);
 
-for(let i=0; i< finalPolicies.length; i++){
-    let policyConstraintAttributes = IdentifyingAttributes.getPolicyConstraintAttributes(finalPolicies[i]);
+                                    console.log("FINAL POLICY AT I: " + finalPolicies);
+                    
+                                }).then(() => {
+                                    
+                                
+                                        console.log("filtered Applicable Policies: " + JSON.stringify(filteredApplicablePolicies));
+                                    for(i=0; i<requestObject.resource.length; i++){
+                                        for(j=0; j<filteredApplicablePolicies.length; j++){
+                                            let policyType = filteredApplicablePolicies[j].policy_type;
+                    
+                                            if(policyType == 'Deny'){
+                                                privilege = false;
+                                            }else {
+                                                privilege = true;
+                                            }
+                                            let resource = requestObject.resource[i];
+                                            let policy_id = filteredApplicablePolicies[j]['_id'];
+                                            let evaluatePolicy = false;
+                                            EvaluateUserAccess.evaluatePolicy(resource, policy_id).then((resp) => {
+                                                evaluatePolicy = resp;
     
-    for(let j=0; j< policyConstraintAttributes.length; j++){
-        policyAttributes.push(policyConstraintAttributes[j]);
-    }
-}
+                                                if(evaluatePolicy == true && privilege == true){
+                                                    finalPrivilege == true;
+                                                }
+                                                console.log("Policy Evaluation: " + evaluatePolicy);
+                                                
+                                            
+                                            })
+                                            
+                                        }
+                                        
+                                        responseObject.resource[i]['privilege'] = finalPrivilege;
+                                        console.log("RESPONSE OBJECT: " + JSON.stringify(responseObject.resource[i]));
+                                    }
+                    
+                                })
+                            })
+                    }
 
-//Some array operations. A Function Needs To Be Created!
-//dynamicPolicyAttributes = policyAttributes - fixedPolicyAttributes;
+                }).then(() => {
+                    res.status(200).json(responseObject);
+                })
+    
+            }
 
-policyAttributes.forEach(attribute => {
-   if(attribute.Type == 'Dynamic'){
-    dynamicPolicyAttribute.push(attribute);
-   }
+        };
+        setTimeout(f,2500);
+        
+
+
 });
 
-
-//Identify attributes to be fetched from PIP for the user
-let pipAttributesToBeFetched = [];
-let pipAttributes = [];
-
-// environmentAttributes HAS ALREADY BEEN DEFINED ABOVE BUT THE RESON FOR DOING THE STEP BELOW
-// IS SO THAT THE ATTRIBUTES THAT HAS NOT BEEN SENT ALONG WITH THE REQUEST ARE ADDED TO THE
-// environmentAttributes List.
-
-/*
-pipAttributesToBeFetched = dynamicPolicyAttributes;
-environmentAttributes.forEach(envAttribute => {
-    dynamicPolicyAttributes.forEach(dynamicAttribute => {
-        let keyToBeChecked = Object.keys(envAttribute);
-        if(keyToBeChecked == dynamicAttribute.name){
-            pipAttributesToBeFetched.pop(dynamicAttribute.name);
-        }
-    });
-});*/
-
-// A Function Needs To Be Created! Whatever Values still null needs to be fetched from the PIP Database
-pipAttributesToBeFetched = dynamicPolicyAttributes - environmentAttributes;
-
-pipAttributes = IdentifyingAttributes.retrieveAttributesFromPIP(pipAttributesToBeFetched);
-
-for(let i=0; i< pipAttributes.length; i++){
-    let attributeToBeAdded = Object.keys(pipAttributes[i]);
-    let key = attributeToBeAdded[0];
-    let value = pipAttributes[i][key];
-    /*environmentAttributes.push(
-        {
-            [key]: value 
-        }
-    )*/
-    environmentAttributes[key] = value;
-}
-
-//#endregion
-
-//#region CREATING RESPONSE OBJECT AND EVALUATING USER ACCESS
-/*
-let responseObject = {
-    resources: []
-}
-*/
-let responseObject = requestObject;
-
-delete responseObject.username;
-
-// BELOW GIVEN IS JUST AN SYNTACTICAL EXAMPLE TO HELP THE DEVELOPER WHEN HE/SHE IS IMPLEMENTING THE LOGIC
-// FOR ADDING Resource Return Attributes
-// responseObject.resource['resource_retuen_attributes'] = resource_returned_attribute;
-
-// Filter applicable Policies based on conditions
-//i.e further flter policy based on evaluation of text constraint as true or false
-
-let filteredApplicablePolicies = [];
-
-for(let i=0; i<finalPolicies.length; i++){
-    if(EvaluateUserAccess.evaluateConstraintForPolicy(finalPolicies[i],environmentAttributes)){
-        filteredApplicablePolicies.push(finalPolicies[i]);
-    }
-}
-
-//Evaluate whether user should have
-let privilege = false;
-let finalPrivilege = false;
-
-for(i=0; i<requestObject.resource.length; i++){
-
-    for(j=0; j<filteredApplicablePolicies.length; j++){
-       // let policyType = EvaluateUserAccess.getPolicyType(filteredApplicablePolicies[j]);
-
-        let policyType = filteredApplicablePolicies[j].policy_type;
-
-        if(policyType == 'Deny'){
-            privilege = false;
-        }else {
-            privilege = true;
-        }
-
-        let resourceAction = requestObject.resource.action;
-        let evaluatePolicy = EvaluateUserAccess.evaluatePolicy(requestObject.resource, resourceAction, filteredApplicablePolicies[j]);
-
-        if(evaluatePolicy == true && privilege == true){
-            finalPrivilege == true;
-        }
-        
-      //  let resourceToBeAdded = requestObject.resource[i];
-      //  responseObject['resource'] = requestObject.resource[i];
-      //  responseObject['finalPreviledge'] = finalPrivilege;
-
-        //EvaluateUserAccess.addToResponseObject(requestObject.resource[i], finalPrivilege);
-       /* responseObject.resource.push({
-            resource: requestObject.resource[i],
-            finalPrivilege: finalPrivilege
-        })*/
-        //NOW SEND THE RESPONSE
-        
-        responseObject.resource[i]['priviledge'] = finalPrivilege;
-
-    }
-}
-
-//res.status(200).json(responseObject);
-//#endregion
-
-});
+module.exports = router;

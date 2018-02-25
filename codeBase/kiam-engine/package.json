@@ -7,10 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "body-parser": "*",
+    "cors": "*",
     "express": "*",
     "mongoose": "*",
-    "cors": "*",
-    "body-parser": "*"
+    "ldapjs": "*",
+    "assert": "*"
   },
   "author": "Vrushank",
   "license": "ISC"
