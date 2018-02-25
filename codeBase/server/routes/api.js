@@ -1,7 +1,8 @@
 const express = require('express');
 var validator = require('validator');
-
+var bcrypt = require('bcrypt-nodejs');
 const router = express.Router();
+var store_password;
 
 //blacklisted characters [RegularExpression] that cannot go in the database
 const blacklistedExp = '^[^<>{}\"/|;:.,~!?@#$%^=&*\\]\\\\()\\[¿§«»ω⊙¤°℃℉€¥£¢¡®©0-9_+]*$';
@@ -521,21 +522,29 @@ router.put('/updatePolicyTargetActions' , (req,res,next) => {
 
 //Add user
 router.post('/user/Add', (req, res, next) => {
-  let NewUser = new User({
-  name : req.body.username,
-      username : req.body.username, 
-      password : req.body.password,
-  email : req.body.email,
-  role : req.body.role,
-  });
-  NewUser.save( (err,createdObj ) => {
-    if(err)  res.status(500);  
-    else     res.status(200).send(createdObj); 
-  })
+  
+	bcrypt.hash(req.body.password, null, null,function(err, hash) {
+    if (err) return next(err); 
+    store_password = hash; 
+   
+});
+ 
+console.log(store_password);
+let NewUser = new User({
+name : req.body.username,
+    username : req.body.username, 
+    password : store_password,
+email : req.body.email,
+role : req.body.role,
+});
+NewUser.save( (err,createdObj ) => {
+  if(err)  res.status(500);  
+  else     res.status(200).send(createdObj); 
+})
 });
 
 //fetch All users
-router.get('/users', (req, res, next) => {
+router.get('/users/all', (req, res, next) => {
   User.find({}, function(err, users) {
     if (err) res.json(err) ;
     res.json(users);  
@@ -543,12 +552,22 @@ router.get('/users', (req, res, next) => {
 });
 
 //fetch single user by id:
-router.get('user/:id', (req,res,next) =>{
+router.get('/user/:id', (req,res,next) =>{
   User.findById( {_id:req.params.id}, (err, user) => {  
     if (err) {res.json(err);} 
     res.json(user);
   });
 });
+
+
+// router.get('/application/:id', (req,res,next) =>{
+//   App.findById( {_id:req.params.id}, (err, app) => {  
+//     if (err) {res.json(err);} 
+//     res.json(app);
+//   });
+// });
+
+
 
 //edit user
 router.put('/UpdateUser/:id' , (req,res,next) => {
@@ -569,4 +588,8 @@ router.delete('/DelUser/:id' , (req,res,next) => {
  });
 });
 
+
 module.exports = router;
+
+
+

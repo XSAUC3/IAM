@@ -20,9 +20,12 @@ import { RolesComponent } from './components/roles/roles.component';
 import { ResourceTypesComponent } from './components/resource-types/resource-types.component';
 import { ResourcesComponent } from './components/resources/resources.component';
 import { PoliciesComponent } from './components/policies/policies.component';
-
+import { LoginComponent } from './components/login/login.component';
 
 import { AttributeDataService } from './components/attributes/services/attribute-data.service';
+//login
+import { AuthService } from './components/login/services/auth.service';
+import { AuthGuard } from './components/login/guards/auth.guard';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,8 @@ import { AttributeDataService } from './components/attributes/services/attribute
     RolesComponent,
     ResourceTypesComponent,
     ResourcesComponent,
-    PoliciesComponent
+    PoliciesComponent,
+    LoginComponent
    
   ],
   imports: [
@@ -48,7 +52,8 @@ import { AttributeDataService } from './components/attributes/services/attribute
       closeButton:true,
     }), // ToastrModule added
     RouterModule.forRoot([
-      { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+      { path: '', component:DashboardComponent},
+      //{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
        {path: "application",component:ApplicationComponent},
        {path: "dashboard",component:DashboardComponent},
        {path: "resourceTypes",component:ResourceTypesComponent},
@@ -62,7 +67,7 @@ import { AttributeDataService } from './components/attributes/services/attribute
       
     ])
   ],
-  providers: [AttributeDataService],
+  providers: [AttributeDataService,AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

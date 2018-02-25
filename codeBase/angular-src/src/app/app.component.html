@@ -1,5 +1,7 @@
 <html>
 <body class="hold-transition skin-yellow sidebar-mini" >
+    <ng-container *ngIf="authService.loggedIn(); then block; else elsblock"></ng-container>
+    <ng-template #block>
 <div class="wrapper">
 
   <!-- header -->
@@ -27,6 +29,10 @@
     </footer>
 </div>
 <!-- ./wrapper -->
-
+</ng-template>
+<ng-template #elsblock>
+    <app-login></app-login>
+</ng-template>
 </body>
 </html>
+

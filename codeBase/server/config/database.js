@@ -1,3 +1,4 @@
 module.exports = {
-  database: 'mongodb://localhost:27017/kaim'
+  database: 'mongodb://localhost:27017/App',
+  secret: 'yoursecret'
 }

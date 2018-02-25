@@ -4,7 +4,7 @@
     Policies
     <small>Select Policy From The Table To Load</small>
   </h1>
-  <ol class="breadcrumb">
+  <ol class="breadcrumb"  style="background-color:#E8E8E8">
     <li class="active">
       <b>
         <a href="" style="color:blue" (click)="emptyarr()" data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;
@@ -13,7 +13,7 @@
     </li>
     <li class="Reload">
       <b>
-        <a href="" style="color:red" (click)="refresh()">
+        <a  style="color:red;cursor:pointer" (click)="refresh()">
           <i class="fa fa-repeat"></i>&nbsp;&nbsp;Releod</a>
       </b>
     </li>
@@ -45,8 +45,8 @@
               <th>Roles</th>
               <th>Resources</th>
               <th>info</th>
-              <th>Edit</th>
-              <th>Delete</th>
+              <th>Action</th>
+             
             </tr>
           </thead>
           <tbody>
@@ -69,14 +69,13 @@
                   </button>
               </td>
               <td>
-                  <button class="btn btn-warning" (click)="editPolicy(p._id)" data-toggle="modal" data-target="#editModal">
+                  <span  (click)="editPolicy(p._id)" data-toggle="modal" data-target="#editModal"  style="cursor: pointer; color:green;">
                     <i class="fa fa-edit"></i>
-                  </button>
-              </td>
-              <td>
-                  <button class="btn btn-danger" (click)="deletePolicy(p._id)">
+                  </span>
+             &nbsp;&nbsp;&nbsp;
+                  <span  (click)="deletePolicy(p._id)" style="cursor: pointer; color:red;">
                     <i class="fa fa-trash"></i>
-                  </button>
+                  </span>
               </td>
             </tr>
           </tbody>

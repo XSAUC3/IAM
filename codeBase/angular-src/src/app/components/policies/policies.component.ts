@@ -254,6 +254,11 @@ fetchResources=function() {
     this.residarr.splice(index,1)
   }
 
+  //Refresh Page
+  refresh = function() {
+    window.location.reload();
+   }
+   
   emptyarr()
   {
     this.roleidarr = [];

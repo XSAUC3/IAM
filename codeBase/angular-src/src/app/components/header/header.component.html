@@ -19,54 +19,12 @@
 
     <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
-        <!-- Messages: style can be found in dropdown.less-->
-        <li class="dropdown messages-menu">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-envelope-o"></i>
-            <span class="label label-success">4</span>
-          </a>
-          <ul class="dropdown-menu">
-            <li class="header">You have 4 messages</li>
-            <li>
-              <!-- inner menu: contains the actual data -->
-              <ul class="menu">
-                <li><!-- start message -->
-                  <a href="#">
-                   
-                    <h4>
-                      Support Team
-                      <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                    </h4>
-                    <p>Why not buy a new awesome theme?</p>
-                  </a>
-                </li>
-                <!-- end message -->
-              </ul>
-            </li>
-            <li class="footer"><a href="#">See All Messages</a></li>
-          </ul>
-        </li>
         <li class="dropdown user user-menu">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-user"></i>
-            <span class="hidden-xs">Admin</span>
+          <a (click)="onLogoutClick()" href="" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-power-off"></i>
+            <span class="hidden-xs" >Sign Out</span>
           </a>
-          <ul class="dropdown-menu">
-            <!-- User image -->
-            <!-- <li class="user-header">
-             
-            
-            </li> -->
-            <!-- Menu Body -->
-     
-            <!-- Menu Footer-->
-            <li class="user-footer">
-             
-              <div class="pull-right">
-                <a href="#" class="btn btn-default btn-flat">Sign out</a>
-              </div>
-            </li>
-          </ul>
+          
         </li>
         <!-- Notifications: style can be found in dropdown.less -->
     

@@ -59,7 +59,7 @@ export class RolesComponent implements OnInit {
 
    //Refresh Page
    refresh = function() {
-    location.reload();
+    window.location.reload();
   }
    //Del Role
    deleteRole = function(id) {

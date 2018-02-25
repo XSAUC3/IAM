@@ -62,7 +62,7 @@ export class ResourceTypesComponent implements OnInit {
 
    //Refresh Page
    refresh = function() {
-     location.reload();
+    window.location.reload();
    }
 
   // Delete Rt

@@ -45,9 +45,9 @@ export class ApplicationComponent implements OnInit {
 
 
    //Refresh Page
-   refresh = function() {
-     location.reload();
-   }
+   refresh = () => {
+    window.location.reload();
+  }
 
    //Del App
    deleteApp = function(id) {

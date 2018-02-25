@@ -6,7 +6,7 @@
         <small>Control panel</small>
       </h1>
       <ol class="breadcrumb" style="background-color:#E8E8E8">
-        <li><b><a [routerLink]="['/']" href="" style="color:green"><i class="fa fa-home"></i> Home</a></b></li>
+        <li><b><a [routerLink]="['/']" (click)="refresh()"  style="color:green;cursor:pointer"><i class="fa fa-home"></i> Home</a></b></li>
       </ol>
     </section>
     <section class="content">
@@ -32,9 +32,9 @@
       <!-- small box -->
       <div class="small-box" style="background-color:#222d32!important">
         <div class="inner">
-          <h3 onmouseover="this.style.color='white'; cursor='pointer'" onmouseout="this.style.color='#b8c7ce';" style="color:#b8c7ce">Resources</h3>
+          <h3 onmouseover="this.style.color='white'; cursor='arrow'" onmouseout="this.style.color='#b8c7ce';" style="color:#b8c7ce">Resources</h3>
 
-          <p style="color:white">Total Resources : 0</p>
+          <p style="color:white">Total Resources : {{ resources?.length }}</p>
         </div>
         <div class="icon">
           <i style="color:#f69920!important" class="fa fa-pie-chart"></i>
@@ -78,7 +78,7 @@
         <div class="inner">
           <h3 onmouseover="this.style.color='white'; cursor='pointer'" onmouseout="this.style.color='#b8c7ce';" style="color:#b8c7ce">Policies</h3>
 
-          <p style="color:white">Total Policies : 0</p>
+          <p style="color:white">Total Policies : {{ policies?.length }}</p>
         </div>
         <div class="icon">
           <i style="color:#f69920!important" class="fa fa-book"></i>
@@ -91,14 +91,14 @@
       <!-- small box -->
       <div class="small-box" style="background-color:#222d32!important">
         <div class="inner">
-          <h3 onmouseover="this.style.color='white'; cursor='pointer'" onmouseout="this.style.color='#b8c7ce';" style="color:#b8c7ce">Users</h3>
+          <h3 onmouseover="this.style.color='white'; cursor='pointer'" onmouseout="this.style.color='#b8c7ce';" style="color:#b8c7ce">Roles</h3>
 
-          <p style="color:white">Total Users : 0</p>
+          <p style="color:white">Total Roles : {{ roles?.length }}</p>
         </div>
         <div class="icon">
-          <i style="color:#f69920!important" class="fa fa-user"></i>
+          <i style="color:#f69920!important" class="fa fa-users"></i>
         </div>
-        <a [routerLink]="['/adminUsers']" style="color:#f69920!important" href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        <a [routerLink]="['/roles']" style="color:#f69920!important" href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
       </div>
     </div>
     </div>

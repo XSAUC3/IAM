@@ -117,7 +117,7 @@ fetchApplications=function() {
 
 //Refresh Page
 refresh = function() {
-  location.reload();
+  window.location.reload();
 }
 
 //Del App

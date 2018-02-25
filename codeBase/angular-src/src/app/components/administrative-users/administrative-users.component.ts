@@ -19,7 +19,7 @@ export class AdministrativeUsersComponent implements OnInit {
   conformationString:String = "* Please enter name";
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) {
-   // this.fetchData();
+    this.fetchData();
     $(document).ready(function(){
      
       $('#dt').DataTable();
@@ -35,9 +35,20 @@ uData:object = {};
 uExist = false;
 private headers = new Headers({ 'Content-Type': 'resources/json'});
 user = [];
+roles = [];
+
+fetchRoles=function() {
+  this.http.get("http://localhost:3000/api/role/Roles").subscribe(
+    (res: Response) => {
+      this.roles = res.json();
+      console.log(this.applications);
+    }
+  )
+ }
+
 
 fetchData=function() {
-  this.http.get("http://localhost:3000/api/users").subscribe(
+  this.http.get("http://localhost:3000/api/users/all").subscribe(
     (res: Response) => {
       this.user = res.json();
       console.log(this.user);
@@ -47,13 +58,15 @@ fetchData=function() {
 
  //Refresh Page
 refresh = function() {
-  location.reload();
+  window.location.reload();
+  this._router.navigate(['/adminUsers']);
+  this.toastr.info('Page Reloaded.');
 }
 
 //Del App
 deleteUser = function(id) {
  
-  const url = "http://localhost:3000/api/user/DelUser/" + id;
+  const url = "http://localhost:3000/api/DelUser/" + id;
   return this.http.delete(url, {headers: this.headers}).toPromise()
     .then(() => {
     this.fetchData();
@@ -124,7 +137,7 @@ deleteUser = function(id) {
      }
      console.log(this.editObj);
  
-     this.http.put("http://localhost:3000/api/user/UpdateUser/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+     this.http.put("http://localhost:3000/user/UpdateUser/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
        console.log(res);
        $('#updateModal').modal('toggle');
        this._router.navigate(['/admin-user']);
@@ -138,13 +151,14 @@ deleteUser = function(id) {
  
  
    ngOnInit() {
-    // this.fetchData();
+     this.fetchData();
      $(document).ready(function(){
       
        $('#dt').DataTable();
  
    });
-    // this.fetchData();
+     this.fetchData();
+     this.fetchRoles();
    }
 
 }

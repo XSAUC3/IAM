@@ -8,10 +8,16 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "*",
-    "mongoose": "*",
-    "cors": "*",
+    "bcrypt": "^1.0.3",
+    "bcrypt-nodejs": "0.0.3",
+    "bcryptjs": "^2.4.3",
     "body-parser": "*",
+    "cors": "*",
+    "express": "*",
+    "jsonwebtoken": "^8.1.1",
+    "mongoose": "*",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.1",
     "validator": "*"
   },
   "author": "Chinmay",

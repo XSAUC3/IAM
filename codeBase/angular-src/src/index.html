@@ -12,32 +12,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="assets/dist/img/icon.jpg">
 </head>
-<script type="text/javascript" class="init">
-	
-
-  $(document).ready(function() {
-      // Setup - add a text input to each footer cell
-      $('#dt thead td').each( function () {
-          var title = $('#dt thead th').eq( $(this).index() ).text();
-          $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-      } );
-   
-      // DataTable
-      var table = $('#dt').DataTable( {
-      colReorder: true
-    } );
-       
-      // Apply the filter
-      $("#dt thead input").on( 'keyup change', function () {
-          table
-              .column( $(this).parent().index()+':visible' )
-              .search( this.value )
-              .draw();
-      } );
-  } );
-  
-  
-    </script>
   <app-root></app-root>
 </body>
 </html>
