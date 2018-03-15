@@ -1,4 +1,4 @@
 module.exports = {
-  database: 'mongodb://localhost:27017/App',
+  database: 'mongodb://localhost:27017/KIAM',
   secret: 'yoursecret'
 }

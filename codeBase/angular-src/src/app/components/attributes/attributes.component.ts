@@ -35,13 +35,14 @@ export class AttributesComponent implements OnInit {
   ngOnInit() {
 
   //  this.fetchData();
-
+    this.appAttr(this.session_id);
     $(document).ready(() => {
        $('#dt').DataTable();
   });
 
-    this.fetchData();
+    //this.fetchData();
     this.getApplications();
+
   }
 
   // Fetch All Attributes
@@ -63,6 +64,25 @@ export class AttributesComponent implements OnInit {
     location.reload();
   }
 
+  //get res by app_id
+session_id=sessionStorage.getItem('app_id');
+appAttr = function(session_id) {
+
+  this.http.get("http://localhost:3000/api/attributes/fetchByAppId/"+session_id).subscribe(
+   (res: Response) => {
+     this.attributes = res.json();
+
+     //console.log(this.attributes);
+     //this._router.navigate(['/resources']);
+     //this.uData = this.uresource;
+     //this.attributes = this.uData.attribute_id;
+     //console.log("ssion_data : " + this.uData);
+  
+  
+   }
+  )
+  }  
+
   // Set Delete Attribute
   setDeleteAttribute = (_id, Name) => {
     this.attributeIdToBeDeleted = _id;
@@ -75,19 +95,22 @@ export class AttributesComponent implements OnInit {
     this.attributeDataService.deleteAttribute(_id).subscribe(
       data => {
         if (data.success === true ) {
-          this.fetchData();
+          this.appAttr(this.session_id);
+          // this.fetchData();
           $('#deleteModal').modal('toggle');
           this.toastr.error('Attribute Deleted.');
           this._router.navigate(['/attributes']);
         } else if (data.success === false) {
-          this.fetchData();
+          this.appAttr(this.session_id);
+          // this.fetchData();
           $('#deleteModal').modal('toggle');
           this.toastr.error('Attribute Not Found. Refreshing The Attribute List.');
           this._router.navigate(['/attributes']);
         }
       },
       err => {
-        this.fetchData();
+        this.appAttr(this.session_id);
+        // this.fetchData();
         $('#deleteModal').modal('toggle');
         this.toastr.error('Something Went Wrong.');
         this._router.navigate(['/attributes']);
@@ -114,12 +137,51 @@ export class AttributesComponent implements OnInit {
   // Add Attribute
   addNewAttribute = (attribute) => {
 
-    if (attribute.Name === (undefined || null) ||
-        attribute.Type === (undefined || null) ||
-        attribute.DataType === (undefined || null) ||
-        attribute.Description === (undefined || null) ||
-        attribute.Application_Id === (undefined || null) ||
-        attribute.Single_Multiple === (undefined || null)) {
+  //   if(a.res_name==undefined) {
+  //     this.toastr.error("Resource name required.")
+  //    }
+  //    else {
+  //     this.aObj = {
+  //       "res_name":a.res_name,
+  //       "res_displayname":a.res_displayname,
+  //       "Resource_typeid":a.Resource_typeid,
+  //       "application_id":this.session_id,
+  //       "attribute_id":this.attributes,
+  //       "res_descrpition":a.res_descrpition
+  //     }
+  //     console.log(this.aObj);
+      
+  //     this.http.post("http://localhost:3000/api/addResource" , this.aObj ,  {Headers : this.headers} ).subscribe(res => {
+  //       console.log(res);
+  //       if(res._body=="unique") {
+  //         this.toastr.error('Resource already exists.');
+  //       }
+  //       else {
+  //         this.appRes(this.session_id);
+  //         $('#addModal').modal('toggle');
+  //         this.toastr.success('Resource Added.');
+  //       }
+      
+  //     },
+  //     err=> {
+  //       //this.toastr.error('Resource already exists.');
+  //      })
+  
+  
+  // }
+
+
+
+
+
+
+    
+    if (attribute.Name === (undefined || null||'') ||
+        attribute.Type === (undefined || null||'') ||
+        attribute.DataType === (undefined || null||'') ||
+        attribute.Description === (undefined || null||'') ||
+        attribute.Application_Id === (undefined || null||'') ||
+        attribute.Single_Multiple === (undefined || null||'')) {
           this.toastr.error('Please Provide All The Necessary Fields.');
     } else {
 
@@ -129,27 +191,30 @@ export class AttributesComponent implements OnInit {
         Type             : attribute.Type,
         DataType         : attribute.DataType,
         Description      : attribute.Description,
-        Application_Id   : attribute.Application_Id,
+        Application_Id   : this.session_id,
         Single_Multiple  : attribute.Single_Multiple
     };
 
       this.attributeDataService.addAttribute(Obj_Attribute).subscribe(
-        data => {
-          if (data.success === true) {
-            this.fetchData();
-            $('#addModal').modal('toggle');
-            this.toastr.success('Attribute Added.');
-          } else if (data.success === false) {
-            this.fetchData();
-            $('#addModal').modal('toggle');
-            this.toastr.error('Something Went Wrong.');
-          }
+        res => {
+        console.log(res._body);
+          console.log(res);
+                if(res._body=="unique") {
+                  this.toastr.error('Attribute already exists.');
+                }
+                else {
+                  this.appAttr(this.session_id);
+                  $('#addModal').modal('toggle');
+                  this.toastr.success('Attribute Added.');
+                }
+
         },
         err => {
-            this.fetchData();
-            $('#addModal').modal('toggle');
-            this.toastr.error('Something Went Wrong.');
-            console.log(err);
+          // this.appAttr(this.session_id);  
+          // //this.fetchData();
+          //   $('#addModal').modal('toggle');
+            // this.toastr.error('sOMETHING WENT WRONG');
+          //   console.log(err);
         }
       );
     }
@@ -164,13 +229,15 @@ export class AttributesComponent implements OnInit {
           this.uData = data.Attribute;
           console.log(data);
         } else if (data.success === false) {
-          this.fetchData();
+          this.appAttr(this.session_id);
+          //this.fetchData();
           $('#updateModal').modal('toggle');
           this.toastr.error('Attribute Not Found. Refreshing The Attribute List');
         }
       },
       err => {
-        this.fetchData();
+        this.appAttr(this.session_id);
+        //this.fetchData();
         $('#updateModal').modal('toggle');
         this.toastr.error('Something Went Wrong.');
       }
@@ -200,7 +267,7 @@ export class AttributesComponent implements OnInit {
       Type             : updateData.Type,
       DataType         : updateData.DataType,
       Description      : updateData.Description,
-      Application_Id   : updateData.Application_Id,
+      Application_Id   : this.session_id,
       Single_Multiple  : updateData.Single_Multiple
       };
 
@@ -209,19 +276,22 @@ export class AttributesComponent implements OnInit {
           if (data.success === true) {
             $('#updateModal').modal('toggle');
             this._router.navigate(['/attributes']);
-            this.fetchData();
+            this.appAttr(this.session_id);
+            //this.fetchData();
             this.toastr.info('Attribute Updated.');
           } else if (data.success === false) {
             $('#updateModal').modal('toggle');
             this._router.navigate(['/attributes']);
-            this.fetchData();
+            this.appAttr(this.session_id);
+            //this.fetchData();
             this.toastr.error('Attribute Not Found. Refreshing The Attribute List.');
           }
         },
         err => {
           $('#updateModal').modal('toggle');
           this._router.navigate(['/attributes']);
-          this.fetchData();
+          this.appAttr(this.session_id);
+          //this.fetchData();
           this.toastr.error('Something Went Wrong.');
         }
       );
@@ -234,7 +304,8 @@ export class AttributesComponent implements OnInit {
         filter.Type === null &&
         filter.DataType === null) {
 
-          this.fetchData();
+          this.appAttr(this.session_id);
+          //this.fetchData();
 
           this.filterApplied = false;
           this.filterName = filter.Name;

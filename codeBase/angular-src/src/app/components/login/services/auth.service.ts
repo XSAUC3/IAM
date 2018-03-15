@@ -43,4 +43,26 @@ export class AuthService {
     localStorage.clear();
   }
 
+  forgotPassword(email) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/users/ForgotPassword', email, {headers: headers})
+      .map(res => res.json());
+  }
+
+  checkToken(uid, token){
+    let headers = new Headers();
+    headers.append('Accept', 'application/json');
+    return this.http.get('http://localhost:3000/users/ForgotPassword/' + uid + "/" + token, {headers: headers})
+    .map(res => res.json());
+  }
+
+  changePassword(data){
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
+    return this.http.put('http://localhost:3000/users/ChangePassword/', data, {headers: headers})
+    .map(res => res.json());
+  }
+
 }

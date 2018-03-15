@@ -19,10 +19,12 @@ export class ResourcesComponent implements OnInit {
   conformationString:String = "* Please enter name";
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) {
-    this.fetchData();
+    this.appRes(this.session_id);
+    //this.fetchData();
     this.fetchResourceType();
     this.fetchApplications();
     this.fetchAttribute();
+    console.log("session id Res: " + sessionStorage.getItem('app_id'));
     $(document).ready(function(){
      
       $('#dt').DataTable();
@@ -34,6 +36,7 @@ export class ResourcesComponent implements OnInit {
   editobj : {};
   uresource = [];
   uData:object = {};
+  appData = [];
   uExist = false;
   private headers = new Headers({ 'Content-Type': 'resources/json'});
   resource = [];
@@ -55,6 +58,8 @@ export class ResourcesComponent implements OnInit {
     }
     console.log(this.attributes);
   }
+  //get res by app_id
+session_id=sessionStorage.getItem('app_id');
 
   removeAction = function(index) {
     this.attributes.splice(index,1);
@@ -126,8 +131,10 @@ deleteRes = function(id) {
  const url = "http://localhost:3000/api/DeleteResource/" + id;
  return this.http.delete(url, {headers: this.headers}).toPromise()
    .then(() => {
-   this.fetchData();
+    this.appRes(this.session_id);
+  // this.fetchData();
    this.toastr.error('Resource Deleted.');
+   $('#deleteModal').modal('toggle');
   this._router.navigate(['/resources']);
  
    })
@@ -136,28 +143,41 @@ deleteRes = function(id) {
 
 //Add App
 addNewRes = function(a) {
- if(a.res_name != "") {
- this.aObj = {
-   "res_name":a.res_name,
-   "res_displayname":a.res_displayname,
-   "Resource_typeid":a.Resource_typeid,
-   "application_id":a.application_id,
-   "attribute_id":this.attributes,
-   "res_descrpition":a.res_descrpition
- }
- console.log(this.aObj);
- 
- this.http.post("http://localhost:3000/api/addResource" , this.aObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
-   console.log(res);
- this.fetchData();
- $('#addModal').modal('toggle');
- this.toastr.success('Resource Added.');
- })
+
+  if(a.res_name==undefined) {
+    this.toastr.error("Resource name required.")
+   }
+   else {
+    this.aObj = {
+      "res_name":a.res_name,
+      "res_displayname":a.res_displayname,
+      "Resource_typeid":a.Resource_typeid,
+      "application_id":this.session_id,
+      "attribute_id":this.attributes,
+      "res_descrpition":a.res_descrpition
+    }
+    console.log(this.aObj);
+    
+    this.http.post("http://localhost:3000/api/addResource" , this.aObj ,  {Headers : this.headers} ).subscribe(res => {
+      console.log(res);
+      if(res._body=="unique") {
+        this.toastr.error('Resource already exists.');
+      }
+      else {
+        this.appRes(this.session_id);
+        $('#addModal').modal('toggle');
+        this.toastr.success('Resource Added.');
+      }
+    
+    },
+    err=> {
+      //this.toastr.error('Resource already exists.');
+     })
+
+
 }
-else{
- this.isEmpty = true;
 }
-}
+   
 
 //Edit App
 
@@ -176,6 +196,33 @@ this.http.get("http://localhost:3000/api/Resource/"+id).subscribe(
 )
 }
 
+
+appRes = function(session_id) {
+
+  this.http.get("http://localhost:3000/api/Resource/fetchByAppId/"+session_id).subscribe(
+   (res: Response) => {
+     this.resource = res.json();
+
+     console.log(this.appData);
+     this._router.navigate(['/resources']);
+     //this.uData = this.uresource;
+     //this.attributes = this.uData.attribute_id;
+     //console.log("ssion_data : " + this.uData);
+  
+  
+   }
+  )
+  }  
+
+  attributeIdToBeDeleted : String;
+  attributeNameToBeDeleted : String;
+
+  // Set Delete Attribute
+  setDeleteAttribute = (_id, Name) => {
+    this.attributeIdToBeDeleted = _id;
+    this.attributeNameToBeDeleted = Name;
+  }
+
 //Upd App
 
 updateRes = function(updateData,id)
@@ -189,7 +236,7 @@ updateRes = function(updateData,id)
       "res_name":updateData.ures_name,
       "res_displayname":updateData.ures_displayname,
       "Resource_typeid":updateData.uResource_typeid,
-      "application_id":updateData.uapplication_id,
+      "application_id":this.session_id,
       "attribute_id":this.attributes,
       "attribute_value":updateData.uattribute_value,
       "res_description":updateData.ures_descrpition
@@ -200,7 +247,7 @@ updateRes = function(updateData,id)
       console.log(res);
       $('#updateModal').modal('toggle');
       this._router.navigate(['/resources']);
-    this.fetchData();
+    this.appRes(this.session_id);
     this.toastr.info('Resource Updated.');
 
   
@@ -210,13 +257,14 @@ updateRes = function(updateData,id)
 
 
   ngOnInit() {
-    this.fetchData();
+   // this.fetchData();
     $(document).ready(function(){
      
       $('#dt').DataTable();
 
   });
-    this.fetchData();
+   // this.fetchData();
+    this.appRes(this.session_id);
   }
 
 }

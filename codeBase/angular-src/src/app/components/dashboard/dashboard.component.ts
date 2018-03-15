@@ -1,8 +1,22 @@
 import { Component, ViewContainerRef,OnInit } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
 import { ActivatedRoute,Router } from '@angular/router';
 import 'rxjs/add/operator/toPromise';
-import { HttpModule } from '@angular/http';
+
+declare const $: any;
+declare interface RouteInfo {
+    path: string;
+    title: string;
+    icon: string;
+    color: string;
+}
+export const ROUTES: RouteInfo[] = [
+    { path: '/application',  title: 'Applications',     icon:'folder_open',    color: 'orange' },
+    { path: '/resources',    title: 'Resources',        icon:'extension',  color: 'green'  },
+    { path: '/resourceTypes',title: 'Resource Type',    icon:'collections_bookmark',       color: 'blue'   },
+    { path: '/attributes',   title: 'Attributes',       icon:'view_module',           color: 'red'    },
+    { path: '/policies',     title: 'Policies',         icon:'description',    color: 'purple' },
+    { path: '/roles',        title: 'Roles',            icon:'supervisor_account', color: 'black'  }
+];
 
 @Component({
   selector: 'app-dashboard',
@@ -11,79 +25,16 @@ import { HttpModule } from '@angular/http';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private _router: Router,  private http:Http, private route: ActivatedRoute) { 
+  menuItems: any[];
 
-  }
-
-
-  apps = [];
-  resourceTypes = [];
-  attributes = [];
-  resources = [];
-  policies = [];
-  roles =[];
-  fetchData=function() {
-    this.http.get("http://localhost:3000/api/Applications").subscribe(
-      (res: Response) => {
-        this.apps = res.json();
-      }
-    )
-   }
-
-
-   refresh = function() {
-    window.location.reload();
+  constructor() { 
+    this.menuItems = ROUTES.filter(menuItem => menuItem);
+    
   }
   
-   fetchRt=function() {
-    this.http.get("http://localhost:3000/api/resourceTypes").subscribe(
-      (res: Response) => {
-        this.resourceTypes = res.json();
-      }
-    )
-   }
-
-   fetchR=function() {
-    this.http.get("http://localhost:3000/api/Fetch/Resource").subscribe(
-      (res: Response) => {
-        this.resources = res.json();
-      }
-    )
-   }
-
-   fetchAtt = function() {
-    
-    this.http.get("http://localhost:3000/api/attributes/allAttributes").subscribe(
-      (res: Response) => {
-        this.attributes = res.json();     
-      }
-    )
-  }
-
-  fetchPol = function() {
-    
-    this.http.get("http://localhost:3000/api/policies").subscribe(
-      (res: Response) => {
-        this.policies = res.json();     
-      }
-    )
-  }
-
-  fetchRoles = function() {
-    
-    this.http.get("http://localhost:3000/api/role/Roles").subscribe(
-      (res: Response) => {
-        this.roles = res.json();     
-      }
-    )
-  }
+  
   ngOnInit() {
-    this.fetchData();
-    this.fetchRt();
-    this.fetchR();
-    this.fetchAtt();
-    this.fetchPol();
-    this.fetchRoles();
+    
   }
-
+  
 }

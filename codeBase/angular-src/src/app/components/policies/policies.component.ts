@@ -63,7 +63,7 @@ export class PoliciesComponent implements OnInit {
     this.fetchRoles();
     this.fetchResources();
     $(document).ready(function(){ 
-       $('#dtbl').DataTable();
+       $('#dt').DataTable();
     });
   }
 
@@ -151,6 +151,7 @@ fetchResources=function() {
                 .subscribe(res => {
                   this.fetchPolicies();
                 });
+                $('#addModal').modal('toggle');
                 this.toastr.success('Policy Added.');
     }
     this.rolesnamearr = [];
@@ -298,7 +299,7 @@ fetchResources=function() {
     {
       actionsname.push(a)
     }
-    for (let s of Object.values(data))
+    for (let s of (<any>Object).values(data))
     {
       actionstate.push(s)
     }

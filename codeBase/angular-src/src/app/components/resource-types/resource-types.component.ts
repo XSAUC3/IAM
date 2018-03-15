@@ -18,7 +18,7 @@ export class ResourceTypesComponent implements OnInit {
   conformationString:String = "* Please enter name";
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) { 
-    this.fetchData();
+    //this.fetchData();
     $(document).ready(function(){
      
       $('#dt').DataTable();
@@ -34,8 +34,10 @@ export class ResourceTypesComponent implements OnInit {
   uExist = false;
   private headers = new Headers({ 'Content-Type': 'application/json'});
   resourceTypes = [];
+  applications= [];
   actions = [];
   newAction = "";
+  
   pushAction = function() {
     if(this.newAction != "") {
        let object = {
@@ -54,11 +56,40 @@ export class ResourceTypesComponent implements OnInit {
     this.http.get("http://localhost:3000/api/resourceTypes").subscribe(
       (res: Response) => {
         this.resourceTypes = res.json();
+        console.log(res.json());
      
       }
     )
    }
 
+   //get res by app_id
+session_id=sessionStorage.getItem('app_id');
+
+appResT = function(session_id) {
+
+  this.http.get("http://localhost:3000/api/ResourceType/fetchByAppId/"+session_id).subscribe(
+   (res: Response) => {
+     this.resourceTypes = res.json();
+
+     console.log(this.resourceTypes);
+     //this._router.navigate(['/resources']);
+     //this.uData = this.uresource;
+     //this.attributes = this.uData.attribute_id;
+     //console.log("ssion_data : " + this.uData);
+  
+  
+   }
+  )
+  }  
+
+   fetchApplications=function() {
+    this.http.get("http://localhost:3000/api/Applications").subscribe(
+      (res: Response) => {
+        this.applications = res.json();
+        console.log(this.applications);
+      }
+    )
+   }
 
    //Refresh Page
    refresh = function() {
@@ -71,8 +102,11 @@ export class ResourceTypesComponent implements OnInit {
     const url = "http://localhost:3000/api/delResourceType/" + id;
     return this.http.delete(url, {headers: this.headers}).toPromise()
       .then(() => {
-          this.fetchData();
+        this.appResT(this.session_id);
+
+//this.fetchData();
           this.toastr.error('Resource-Type Deleted.');
+          $('#deleteModal').modal('toggle');
           this._router.navigate(['/resourceTypes']);
       })
   
@@ -80,27 +114,66 @@ export class ResourceTypesComponent implements OnInit {
 
 //Add Rt
   addNewRt = function(rt) {
-    console.log(rt)
-    if(rt.resourceType_name != "") {
+
+
+    if(rt.resourceType_name===undefined||rt.resourceType_name==''||rt.resourceType_name===null) {
+      this.toastr.error("Resource-Type name required.")
+     }
+     else {
       this.rtObj = {
         "resourceType_name":rt.resourceType_name,
         "resourceType_displayname":rt.resourceType_displayname,
         "resourceType_description":rt.resourceType_description,
+        "application_id":this.session_id,
         "resourceType_actions": this.actions 
       }
     console.log(this.rtObj)
-    this.http.post("http://localhost:3000/api/addResourceType" , this.rtObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+    this.http.post("http://localhost:3000/api/addResourceType" , this.rtObj ,  {Headers : this.headers} ).subscribe(res => {
          console.log(res);
-       this.fetchData();
+        if(res._body=="unique") {
+          this.toastr.error('Resource-type already exists.');
+        }
+        else {
+          this.appResT(this.session_id);
           $('#addModal').modal('toggle');
           this.toastr.success('Resource-Type Added.');
-          });
-          this.actions=[];
+        }
+        this.actions=[];
+      
+      },
+      err=> {
+        //this.toastr.error('Resource already exists.');
+       })
+  
+  
   }
-  else{
-    this.isEmpty = true;
+
+
+  //   console.log(rt)
+  //   if(rt.resourceType_name != "") {
+  //     this.rtObj = {
+  //       "resourceType_name":rt.resourceType_name,
+  //       "resourceType_displayname":rt.resourceType_displayname,
+  //       "resourceType_description":rt.resourceType_description,
+  //       "application_id":this.session_id,
+  //       "resourceType_actions": this.actions 
+  //     }
+  //   console.log(this.rtObj)
+  //   this.http.post("http://localhost:3000/api/addResourceType" , this.rtObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+  //        console.log(res);
+  //      this.appResT(this.session_id);
+  //         $('#addModal').modal('toggle');
+  //         this.toastr.success('Resource-Type Added.');
+  //         },
+  //         (err: Error)=> {
+  //           this.toastr.error('Resource-Type already exists.');
+  //          });
+  //         this.actions=[];
+  // }
+  // else{
+  //   this.isEmpty = true;
+  //  }
    }
-  }
 
 //Edit Rt
 
@@ -135,30 +208,42 @@ editRt = function(id) {
         "resourceType_name":updateData.uRt_name,
         "resourceType_displayname":updateData.uRt_displayname,
         "resourceType_description":updateData.uRt_description,
+        "application_id":this.session_id,
         "resourceType_actions": this.actions 
       }
       this.http.put("http://localhost:3000/api/updateResourceType/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
         console.log(res);
         $('#updateModal').modal('toggle');
         this._router.navigate(['/resourceTypes']);
-        this.fetchData();
+        this.appResT(this.session_id);
         this.toastr.info('Resource-Type Updated.');
         this.actions=[];
       })
   }
   }
 
+  attributeIdToBeDeleted : String;
+  attributeNameToBeDeleted : String;
+
+  // Set Delete Attribute
+  setDeleteAttribute = (_id, Name) => {
+    this.attributeIdToBeDeleted = _id;
+    this.attributeNameToBeDeleted = Name;
+  }
+
 
 
 
   ngOnInit() {
-    this.fetchData();
+   // this.fetchData();
+   this.appResT(this.session_id);
+   this.fetchApplications();
     $(document).ready(function(){
      
       $('#dt').DataTable();
 
     });
-    this.fetchData();
+    //this.fetchData();
     
   
   }

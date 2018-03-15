@@ -1,187 +1,279 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
 
-  <!-- Content Header (Page header) -->
-  <section class="content-header">
-    <h1>
-      Admininstrative Users
-      <small>View Users</small>
-    </h1>
-    <ol class="breadcrumb"  style="background-color:#E8E8E8">
-      <li class="active"><b><a href="" style="color:blue" data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
-      <li class="Reload"><b><a  style="color:red;cursor:pointer" (click)="refresh()"><i class="fa fa-repeat" ></i>&nbsp;&nbsp;Releod</a></b></li>
-      <li class="Reload"><b><a href="" style="color:green" [routerLink]="['/dashboard']"><i class="	fa fa-home" ></i>&nbsp;&nbsp;Home</a></b></li>
-    </ol>
-  </section>
+  <div class="row">
+    <div class="col-md-8">
+      <h1>
+        Administrative Users
+        <small>View User</small>
+      </h1>
+    </div>
+    <div class="col-md-4">
+      <ol id="ol" class="breadcrumb">
+        <li class="active">
+          <b>
+            <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal">
+              <i class="material-icons">add</i>Add</a>
+          </b>
+        </li>
+        <li class="Reload">
+          <b>
+            <a style="color:#f44336;" (click)="refresh()">
+              <i class="material-icons">autorenew</i>Releod</a>
+          </b>
+        </li>
+        <li class="Reload">
+          <b>
+            <a style="color:#4caf50;" [routerLink]="['/dashboard']">
+              <i class="material-icons">home</i>Home</a>
+          </b>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+</section>
 <!-- mkm -->
-  <!-- Main content -->
-  <section class="content">
- 
-    <div class="box">
-     
-      <!-- /.box-header -->
-      <div class="box-body">
-	  
-        <table id="dt" class="table table-bordered table-hover" >
-          <thead class="thead-inverse">
+<!-- Main content -->
+<section class="content">
+
+  <div class="box">
+
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div class="table-responsive">
+      <table id="dt" class="table table-bordered table-hover">
+        <thead>
           <tr>
             <!-- <th style="width: 10%;">#Id</th> -->
             <th>Name</th>
-			<th>UserName</th>
+            <th>UserName</th>
             <th>Email</th>
-			<th>Role</th>
-			<th>Status</th>
-			<th>Action</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
           </tr>
-          </thead>
-		  <!-- <thead class="thead-inverse">
-          <tr>
-            
-            <td>Name</td>
-			<td>UserName</td>
-            <td>Email</td>
-			<td>Role</td>
-			<td>Status</td>
-			
-          </tr>
-          </thead> -->
-          <tbody>
+        </thead>
+        <tbody>
           <tr *ngFor="let app of user">
             <!-- <td>{{app._id}}</td> -->
-			<td>{{app.name}}</td>
+            <td>{{app.name}}</td>
             <td>{{app.username}}</td>
             <td>{{app.email}}</td>
-			<td>{{app.role}}</td>
-			<td>{{app.status}}</td>
-            <td><span   (click)="editUser(app._id)" data-toggle="modal" data-target="#updateModal"  ><i  style="color:green" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span  (click)="deleteUser(app._id)"><i class="fa fa-trash" style="color:red"></i></span></td>
+            <td>
+              <span *ngFor="let rt2 of app.role">
+                <ng-container *ngFor="let role of roles">
+                    <ng-container *ngIf="rt2.role_id == role._id; then thenBlockApp"></ng-container>
+                    <ng-template #thenBlockApp>
+                    {{role.Role_name}}
+                    </ng-template>
+                </ng-container><br>
+              </span>
+          </td>
+            <td>{{app.status}}</td>
+            <td>
+              <span (click)="editUser(app._id)" data-toggle="modal" data-target="#updateModal">
+                <i style="color:#4caf50;cursor:pointer" class="material-icons">create</i>
+              </span> &nbsp;&nbsp;&nbsp;
+              <span (click)="setDeleteAttribute(app._id, app.name)" data-toggle="modal" data-target="#deleteModal"><i class="material-icons" style="cursor: pointer; color:red;">delete</i></span>
+            </td>
           </tr>
           <!-- [routerLink]="['/viewApplication',app._id]" -->
-          </tbody>
-          
-        </table>
-      </div>
-      <!-- /.box-body -->
+        </tbody>
+      </table>
     </div>
+    </div>
+    <!-- /.box-body -->
+  </div>
 
-    <!-- /.box -->
-  
+  <!-- /.box -->
+  </section>
 
-        <!-- Add modal -->
-        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+
+  <!-- Add modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form role="form" #aData="ngForm" (ngSubmit)="addNewUser(aData.value); aData.reset()">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="app_name">Name</label>
+                <input type="text" class="form-control" required name="name" id="username" placeholder="Enter Full Name" ngModel>
               </div>
-              <div class="modal-body">
-                <form role="form" #aData = "ngForm"  (ngSubmit)="addNewUser(aData.value); aData.reset()">
-                  <div class="box-body">
-				  <div class="form-group">
-                      <label for="app_name">Name</label>
-                      <input type="text" class="form-control" required name="name" id="username" placeholder="Enter Full Name" ngModel>
-                    </div>
-                    <div class="form-group">
-                      <label for="app_name">UserName</label>
-                      <input type="text" class="form-control" required name="username" id="username" placeholder="Enter Username" ngModel>
-                    </div>
-                    <div class="form-group">
-                      <label for="app_displayname">Password</label>
-                      <input type="password" class="form-control" required name="password" id="password" placeholder="Enter display name" ngModel>
-                    </div>
-					<div class="form-group">
-                      <label for="app_name">Email</label>
-                      <input type="text" class="form-control" required name="email" id="email" placeholder="Enter User Name" ngModel>
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Role</label>
-                        <select class="form-control" name="role" id="role" placeholder="Select Role" ngModel>
-                          <option *ngFor="let role of roles" value={{role.Role_name}}>{{role.Role_name}}</option>
-                        </select>
-                      </div>
-                  </div>
-                  <!-- /.box-body -->
-      
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add User</button>
-                  </div>
-                </form>
+              <div class="form-group">
+                <label for="app_name">UserName</label>
+                <input type="text" class="form-control" required name="username" id="username" placeholder="Enter Username" ngModel>
               </div>
-            
+              <div class="form-group">
+                <label for="app_displayname">Password</label>
+                <input type="password" class="form-control" required name="password" id="password" type="password" placeholder="Enter password" ngModel>
+              </div>
+              <div class="form-group">
+                <label for="app_name">Email</label>
+                <input type="text" class="form-control" required name="email" id="email" placeholder="Enter User Name" ngModel>
+              </div>
+              <div class="form-group">
+                  <label for="app_name">Role</label>
+                  <div class="row">
+                    <div class="col-md-9" >
+                      <select class="form-control" name="role" id="role" placeholder="Select Role" [(ngModel)]="role">
+                       <option value=""  selected="true" disabled >Select Role</option>
+                        <option *ngFor="let role of roles" value={{role._id}}>{{role.Role_name}}</option>
+                      </select>  
+                    </div>
+                   <div class="col-md-3" >
+                      <a  (click)="pushAction()" class="btn btn-success"><i class="material-icons">add</i></a>
+                    </div>
+                  </div>
+                  <div>
+                      <ul style=" height:130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                        <li *ngFor="let action of addRole; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
+                          <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
+                          fa-wrench"></i>
+                          &nbsp; &nbsp;
+                          <ng-container *ngFor="let role of roles">
+                              <ng-container *ngIf="action.role_id == role._id; then thenBlockApp"></ng-container>
+                              <ng-template #thenBlockApp>
+                              {{role.Role_name}}
+                              </ng-template>
+                            </ng-container>
+                          <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                        </li>
+                      </ul>
+                  </div>
+              </div>
             </div>
-          </div>
+            <!-- /.box-body -->
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Add User</button>
+            </div>
+          </form>
         </div>
 
-        <!-- End AddModal -->
+      </div>
+    </div>
+  </div>
+
+  <!-- End AddModal -->
 
 
 
-             <!-- Update modal -->
-             <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="updateModalLabel">Update User</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <form role="form" #updateData = "ngForm"  (ngSubmit)="updateUser(updateData.value,uData._id); updateData.reset()">
-                        <div class="box-body">
-				  <div class="form-group">
-                      <label for="app_name">Name</label>
-                      <input type="text" class="form-control"  required name="name" id="username" placeholder="Enter Full Name" ngModel>
-                    </div>
-                    <div class="form-group">
-                      <label for="app_name">UserName</label>
-                      <input type="text" class="form-control" required name="username" id="username" placeholder="Enter Username" ngModel>
-                    </div>
-                    <div class="form-group">
-                      <label for="app_displayname">Password</label>
-                      <input type="password" class="form-control" required name="password" id="password" placeholder="Enter Password" ngModel>
-                    </div>
-					<div class="form-group">
-                      <label for="app_name">Email</label>
-                      <input type="text" class="form-control" required name="email" id="email" placeholder="Enter Email" ngModel>
-                    </div>
-					<div class="form-group">
-                      <label for="app_name">Role</label>
-                      <select class="form-control" required name="role" id="role"  ngModel>
-					  <option value="" selected>--Select Role--</option>
-					  <option value="User">User</option>
-					  <option value="Moderator">Moderator</option>
-					  <option value="Admin">Admin</option>
-					  </select>
-                    </div>
-					<div class="form-group">
-                      <label for="app_name">Status</label>
-                      <select class="form-control" required name="status" id="status"  ngModel>
-					  <option value="" selected>--Select Status--</option>
-					  <option value=true>Active</option>
-					  <option value=false>Disable</option>
-					  
-					  </select>
-                    </div>
-					
-                  </div>
-                        <!-- /.box-body -->
-            
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Update</button>
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                          
-                        </div>
-                      </form>
-                    </div>
-                  
-                  </div>
-                </div>
+  <!-- Update modal -->
+  <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateModalLabel">Update User</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form role="form" #updateData="ngForm" (ngSubmit)="updateUser(updateData.value,uData._id); updateData.reset()">
+            <div class="box-body">
+              <div class="form-group">
+                <label for="app_name">Name</label>
+                <input type="text" class="form-control" required name="name" id="username" placeholder="Enter Full Name" [(ngModel)]="uData.name">
               </div>
-      
-              <!-- End UpdateModal -->
+              <div class="form-group">
+                <label for="app_name">UserName</label>
+                <input type="text" class="form-control" required name="username" id="username" placeholder="Enter Username" [(ngModel)]="uData.username">
+              </div>
+              <div class="form-group">
+                <label for="app_displayname">Password</label>
+                <input type="password" class="form-control" required name="password" id="password" placeholder="Enter Password" ngModel>
+              </div>
+              <div class="form-group">
+                <label for="app_name">Email</label>
+                <input type="text" class="form-control" required name="email" id="email" placeholder="Enter Email" [(ngModel)]="uData.email">
+              </div>
+              <div class="form-group">
+                  <label for="app_name">Role</label>
+                  <div class="row">
+                    <div class="col-md-10" >
+                      <select class="form-control" name="role" id="role" placeholder="Select Role" [(ngModel)]="role">
+                        <option *ngFor="let role of roles" value={{role._id}}>{{role.Role_name}}</option>
+                      </select>  
+                    </div>
+                   <div class="col-md-2" style="text-align:right">
+                      <a  (click)="pushAction()" class="btn btn-success"><i class="fa fa-plus"></i>Add</a>
+                    </div>
+                  </div>
+                  <div>
+                      <ul style=" height:130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                        <li *ngFor="let action of addRole; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
+                          <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
+                          fa-wrench"></i>
+                          &nbsp; &nbsp;
+                          <ng-container *ngFor="let role of roles">
+                              <ng-container *ngIf="action.role_id == role._id; then thenBlockApp"></ng-container>
+                              <ng-template #thenBlockApp>
+                              {{role.Role_name}}
+                              </ng-template>
+                            </ng-container>
+                          <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                        </li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="form-group">
+                <label for="app_name">Status</label>
+                <select class="form-control" required name="status" id="status" [(ngModel)]="uData.status">
+                  <option value="" selected>--Select Status--</option>
+                  <option value=true>Active</option>
+                  <option value=false>Disable</option>
 
-        </section>
-       
+                </select>
+              </div>
+
+            </div>
+            <!-- /.box-body -->
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Update</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- End UpdateModal -->
+
+  <!-- Delete modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" style="color: red" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            <h4 class="modal-title" id="exampleModalLabel">Delete Attribute</h4>
+            <hr style="border-top: 1px solid #000; margin-bottom:0;">
+          </div>
+          <div class="modal-body">
+              <div>
+                <h5>Are You Sure You Want To Delete {{attributeNameToBeDeleted}} User?</h5>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" (click)="deleteUser(attributeIdToBeDeleted)" class="btn btn-primary">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+              </div>
+          </div>
         
+        </div>
+      </div>
+    </div>

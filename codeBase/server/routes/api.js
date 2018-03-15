@@ -51,10 +51,11 @@ router.post('/addApp', (req, res, next) => {
     app_description : req.body.app_description,
   });
   newApp.save( (err,createdObj ) => {
-    if(err)  res.status(500);  
+    if(err)  res.send(err);   
     else     res.status(200).send(createdObj); 
   })
 });
+//res.status(500).json({Error:"Not working"});
 
 //edit App
 router.put('/updateApp/:id' , (req,res,next) => {
@@ -98,26 +99,72 @@ router.get('/resourceType/:id', (req,res,next) =>{
   });
 });
 
+
+
+
+
 //Add rt
 router.post('/addResourceType', (req, res, next) => {
-   let actions = [];
-console.log(req.body.resourceType_actions);
-  //  for( i=1; i<= req.body.resourceType_actions.length ; i++ ){
-  //    actions.push({
-  //      action_name: req.body.resourceType_actions[i].action_name
-  //    });
-  //   }
-    console.log(req.body.resourceType_actions)
-  let newResourceType = new ResourceType({
-    resourceType_name        : req.body.resourceType_name, 
-    resourceType_displayname : req.body.resourceType_displayname, 
-    resourceType_description : req.body.resourceType_description,
-    resourceType_actions     : req.body.resourceType_actions
-  });
-  newResourceType.save( (err,createdObj ) => {
-    if(err)  res.status(500);  
-    else     res.status(200).send(createdObj); 
-  })
+
+  ResourceType.find({resourceType_name:req.body.resourceType_name}).where('application_id').equals(req.body.application_id).count((err,data)=>{
+    if(data==0) {
+    
+      let actions = [];
+      console.log(req.body.resourceType_actions);
+        //  for( i=1; i<= req.body.resourceType_actions.length ; i++ ){
+        //    actions.push({
+        //      action_name: req.body.resourceType_actions[i].action_name
+        //    });
+        //   }
+          console.log(req.body.resourceType_actions)
+        let newResourceType = new ResourceType({
+          resourceType_name        : req.body.resourceType_name, 
+          resourceType_displayname : req.body.resourceType_displayname, 
+          resourceType_description : req.body.resourceType_description,
+          application_id           :req.body.application_id,
+          resourceType_actions     : req.body.resourceType_actions
+        });
+        newResourceType.save( (err,createdObj ) => {
+          if(err) res.status(500).json({Error:"Not working"}); 
+          else     res.status(200).send(createdObj); 
+        })
+         }
+         else {
+          res.send("unique");
+          console.log("hello");
+           
+         }
+   });
+
+
+//    let actions = [];
+// console.log(req.body.resourceType_actions);
+//   //  for( i=1; i<= req.body.resourceType_actions.length ; i++ ){
+//   //    actions.push({
+//   //      action_name: req.body.resourceType_actions[i].action_name
+//   //    });
+//   //   }
+//     console.log(req.body.resourceType_actions)
+//   let newResourceType = new ResourceType({
+//     resourceType_name        : req.body.resourceType_name, 
+//     resourceType_displayname : req.body.resourceType_displayname, 
+//     resourceType_description : req.body.resourceType_description,
+//     application_id           :req.body.application_id,
+//     resourceType_actions     : req.body.resourceType_actions
+//   });
+//   newResourceType.save( (err,createdObj ) => {
+//     if(err) res.status(500).json({Error:"Not working"}); 
+//     else     res.status(200).send(createdObj); 
+//   })
+});
+
+//fetch by app_id
+router.get('/ResourceType/fetchByAppId/:app_id', (req,res,next) =>{
+  ResourceType.find({application_id: req.params.app_id}, (err, app) => {  
+    console.log( req.params.app_id);
+  if (err) {res.json(err);} 
+  else {res.json(app);}
+});
 });
 
 //edit rt
@@ -149,7 +196,12 @@ router.delete('/delResourceType/:id' , (req,res,next) => {
 
   // Add Attribute
   router.post('/attributes/addAttribute', (req, res, next) => {
-    
+
+
+    Attribute.find({Name:req.body.Name}).where('Application_Id').equals(req.body.Application_Id).count((err,data)=>{
+      console.log(data);
+      if(data==0) {
+  
     let newAttribute = new Attribute({
       Name            :req.body.Name,
       Type            :req.body.Type,
@@ -158,11 +210,54 @@ router.delete('/delResourceType/:id' , (req,res,next) => {
       Application_Id  :req.body.Application_Id,
       Single_Multiple :req.body.Single_Multiple
     });
-    Attribute.addAttribute(newAttribute ,(err, attribute) =>{
-      if(err) { res.status(500).json({Error: err.message}); }
-      else if(attribute == null) { res.status(500).json({success: false, msg: 'Something Went Wrong'}); }
-      else    { res.status(200).json({success: true, Attribute: attribute}); }
-    });
+
+    
+    newAttribute.save((err, attribute) =>{
+     
+      if(err)  res.send(err);  
+       else    res.status(200).send(attribute); 
+         })
+          }
+             else {
+              res.send("unique");
+              console.log("hello");
+               
+             }
+     });
+
+    //  Role.find({Role_name:req.body.Role_name}).where('Application_id').equals(req.body.Application_id).count((err,data)=>{
+    //   if(data==0) {
+      
+    //     let newRole = new Role({
+    //       Role_name : req.body.Role_name, 
+    //       Application_id : req.body.Application_id, 
+    //     });
+    //     console.log(req.body);
+    //     newRole.save( (err,createdObj ) => {
+    //       if(err)  res.send(err);  
+    //       else     res.status(200).send(createdObj); 
+    //     })
+    //        }
+    //        else {
+    //         res.send("unique");
+    //         console.log("hello");
+             
+    //        }
+    //  });
+    
+    // let newAttribute = new Attribute({
+    //   Name            :req.body.Name,
+    //   Type            :req.body.Type,
+    //   DataType        :req.body.DataType,
+    //   Description     :req.body.Description,
+    //   Application_Id  :req.body.Application_Id,
+    //   Single_Multiple :req.body.Single_Multiple
+    // });
+    // Attribute.addAttribute(newAttribute ,(err, attribute) =>{
+    //   if(err) { res.status(500).json({Error: err.message}); }
+    //   else if(attribute == null) { res.status(500).json({success: false, msg: 'Something Went Wrong'}); }
+    //   else    { res.status(200).json({success: true, Attribute: attribute}); }
+    // });
   });
 
   //edit Attribute
@@ -189,6 +284,15 @@ router.delete('/delResourceType/:id' , (req,res,next) => {
       if (err) { res.status(500).json({Error: err["errmsg"]}); }
       else { res.status(200).json({success: true, Attributes: attributes}); } 
     });
+  });
+
+  //fetch by app_id
+  router.get('/attributes/fetchByAppId/:app_id', (req,res,next) =>{
+    Attribute.find({Application_Id: req.params.app_id}, (err, app) => {  
+      console.log( req.params.app_id);
+    if (err) {res.json(err);} 
+    else {res.json(app);}
+  });
   });
 
   //fetch Attribute by ID
@@ -337,16 +441,26 @@ router.get('/role/:id', (req,res,next) =>{
 
 //Add Role
 router.post('/role/addRole', (req, res, next) => {
+   Role.find({Role_name:req.body.Role_name}).where('Application_id').equals(req.body.Application_id).count((err,data)=>{
+    if(data==0) {
+    
+      let newRole = new Role({
+        Role_name : req.body.Role_name, 
+        Application_id : req.body.Application_id, 
+      });
+      console.log(req.body);
+      newRole.save( (err,createdObj ) => {
+        if(err)  res.send(err);  
+        else     res.status(200).send(createdObj); 
+      })
+         }
+         else {
+          res.send("unique");
+          console.log("hello");
+           
+         }
+   });
 
-let newRole = new Role({
-  Role_name : req.body.Role_name, 
-  Application_id : req.body.Application_id, 
-});
-console.log(req.body);
-newRole.save( (err,createdObj ) => {
-  if(err)  res.status(500).json({Error:"Not working"});  
-  else     res.status(200).send(createdObj); 
-})
 });
 
 //edit Role
@@ -361,6 +475,14 @@ var id = req.params.id;
     else    res.status(200).send(result);
   });
 })
+//fetch by appid
+router.get('/role/fetchByAppId/:app_id', (req,res,next) =>{
+  Role.find({Application_id: req.params.app_id}, (err, app) => {  
+    console.log( req.params.app_id);
+  if (err) {res.json(err);} 
+  else {res.json(app);}
+});
+});
 
 //Delete Role
 router.delete('/role/delRole/:id' , (req,res,next) => {
@@ -384,21 +506,35 @@ router.get('/Fetch/Resource', (req, res, next) => {
 
 //Add App
 router.post('/addResource', (req, res, next) => {
-  let newApp = new Resource({
-  res_name        : req.body.res_name, 
-  res_displayname : req.body.res_displayname, 
-  res_descrpition : req.body.res_descrpition,
-  Resource_typeid : req.body.Resource_typeid,
-  attribute_id : req.body.attribute_id,
-  attribute_value : req.body.attribute_value, 
-  application_id : req.body.application_id
-});
-console.log(newApp);
 
-newApp.save( (err,createdObj ) => {
-  if(err)  res.status(500).json({Error : 'Not Working.'});  
-  else     res.status(200).json(createdObj); 
-})
+
+
+Resource.find({res_name:req.body.res_name}).where('application_id').equals(req.body.application_id).count((err,data)=>{
+  if(data==0) {
+  
+    let newApp = new Resource({
+      res_name        : req.body.res_name, 
+      res_displayname : req.body.res_displayname, 
+      res_descrpition : req.body.res_descrpition,
+      Resource_typeid : req.body.Resource_typeid,
+      attribute_id : req.body.attribute_id,
+      attribute_value : req.body.attribute_value, 
+      application_id : req.body.application_id
+    });
+    console.log(newApp);
+    
+    newApp.save( (err,createdObj ) => {
+      if(err)  res.status(500).json({Error : 'Not Working.'});  
+      else     res.status(200).json(createdObj); 
+    })
+       }
+       else {
+        res.send("unique");
+        console.log("hello");
+         
+       }
+ });
+
 });
 
 //fetch single app by id:
@@ -408,6 +544,16 @@ router.get('/Resource/:id', (req,res,next) =>{
   else {res.json(app);}
 });
 });
+
+//fetch by app_id
+router.get('/Resource/fetchByAppId/:app_id', (req,res,next) =>{
+  Resource.find({application_id: req.params.app_id}, (err, app) => {  
+    console.log( req.params.app_id);
+  if (err) {res.json(err);} 
+  else {res.json(app);}
+});
+});
+
 
 //edit App
 router.put('/UpdateResource/:id' , (req,res,next) => {
@@ -522,25 +668,21 @@ router.put('/updatePolicyTargetActions' , (req,res,next) => {
 
 //Add user
 router.post('/user/Add', (req, res, next) => {
-  
-	bcrypt.hash(req.body.password, null, null,function(err, hash) {
-    if (err) return next(err); 
-    store_password = hash; 
-   
-});
- 
-console.log(store_password);
-let NewUser = new User({
-name : req.body.username,
-    username : req.body.username, 
-    password : store_password,
-email : req.body.email,
-role : req.body.role,
-});
-NewUser.save( (err,createdObj ) => {
-  if(err)  res.status(500);  
-  else     res.status(200).send(createdObj); 
-})
+
+  let NewUser = new User({
+      name : req.body.name,
+      username : req.body.username, 
+      password : req.body.password,
+      email : req.body.email,
+      role : req.body.role,
+  });
+  User.addUser(NewUser, (err, user) => {
+    if(err) {
+      res.json({success: false, msg: 'Failed to register user'});
+    } else {
+      res.json({success: true, msg: 'User registered'});
+    }
+  });
 });
 
 //fetch All users
@@ -573,9 +715,12 @@ router.get('/user/:id', (req,res,next) =>{
 router.put('/UpdateUser/:id' , (req,res,next) => {
   var id = req.params.id;
   
-    User.update({_id : id  },{$set:req.body },(err , result) => {
-      if(err) res.status(500).send(err); 
-      else    res.status(200).send(result);
+  User.UpdateUser(id, req.body, (err, user) => {
+      if(err) {
+        res.json({success: false, msg: 'Failed to register user'});
+      } else {
+        res.json({success: true, msg: 'User registered'});
+      }
     });
 });
 

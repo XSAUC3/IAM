@@ -19,21 +19,10 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css",
-        "./assets/bower_components/bootstrap/dist/css/bootstrap.min.css",
-        "./assets/bower_components/font-awesome/css/font-awesome.min.css",
-        "./assets/dist/css/AuroUniversity.min.css",
-        "./assets/dist/css/skins/_all-skins.min.css",
-        "./assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css",
         "../node_modules/ngx-toastr/toastr.css"
       ],
       "scripts": [
- 
-        "./assets/bower_components/bootstrap/dist/js/bootstrap.min.js",
-        "./assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js",
-        "./assets/bower_components/fastclick/lib/fastclick.js",
-        "./assets/dist/js/AuroUniversity.min.js",
-        "./assets/dist/js/demo.js"
+
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

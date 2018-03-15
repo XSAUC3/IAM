@@ -12,6 +12,11 @@ export class LoginComponent implements OnInit {
 
   username: String;
   password: String;
+  email : String;
+
+  path : String;
+
+  rsp : Boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -28,7 +33,7 @@ export class LoginComponent implements OnInit {
         if(data.success) {
           this.authService.storeUserData(data.token, data.user);
           //Toast
-          this.toastr.success('You are now logged in Successfully.');
+          //this.toastr.success('You are now logged in Successfully.');
           //this.flashMessage.show('You are now logged in', {cssClass: 'alert-success', timeout: 5000});
           this.router.navigate(['dashboard']);
         } else {
@@ -40,7 +45,81 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  // Forgot Password
+  ForgotPassword = () => {
+    console.log("Done..!");
+    
+    let Email_Id = this.email;
+
+    if (Email_Id == (undefined || null)) {
+          this.toastr.error('Please Provide All The Necessary Fields.');
+    } else {
+      const email = {
+        mail: Email_Id
+      }
+
+      this.authService.forgotPassword(email).subscribe(data => {
+        if(data.success) {
+          //Toast
+          this.toastr.success('Mail is being sent Successfully to your Email.');
+        } else {
+          //Toast
+          this.toastr.error(data.msg);
+        }
+    });
+
+       this.email = "";
+    };
+  }
+
+  url : String;
+  uid : String;
+  change_password : String;
+  change_repassword : String;
+
+  onChangePassword(){
+    if(this.change_password === this.change_repassword){
+      let dt = {
+        id : this.uid,
+        password : this.change_password
+      }
+      this.authService.changePassword(dt).subscribe(data => {
+        if(data.success) {
+          //Toast
+          this.toastr.success('Password has been changed successfully..!');
+          this.rsp = false;
+          this.router.navigate(['/']);
+        } else {
+          //Toast
+          this.toastr.error('Something went Wrong..!');
+          this.router.navigate(['/']);
+        }
+    });
+    }
+  }
+
+  
+
   ngOnInit() {
+    let url = window.location.href;
+    console.log(url);
+    
+    if(url != 'http://localhost:4200/'){
+      let para = url.split('$')[1];
+      let id = para.split('&')[0];
+      let token = para.split('&')[1];
+      
+      this.authService.checkToken(id, token).subscribe(data => {
+        if(data.success == false) {
+          this.toastr.error('Link is Incorrect or is being expired..!');
+        }
+        else{
+          this.rsp = true;
+          // console.log(para,this.uid,this.token);
+          this.uid = id;
+        }
+      });
+    }
   }
 
 }

@@ -1,15 +1,38 @@
 
   <!-- Content Header (Page header) -->
   <section class="content-header">
-    <h1>
-      Resources
-      <small>View Resources</small>
-    </h1>
-    <ol class="breadcrumb"  style="background-color:#E8E8E8">
-      <li class="active"><b><a href="" style="color:blue" data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
-      <li class="Reload"><b><a style="color:red;cursor:pointer" (click)="refresh()"><i class="fa fa-repeat" ></i>&nbsp;&nbsp;Releod</a></b></li>
-      <li class="Reload"><b><a href="" style="color:green" [routerLink]="['/dashboard']"><i class="	fa fa-home" ></i>&nbsp;&nbsp;Home</a></b></li>
-    </ol>
+
+    <div class="row">
+      <div class="col-md-8">
+        <h1>
+          Resources
+          <small>View Resource</small>
+        </h1>
+      </div>
+      <div class="col-md-4">
+        <ol id="ol" class="breadcrumb">
+          <li class="active">
+            <b>
+              <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal">
+                <i class="material-icons">add</i>Add</a>
+            </b>
+          </li>
+          <li class="Reload">
+            <b>
+              <a style="color:#f44336;" (click)="refresh()">
+                <i class="material-icons">autorenew</i>Releod</a>
+            </b>
+          </li>
+          <li class="Reload">
+            <b>
+              <a style="color:#4caf50;" [routerLink]="['/dashboard']">
+                <i class="material-icons">home</i>Home</a>
+            </b>
+          </li>
+        </ol>
+      </div>
+    </div>
+  
   </section>
 
   <!-- Main content -->
@@ -74,7 +97,7 @@
             <!-- <td>{{res.attribute_id}}</td> -->
             <!-- <td>{{res.attribute_value}}</td> -->
             <td>{{res.res_descrpition}}</td>
-            <td><span (click)="editRes(res._id);fetchResourceType();fetchApplications();fetchAttribute();" data-toggle="modal" data-target="#updateModal"  ><i  style="color:green" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="deleteRes(res._id)"><i class="fa fa-trash" style="color:red"></i></span></td>
+            <td><span (click)="editRes(res._id);fetchResourceType();fetchApplications();fetchAttribute();" data-toggle="modal" data-target="#updateModal"  > <i style="color:#4caf50;cursor:pointer" class="material-icons">create</i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(res._id, res.res_name)" data-toggle="modal" data-target="#deleteModal"><i class="material-icons" style="cursor: pointer; color:red;">delete</i></span></td>
           </tr>
           <!-- [routerLink]="['/viewApplication',app._id]" -->
           </tbody>
@@ -103,11 +126,11 @@
                   <div class="box-body">
                     <div class="form-group">
                       <label for="res_name">Resource Name</label>
-                      <input type="text" class="form-control" name="res_name" id="res_name" placeholder="Enter name" ngModel>
+                      <input autocomplete="off" type="text" class="form-control" name="res_name" id="res_name" placeholder="Enter name" ngModel>
                     </div>
                     <div class="form-group">
                       <label for="res_displayname">Resource Display name</label>
-                      <input type="text" class="form-control" name="res_displayname" id="res_displayname" placeholder="Enter display name" ngModel>
+                      <input autocomplete="off" type="text" class="form-control" name="res_displayname" id="res_displayname" placeholder="Enter display name" ngModel>
                     </div>
                     <div class="form-group">
                       <label for="Resource_typeid">Resource Type</label>
@@ -115,12 +138,12 @@
                         <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.resourceType_name}}</option>
                       </select>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label for="application_id">Application Name</label>
                       <select class="form-control" name="application_id" id="application_id" placeholder="Select Application name" ngModel>
                         <option *ngFor="let app of applications" value={{app._id}}>{{app.app_name}}</option>
                       </select>
-                    </div>
+                    </div> -->
                     
                     <div class="form-group">
                       <label for="attribute_id">Attribute Name</label>
@@ -131,15 +154,17 @@
                           <div class="col-md-5" >
                             <!-- <input [(ngModel)]="newAction" name="newAction" type="text" placeholder="Add Action" class="form-control"> -->
                             <select class="form-control" name="attribute_id" id="attribute_id" placeholder="Select Attribute name" [(ngModel)]="attribute_id">
-                                <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
+                                <option value="" selected disabled>Select Attribute</option> 
+
+                              <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
                               </select>
                           </div>
                          <div class="col-md-4">
-                             <input type="text" class="form-control" name="attribute_value" id="attribute_value" placeholder="Enter Attribute value" [(ngModel)]="attribute_value">
+                             <input autocomplete="off" type="text" class="form-control" name="attribute_value" id="attribute_value" placeholder="Enter Attribute value" [(ngModel)]="attribute_value">
                           </div>
                          <div class="col-md-1" style="text-align:right">
                            
-                            <a  (click)="pushAction()" class="btn btn-success"><i class="fa fa-plus"></i>Add</a>
+                            <a  (click)="pushAction()" class="btn btn-success"><i class="material-icons">add</i></a>
                           </div>
                         </div>
                         <br>
@@ -166,7 +191,7 @@
                     </div> -->
                     <div class="form-group">
                       <label for="exampleInputEmail1">Resource Description</label>
-                      <textarea class="form-control" name="res_descrpition" id="res_descrpition" placeholder="Enter description" ngModel></textarea>
+                      <textarea autocomplete="off" class="form-control" name="res_descrpition" id="res_descrpition" placeholder="Enter description" ngModel></textarea>
                     </div>
                    
                   </div>
@@ -214,12 +239,12 @@
                               <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.resourceType_name}}</option>
                             </select>
                           </div>
-                          <div class="form-group">
+                          <!-- <div class="form-group">
                             <label for="application_id">Application name</label>
                             <select class="form-control" name="uapplication_id" id="uapplication_id" placeholder="Select Application Type name" [(ngModel)]="uData.application_id">
                             <option *ngFor="let app of applications" value={{app._id}}>{{app.app_name}}</option>
                             </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="attribute_id">Attribute Name</label>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -229,7 +254,8 @@
                                     <div class="col-md-5" >
                                       <!-- <input [(ngModel)]="newAction" name="newAction" type="text" placeholder="Add Action" class="form-control"> -->
                                       <select class="form-control" name="attribute_id" id="attribute_id" placeholder="Select Attribute name" [(ngModel)]="attribute_id">
-                                          <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
+                                        <option value="" selected disabled>Select Attribute</option> 
+                                        <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
                                         </select>
                                     </div>
                                    <div class="col-md-4">
@@ -237,7 +263,7 @@
                                     </div>
                                    <div class="col-md-1" style="text-align:right">
                                      
-                                      <a  (click)="pushAction()" class="btn btn-success"><i class="fa fa-plus"></i>Add</a>
+                                      <a  (click)="pushAction()" class="btn btn-success"><i class="material-icons">add</i></a>
                                     </div>
                                   </div>
                                   <br>
@@ -287,6 +313,33 @@
               </div>
       
               <!-- End UpdateModal -->
+
+
+              <!-- Delete modal -->
+              <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                          <button type="button" style="color: red" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                        <h4 class="modal-title" id="exampleModalLabel">Delete Attribute</h4>
+                        <hr style="border-top: 1px solid #000; margin-bottom:0;">
+                      </div>
+                      <div class="modal-body">
+                          <div>
+                            <h5>Are You Sure You Want To Delete {{attributeNameToBeDeleted}} Resource?</h5>
+                          </div>
+                          
+                          <div class="modal-footer">
+                            <button type="button" (click)="deleteRes(attributeIdToBeDeleted)" class="btn btn-primary">Yes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                          </div>
+                      </div>
+                    
+                    </div>
+                  </div>
+                </div>
 
         </section>
        

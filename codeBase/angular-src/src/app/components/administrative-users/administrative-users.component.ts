@@ -36,12 +36,29 @@ uExist = false;
 private headers = new Headers({ 'Content-Type': 'resources/json'});
 user = [];
 roles = [];
+addRole = [];
+
+role = '';
+pushAction = function() {
+  if(this.role != '') {
+    let object = {
+      role_id: this.role
+    };
+   this.addRole.push(object);
+   this.role = "";
+  }
+  console.log(this.addRole);
+}
+
+removeAction = function(index) {
+  this.addRole.splice(index,1);
+}
 
 fetchRoles=function() {
   this.http.get("http://localhost:3000/api/role/Roles").subscribe(
     (res: Response) => {
       this.roles = res.json();
-      console.log(this.applications);
+      console.log(this.roles);
     }
   )
  }
@@ -63,6 +80,15 @@ refresh = function() {
   this.toastr.info('Page Reloaded.');
 }
 
+attributeIdToBeDeleted : String;
+attributeNameToBeDeleted : String;
+
+// Set Delete Attribute
+setDeleteAttribute = (_id, Name) => {
+  this.attributeIdToBeDeleted = _id;
+  this.attributeNameToBeDeleted = Name;
+}
+
 //Del App
 deleteUser = function(id) {
  
@@ -71,6 +97,7 @@ deleteUser = function(id) {
     .then(() => {
     this.fetchData();
     this.toastr.error('User Deleted.');
+    $('#deleteModal').modal('toggle');
    this._router.navigate(['/app/admin-user']);
   
     })
@@ -82,10 +109,10 @@ deleteUser = function(id) {
   if(a.res_name != "") {
   this.aObj = {
     "name":a.name,
-	"username":a.username,
+	  "username":a.username,
     "password":a.password,
-	"email":a.email,
-	"role":a.role
+	  "email":a.email,
+	  "role":this.addRole
   }
   console.log(this.aObj);
   
@@ -108,6 +135,7 @@ deleteUser = function(id) {
     this.uresource = res.json();
     console.log(res.json());
     this.uData = this.uresource;
+    this.addRole = this.uData.role;
     console.log(this.uData);
 
  
@@ -132,12 +160,12 @@ deleteUser = function(id) {
        "username":updateData.username,
        "password":updateData.password,
        "email":updateData.email,
-       "role":updateData.role,
+       "role":this.addRole,
 	   "status":updateData.status
      }
      console.log(this.editObj);
  
-     this.http.put("http://localhost:3000/user/UpdateUser/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+     this.http.put("http://localhost:3000/api/UpdateUser/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
        console.log(res);
        $('#updateModal').modal('toggle');
        this._router.navigate(['/admin-user']);

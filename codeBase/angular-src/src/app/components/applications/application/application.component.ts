@@ -51,39 +51,42 @@ export class ApplicationComponent implements OnInit {
 
    //Del App
    deleteApp = function(id) {
-    var q = confirm("Do you really want to delete?")
-    if(q==true) {
     const url = "http://localhost:3000/api/delApp/" + id;
     return this.http.delete(url, {headers: this.headers}).toPromise()
       .then(() => {
       this.fetchData();
       this.toastr.error('Application Deleted.');
-     this._router.navigate(['/app/application']);
-    
+      $('#deleteModal').modal('toggle');
+      this._router.navigate(['/app/application']);
       })
-  
-  }
 }
 
 //Add App
   addNewApp = function(a) {
-    if(a.name != "") {
-    this.aObj = {
-      "app_id":a.id,
-      "app_name":a.app_name,
-      "app_displayname":a.app_displayname,
-      "app_description":a.app_description
+    console.log(a);
+    if(a.app_name===undefined||a.app_name===null||a.app_name==='') {
+      this.toastr.error('Application name required.');
+      //this.isEmpty = true;
     }
-    this.http.post("http://localhost:3000/api/addApp" , this.aObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
-      console.log(res);
-    this.fetchData();
-    $('#addModal').modal('toggle');
-    this.toastr.success('Application Added.');
-    })
-  }
-  else{
-    this.isEmpty = true;
-  }
+    else {
+
+      this.aObj = {
+        "app_id":a.id,
+        "app_name":a.app_name,
+        "app_displayname":a.app_displayname,
+        "app_description":a.app_description
+      }
+      this.http.post("http://localhost:3000/api/addApp" , this.aObj ,  {Headers : this.headers} ).subscribe(res=> {
+        console.log(res);
+      this.fetchData();
+      $('#addModal').modal('toggle');
+      this.toastr.success('Application Added.');
+      },
+      err=> {
+        this.toastr.error('Application already exists.');
+       })
+    }
+    
 }
 
 //Edit App
@@ -129,6 +132,15 @@ updateApp = function(updateData,id)
     })
 }
 }
+
+applicationIdToBeDeleted : String;
+applicationNameToBeDeleted : String;
+
+  // Set Delete Attribute
+  setDeleteApplication = (_id, Name) => {
+    this.applicationIdToBeDeleted = _id;
+    this.applicationNameToBeDeleted = Name;
+  }
 
 
   ngOnInit() {

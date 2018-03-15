@@ -1,15 +1,38 @@
 
   <!-- Content Header (Page header) -->
   <section class="content-header">
-    <h1>
-      Attributes
-      <small>View Attributes</small>
-    </h1>
-    <ol class="breadcrumb"  style="background-color:#E8E8E8">
-      <li class="active"><b><a style="color:blue; cursor: pointer;" (click)="getApplications()"  data-toggle="modal" data-target="#addModal">&nbsp;&nbsp;<i class="fa fa-plus" ></i>&nbsp;&nbsp;Add</a></b></li>
-      <li class="Reload"><b><a style="color:red; cursor: pointer;" (click)="refresh()"><i class="fa fa-repeat" ></i>&nbsp;&nbsp;Releod</a></b></li>
-      <li class="Reload"><b><a style="color:green; cursor: pointer;" [routerLink]="['/dashboard']"><i class="	fa fa-home" ></i>&nbsp;&nbsp;Home</a></b></li>
-    </ol>
+
+    <div class="row">
+      <div class="col-md-8">
+        <h1>
+          Attributes
+          <small>View Attribute</small>
+        </h1>
+      </div>
+      <div class="col-md-4">
+        <ol id="ol" class="breadcrumb">
+          <li class="active">
+            <b>
+              <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal">
+                <i class="material-icons">add</i>Add</a>
+            </b>
+          </li>
+          <li class="Reload">
+            <b>
+              <a style="color:#f44336;" (click)="refresh()">
+                <i class="material-icons">autorenew</i>Releod</a>
+            </b>
+          </li>
+          <li class="Reload">
+            <b>
+              <a style="color:#4caf50;" [routerLink]="['/dashboard']">
+                <i class="material-icons">home</i>Home</a>
+            </b>
+          </li>
+        </ol>
+      </div>
+    </div>
+  
   </section>
 
   <!-- Main content -->
@@ -24,62 +47,7 @@
             <table id="dt" class="table table-bordered table-hover" >
               
               <thead class="thead-inverse">
-                <tr >
-                  <th colspan="7">
-                      <div class="col-sm-1"><label style="margin-top:5px;">Filters:&nbsp;&nbsp;&nbsp;&nbsp;</label></div>
-                      <div class="col-sm-11">
-                    <form role="form" #filterData = "ngForm"  (ngSubmit)="addFilters(filterData.value); filterData.reset()">
-                            <div class="form-group" style="display:inline-block">
-                                
-                                <label for="Name">Name</label>
-                                <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter Attribute Name" ngModel>
-                            </div>
-                            <div class="form-group" style="display:inline-block">
-                                  <label>&nbsp;&nbsp;</label>
-                                  <label for="Type">Type</label>
-                                  <input type="text" class="form-control" name="Type" id="Type" placeholder="Enter Attribute Type" ngModel>
-                            </div>
-                            <div class="form-group" style="display:inline-block">
-                                    <label>&nbsp;&nbsp;</label>
-                                    <label for="DataType">DataType</label>
-                                    <input type="text" class="form-control" name="DataType" id="DataType" placeholder="Enter Attribute DataType" ngModel>
-                            </div>
-                            <label>&nbsp;&nbsp;</label>
-                            <button type="submit" class="btn btn-primary">Filter</button>
-                    </form>
-                  </div>
-                  <div class="clearfix"></div>
-                  <hr style="border-top: 1px solid #000;">
-                    <div>
-                      <div class="col-sm-1"><label>Applied Filters:&nbsp;&nbsp;</label></div>
-                      <div class="col-sm-11" style="border-style: solid;">
-                          <div class="col-sm-1" style="display:inline-block;padding-left:0; border-right-style: solid;">
-                            <label>Name</label>
-                          <br>
-                            <label>Type</label>
-                          <br>
-                            <label>DataType</label>
-                          </div>
-                          
-                          <div class="col-sm-7" style="display:inline-block;">
-                              <div *ngIf="filterName != null && filterName != undefined; then Name" style="display:inline-block"></div>
-                              <ng-template #Name><label>{{filterName}}</label></ng-template>
-                           
-                            <br>
-                                <div *ngIf="filterType != null && filterType != undefined; then Type" style="display:inline-block"></div>
-                                <ng-template #Type><label>{{filterType}}</label></ng-template>
-                          
-                            <br>
-
-                            <div *ngIf="filterDataType != null && filterDataType != undefined; then DataType" style="display:inline-block"></div>
-                            <ng-template #DataType><label>{{filterDataType}}</label></ng-template>
-                          </div>
-                          
-                          <div class="col-sm-4" style="display:inline-block;"></div>
-                      </div>
-                    </div>
-                  </th>
-                </tr>
+               
                 
                 <tr>
                   <!-- <th style="width: 10%;">#Id</th> -->
@@ -109,7 +77,7 @@
                           </ng-template>
                       </ng-container>
                       <td>{{attribute.Single_Multiple}}</td>
-                      <td><span   (click)="editAttribute(attribute._id)" data-toggle="modal" data-target="#updateModal"  ><i  style="cursor: pointer; color:green;" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(attribute._id, attribute.Name)" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash" style="cursor: pointer; color:red;"></i></span></td>
+                      <td><span   (click)="editAttribute(attribute._id)" data-toggle="modal" data-target="#updateModal"  > <i style="color:#4caf50;cursor:pointer" class="material-icons">create</i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(attribute._id, attribute.Name)" data-toggle="modal" data-target="#deleteModal"> <i class="material-icons" style="color:#f44336;cursor:pointer">delete</i></span></td>
                     </tr>
                 </ng-template>
                 
@@ -128,7 +96,7 @@
                             </ng-template>
                         </ng-container>
                         <td>{{attribute.Single_Multiple}}</td>
-                        <td><span   (click)="editAttribute(attribute._id)" data-toggle="modal" data-target="#updateModal"  ><i  style="cursor: pointer; color:green;" class="fa fa-edit"></i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(attribute._id, attribute.Name)" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash" style="cursor: pointer; color:red;"></i></span></td>
+                        <td><span   (click)="editAttribute(attribute._id)" data-toggle="modal" data-target="#updateModal"  > <i style="color:#4caf50;cursor:pointer" class="material-icons">create</i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(attribute._id, attribute.Name)" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash" style="cursor: pointer; color:red;"></i></span></td>
                       </tr>
                 </ng-template>
                 
@@ -163,37 +131,43 @@
                   <div class="box-body">
                     <div class="form-group">
                       <label for="Name">Attribute Name</label>
-                      <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter Attribute Name" ngModel>
+                      <input type="text" autocomplete="off" class="form-control" name="Name" id="Name" placeholder="Enter Attribute Name" ngModel>
                     </div>
                     <div class="form-group">
                       <label for="Type">Attribute Type</label>
                       <select class="form-control" name="Type" id="Type"  ngModel>
-                          <option>Fixed</option>
+                          <option value="" selected disabled>Select Type</option> 
+ 
+                        <option>Fixed</option>
                           <option>Dynamic</option>
                       </select>
                     </div>
                     <div class="form-group">
                       <label for="DataType">DataType</label>
                       <select class="form-control" name="DataType" id="DataType" ngModel>
-                          <option>String</option>
+                          <option value="" selected disabled>Select Datatype</option> 
+  
+                        <option>String</option>
                           <option>Boolean</option>
                           <option>Date</option>
                       </select>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label for="Application_Id">Application Name</label>
                       <select class="form-control" name="Application_Id" id="Application_Id" ngModel>
                           <option *ngFor="let application of applications" value="{{application._id}}">{{application.app_name}}</option>
                       </select>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                       <label for="Description">Description</label>
-                      <textarea rows="5" style="resize: vertical;" class="form-control" name="Description" id="Description" placeholder="Enter Attribute Description" ngModel></textarea>
+                      <textarea rows="5" autocomplete="off" style="resize: vertical;" class="form-control" name="Description" id="Description" placeholder="Enter Attribute Description" ngModel></textarea>
                     </div>
                     <div class="form-group">
                         <label for="Single_Multiple">Single | Multiple</label>
                         <select class="form-control" name="Single_Multiple" id="Single_Multiple" ngModel>
-                            <option>Single</option>
+                            <option value="" selected disabled>Select Value Type</option> 
+ 
+                          <option>Single</option>
                             <option>Multiple</option>
                         </select>
                     </div>
@@ -238,6 +212,7 @@
                           <div class="form-group">
                             <label for="Type">Attribute Type</label>
                             <select class="form-control" name="Type" id="Type"  [(ngModel)]="uData.Type">
+                                <option value="" selected disabled>Select Type</option> 
                                 <option>Fixed</option>
                                 <option>Dynamic</option>
                             </select>
@@ -245,17 +220,19 @@
                           <div class="form-group">
                             <label for="DataType">DataType</label>
                             <select class="form-control" name="DataType" id="DataType" [(ngModel)]="uData.DataType">
-                                <option>String</option>
+                                <option value="" selected disabled>Select DataType</option> 
+
+                              <option>String</option>
                                 <option>Boolean</option>
                                 <option>Date</option>
                             </select>
                           </div>
-                          <div class="form-group">
+                          <!-- <div class="form-group">
                             <label for="Application_Id">Application ID</label>
                             <select class="form-control" name="Application_Id" id="Application_Id" [(ngModel)]="uData.Application_Id">
                               <option *ngFor="let application of applications" value="{{application._id}}">{{application.app_name}}</option>
                             </select>
-                          </div>
+                          </div> -->
                           <div class="form-group">
                             <label for="Description">Description</label>
                             <textarea rows="5" style="resize: vertical;" class="form-control" name="Description" id="Description" placeholder="Enter Attribute Description" [(ngModel)]="uData.Description"></textarea>
@@ -263,7 +240,9 @@
                           <div class="form-group">
                               <label for="Single_Multiple">Single | Multiple</label>
                               <select class="form-control" name="Single_Multiple" id="Single_Multiple" [(ngModel)]="uData.Single_Multiple">
-                                  <option>Single</option>
+                                  <option value="" selected disabled>Select Value Type</option> 
+ 
+                                <option>Single</option>
                                   <option>Multiple</option>
                               </select>
                           </div>

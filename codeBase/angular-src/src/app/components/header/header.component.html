@@ -1,40 +1,64 @@
-<header class="main-header">
-  <!-- Logo -->
-  <a href="#" class="logo">
-    <!-- mini logo for sidebar mini 50x50 pixels -->
-    <span class="logo-mini"><img src="assets/dist/img/kLogoS.jpg"  style="height: 46px;width: 50px;"alt="Kavalus"></span>
-    <!-- logo for regular state and mobile devices -->
-       <span class="logo-lg" ><img src="assets/dist/img/kLogo.jpg"  style="height: 46px;width: 134px;"alt="Kavalus"></span>
-    <!-- <span class="logo-lg" ><b> Kavalus Inc.</b></span> -->
-  </a>
-  <!-- Header Navbar: style can be found in header.less -->
-  <nav class="navbar navbar-static-top">
-    <!-- Sidebar toggle button-->
-    <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </a>
 
-    <div class="navbar-custom-menu">
-      <ul class="nav navbar-nav">
-        <li class="dropdown user user-menu">
-          <a (click)="onLogoutClick()" href="" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-power-off"></i>
-            <span class="hidden-xs" >Sign Out</span>
-          </a>
-          
-        </li>
-        <!-- Notifications: style can be found in dropdown.less -->
+ <nav class="navbar navbar-transparent" style=" height: 70px;background-color:#fff;">
+        <div class="container-fluid">
+            <div class="navbar-minimize">
+                <button id="minimizeSidebar" class="btn btn-round btn-warning btn-fill btn-just-icon">
+                    <i class="material-icons visible-on-sidebar-regular">more_vert</i>
+                    <i class="material-icons visible-on-sidebar-mini">view_list</i>
+                </button>
+            </div>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="">KIAM</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                    <form class="navbar-form navbar-right" role="search">
+                    </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- <li>
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="material-icons">person</i>
+                            <p class="hidden-lg hidden-md">Profile</p>
+                        </a>
+                        <style>
+                        .dd :hover{
+                            background-color: orange !important;
+                        }
+                        </style>
+                        <ul class="dropdown-menu">
+                            <li class="dd">
+                                <a><i class="material-icons">face</i>  view profile</a>
+                            </li>
+                            <li class="dd" (click)="onLogoutClick()">
+                                <a><i class="material-icons">exit_to_app</i>  Logout</a>
+                            </li>
+                        </ul>
+                    </li> -->
+                    <li >
+                        <a class="dropdown-toggle">
+                            <i class="material-icons">folder_open</i>    
+                            <select style="border: none; background: #fff; border:2px solid orange;"(change)="getAppId()" placeholder="app" [(ngModel)]="selected_id" >
+                                <option value="" selected  disabled="true">Select Application</option>
+                                <option *ngFor="let application of applications" value={{application._id}} >{{application.app_name}}</option>
+                            </select>
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
+                    <li style="cursor:pointer">
+                        <a class="dropdown-toggle" (click)="onLogoutClick()" >
+                           <i class="material-icons">power_settings_new</i>  Logout
+                           <div class="ripple-container"></div>
+                        </a>
+                    </li>
+                    <li class="separator hidden-lg hidden-md"></li>
+                </ul>
+            </div>
+        </div>
+        <br><br>
+    </nav>
     
-       
-        
-        <!-- Control Sidebar Toggle Button -->
-       
-      </ul>
-    </div>
-  </nav>
-</header>
-
-<!-- =============================================== -->

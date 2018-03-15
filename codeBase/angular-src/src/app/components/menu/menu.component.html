@@ -1,85 +1,180 @@
-<!-- Left side column. contains the sidebar -->
-<aside class="main-sidebar">
-  <!-- sidebar: style can be found in sidebar.less -->
-  <section class="sidebar">
-    <ul class="sidebar-menu" data-widget="tree">
+<div class="sidebar" data-active-color="orange" >
+<div class="logo">
+      <a class="simple-text">
+        <img src="assets/img/kavalus.png">
+      </a>
+  </div>
+  <div class="sidebar-wrapper">
+      <!-- <ul *ngIf="!componentVisibility" class="nav">
+          <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}"  data-toggle="tooltip" data-placement="right" title="Select Application">
+              <a [routerLink]="[menuItem.path]" >
+                 <i class="material-icons">{{menuItem.icon}}</i>
+                 <p ><b style="color:#a9afbb">{{menuItem.title}}</b></p>
+              </a>
+          </li>
+      </ul> -->
+
+
+      <ul *ngIf="componentVisibility" class="nav">
       
-      <li class="treeview" [routerLink]="['/dashboard']" [routerLinkActive]="['active']">
-        <a href="#">
-          <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+        <li [routerLink]="['/dashboard']" [routerLinkActive]="['active']">
+          <a >
+            <i class="material-icons">dashboard</i> <p>Dashboard</p>
+           
+          </a>
+          
+        </li>
+        <li   [routerLink]="['/application']" [routerLinkActive]="['active']">
+          <a  >
+            <i class="material-icons">folder_open</i>
+            <p>Applications</p>
          
-        </a>
-        
-      </li>
-      <li class="treeview"  [routerLink]="['/application']" [routerLinkActive]="['active']">
-        <a href="#">
-          <i class="fa fa-folder"></i>
-          <span>Applications</span>
-       
-        </a>
-       
-      </li>
-     
-      <li class="treeview" [routerLink]="['/resources']" [routerLinkActive]="['active']">
-        <a href="#">
-          <i class="fa fa-pie-chart"></i> <span>Resources</span>
+          </a>
          
-        </a>
+        </li>
+        <li [routerLink]="['/attributes']" [routerLinkActive]="['active']">
+            <a >
+              <i class="material-icons">view_module</i>
+               <p>Attributes</p>
+           
+            </a>
+          </li>
+          <li [routerLink]="['/resourceTypes']" [routerLinkActive]="['active']">
+            <a >
+              <i class="material-icons">collections_bookmark</i>
+              <p>Resource Type</p>
+            </a>
+           
+          </li>
+        <li [routerLink]="['/resources']" [routerLinkActive]="['active']">
+          <a >
+            <i class="material-icons">extension</i> <p>Resources</p>
+          </a>
+        </li>
+  
         
-      </li>
-
-
-      <li class="treeview" [routerLink]="['/resourceTypes']" [routerLinkActive]="['active']">
-        <a href="#">
-          <i class="fa fa-files-o"></i>
-          <span>Resource Type</span>
        
-        </a>
        
-      </li>
-      <li class="treeview" [routerLink]="['/attributes']" [routerLinkActive]="['active']">
-        <a href="#">
-          <i class="fa fa-th"></i>
-           <span>Attributes</span>
-       
-        </a>
-      </li>
-      <li class="treeview" [routerLink]="['/policies']" [routerLinkActive]="['active']">
-        <a href="#">
-          <i class="fa fa-book"></i>
-          <span>Policies</span>
-        
-        </a>
-        
-      </li>
-      <li class="treeview" [routerLink]="['/roles']" [routerLinkActive]="['active']">
-        <a href="#">
-          <i class="fa fa-users"></i>
-          <span>Roles</span>
-        
-        </a>
-        
-      </li>
-      <li class="treeview" [routerLink]="['/adminUsers']" [routerLinkActive]="['active']">
-          <a href="#">
-            <i class="fa fa-user"></i>
-            <span>Administrative Users</span>
+        <li [routerLink]="['/roles']" [routerLinkActive]="['active']">
+          <a >
+            <i class="material-icons">supervisor_account</i>
+            <p>Roles</p>
           
           </a>
           
         </li>
-    
+        <li  [routerLink]="['/policies']" [routerLinkActive]="['active']">
+            <a >
+              <i class="material-icons">description</i>
+              <p>Policies</p>
+            
+            </a>
+            
+          </li>
+        <li  [routerLink]="['/adminUsers']" [routerLinkActive]="['active']">
+            <a >
+              <i class="material-icons">account_box</i>
+              <p>Administrative Users</p>
+            
+            </a>
+            
+          </li>
       
+        
+        
+       
+       
       
-     
-     
-    
-     
-    </ul>
-  </section>
+       
+      </ul>
+      <ul *ngIf="!componentVisibility" class="nav" >
+        
+          <li  [routerLink]="['/dashboard']" [routerLinkActive]="['active']">
+            <a>
+              <i class="material-icons">dashboard</i> <p>Dashboard</p>
+             
+            </a>
+            
+          </li>
+          <li  [routerLink]="['/application']" [routerLinkActive]="['active']">
+            <a >
+              <i class="material-icons">folder_open</i>
+              <p>Applications</p>
+           
+            </a>
+           
+          </li>
+          <li data-toggle="modal" data-target="#exampleModal" >
+            <a  title="Please select application first" style="cursor: not-allowed;">
+              <i class="material-icons">view_module</i>
+               <p>Attributes</p>
+           
+            </a>
+          </li>
+          <li data-toggle="modal" data-target="#exampleModal">
+            <a  title="Please select application first" style="cursor: not-allowed;">
+              <i class="material-icons">collections_bookmark</i>
+              <p>Resource Type</p>
+           
+            </a>
+           
+          </li>
+          <li data-toggle="modal" data-target="#exampleModal">
+            <a  title="Please select application first" style="cursor: not-allowed;">
+              <i class="material-icons">extension</i> <p>Resources</p>
+             
+            </a>
+            
+          </li>
+          <li data-toggle="modal" data-target="#exampleModal">
+            <a title="Please select application first" style="cursor: not-allowed;">
+              <i class="material-icons">supervisor_account</i>
+              <p>Roles</p>
+            
+            </a>
+            
+          </li>
+        
+          <li data-toggle="modal" data-target="#exampleModal">
+            <a  title="Please select application first" style="cursor: not-allowed;">
+              <i class="material-icons">description</i>
+              <p>Policies</p>
+            
+            </a>
+            
+          </li>
+       
+          <li [routerLink]="['/adminUsers']" [routerLinkActive]="['active']">
+              <a >
+                <i class="material-icons">account_box</i>
+                <p>Administrative Users</p>
+              
+              </a>
+              
+            </li>
+            </ul>
+    </div>
+</div>
 
 
-  <!-- /.sidebar -->
-</aside>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Application Error</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         Please select application first.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!-- =============================================== -->
+
+

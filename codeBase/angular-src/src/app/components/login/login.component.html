@@ -1,34 +1,103 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<div class="container" ng-app="myApp">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="page-header">
-        <h1>Kavalus Inc.</h1>
-      </div>
-    </div>
-    
-    <div ui-view></div>
-    
-  </div>
-    <div class="col-md-12">
-      <h3>Login Page</h3>
-      
-      <form (submit)="onLoginSubmit()" class="form">
-        <div class="col-md-4">
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Enter Username" [(ngModel)]="username" name="username">
-          </div> 
-
-          <div class="form-group">
-            <input type="password" class="form-control" placeholder=" Enter Password" [(ngModel)]="password" name="password">
+<link rel="stylesheet" type="text/css" href="https://colorlib.com/etc/lf/Login_v2/css/main.css">
+<div *ngIf="!rsp" class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100" style="padding: 40px 55px 33px 55px;">
+				<form class="login100-form validate-form" (submit)="onLoginSubmit()">
+          <span class="login100-form-title p-b-48">
+            <img src="assets/img/kavalus.png">
+          </span>
+					<span class="login100-form-title p-b-26">
+						KIAM
+          </span>
+          <br>
+          <div class="form-group has-warning">
+              <label for="exampleInputPassword1" >Username</label>
+              <input type="text" class="form-control" autocomplete="off" [(ngModel)]="username" name="username" >
           </div>
 
-          <div class="form-group">
-            <input type="submit" class="btn btn-success" value="Submit" name="submit"/>
-            <span class="text-danger"></span>
-          </div>
+          <div class="form-group has-warning">
+              <label for="exampleInputPassword1">Password</label>
+              <input type="password" class="form-control" autocomplete="off" [(ngModel)]="password" name="password">
+            </div>
 
+					<div class="container-login100-form-btn">
+							<button class="btn btn-warning btn-round" type="submit" style="width: 100%;">
+								Login
+							</button>
+					</div>
+
+          <div class="container-login100-form-btn" >
+							<a class="text-warning" data-toggle="modal" data-target="#fgp" style="width: 100%;text-align: center;">
+                forgot password ?
+              </a>
+          </div>
+          
+        </form>
+        
+        <div class="modal fade" id="fgp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" style="margin-top: 20%;" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title" id="exampleModalLongTitle">
+                    Reset Password
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons">clear</i>
+                    </button>
+                  </h2>
+                </div>
+                <div class="modal-body">
+                    <h4>Enter Email ID</h4>
+                    <p class="text-muted">enter Email ID to enable resetting password by email</p>
+                    <form>
+                      <div class="form-group has-warning">
+                        <input autocomplete="off" type="text" class="form-control" name="email" id="email" placeholder="Enter Email ID" [(ngModel)]="email">
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning" data-dismiss="modal" (click)="ForgotPassword()">Reset Password</button>
+                      </div>
+                    </form>
+                </div>
+              </div>
+            </div>
         </div>
-      </form>
-    </div>
+
+
+			</div>
+		</div>
+  </div>
+
+<div *ngIf="rsp">
+    <div class="container-login100">
+        <div class="wrap-login100" style="padding: 40px 55px 33px 55px;">
+          <form class="login100-form validate-form" (submit)="onChangePassword()">
+            <span class="login100-form-title p-b-48">
+              <img src="assets/img/kavalus.png">
+            </span>
+            <br><br>
+            <span class="login100-form-title p-b-26">
+              Re-Set Password
+            </span>
+            <br>
+            <div class="form-group has-warning">
+                <input autocomplete="off" class="form-control"  type="hidden" [(ngModel)]="uid" name="uid" >
+            </div>
+            <div class="form-group has-warning">
+                <label for="exampleInputPassword1" >Password</label>
+                <input autocomplete="off" type="password" class="form-control" [(ngModel)]="change_password" name="change_password" >
+            </div>
+  
+            <div class="form-group has-warning">
+                <label for="exampleInputPassword1">Re-Enter Password</label>
+                <input autocomplete="off" type="password" class="form-control" [(ngModel)]="change_repassword" name="change_repassword">
+              </div>
+  
+            <div class="container-login100-form-btn">
+                <button class="btn btn-warning btn-round" type="submit" style="width: 100%;">
+                  Login
+                </button>
+              </div>
+          </form>
+        </div>
+      </div>
 </div>
