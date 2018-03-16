@@ -1,3 +1,4 @@
+import {policies,addPolicy,updatePolicy,delPolicy,Fetch_Resource,addPolicyTargetActions,updatePolicyTargetActions,resourceType,Roles,Resource} from '../../routeConfig';
 import { Component, OnInit } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { ToastrService } from 'ngx-toastr';
@@ -14,15 +15,15 @@ declare var $;
 })
 export class PoliciesComponent implements OnInit {
 
-  policiesurl     = 'http://localhost:3000/api/policies'
-  addpolicyurl    = 'http://localhost:3000/api/addPolicy'
+  policiesurl     = policies
+  addpolicyurl    = addPolicy
   fetchpolicyurl  = 'http://localhost:3000/api/policy/'
-  deletepolicyurl = 'http://localhost:3000/api/delPolicy/'
-  updatepolicyurl = 'http://localhost:3000/api/updatePolicy'
-  addpolicytargetactionsurl= 'http://localhost:3000/api/addPolicyTargetActions'
-  updatepolicytargetactionsurl= 'http://localhost:3000/api/updatePolicyTargetActions'
-  fetchresourcebyidurl = "http://localhost:3000/api/Resource/"
-  fetchresourcetypebyidurl = 'http://localhost:3000/api/resourceType/'
+  deletepolicyurl = delPolicy
+  updatepolicyurl = updatePolicy
+  addpolicytargetactionsurl= addPolicyTargetActions
+  updatepolicytargetactionsurl= updatePolicyTargetActions
+  fetchresourcebyidurl = Resource
+  fetchresourcetypebyidurl = resourceType
 
   policies = [];
 
@@ -77,7 +78,7 @@ export class PoliciesComponent implements OnInit {
   }
 //Fetch Roles
   fetchRoles=function() {
-    this._http.get("http://localhost:3000/api/role/Roles").subscribe(
+    this._http.get(Roles).subscribe(
       (res: Response) => {
         this.allroles = res.json();
         //console.log(this.allroles);
@@ -87,7 +88,7 @@ export class PoliciesComponent implements OnInit {
    }
 //Fetch Resources
 fetchResources=function() {
-  this._http.get("http://localhost:3000/api/Fetch/Resource").subscribe(
+  this._http.get(Fetch_Resource).subscribe(
     (res: Response) => {
       this.allresources = res.json();
       //console.log(this.allresources);

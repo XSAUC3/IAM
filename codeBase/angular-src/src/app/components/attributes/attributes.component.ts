@@ -1,3 +1,4 @@
+import {addAttribute,updateAttribute,deleteAttribute,allAttributes,attributes_fetchByAppId,attributeById,filterAttributes} from '../../routeConfig';
 import { ResourceTypesComponent } from './../resource-types/resource-types.component';
 import { AttributeDataService } from './services/attribute-data.service';
 import { Component, ViewContainerRef, OnInit } from '@angular/core';
@@ -68,7 +69,7 @@ export class AttributesComponent implements OnInit {
 session_id=sessionStorage.getItem('app_id');
 appAttr = function(session_id) {
 
-  this.http.get("http://localhost:3000/api/attributes/fetchByAppId/"+session_id).subscribe(
+  this.http.get(attributes_fetchByAppId+session_id).subscribe(
    (res: Response) => {
      this.attributes = res.json();
 

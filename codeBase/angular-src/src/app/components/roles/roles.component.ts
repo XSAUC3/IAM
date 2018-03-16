@@ -1,3 +1,4 @@
+import {authenticate,ForgotPassword,ForgotPassword_id_token,ChangePassword,Applications} from '../../routeConfig';
 import { Component, ViewContainerRef,OnInit } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { ActivatedRoute,Router } from '@angular/router';

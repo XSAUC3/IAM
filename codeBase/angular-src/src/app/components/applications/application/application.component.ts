@@ -1,3 +1,4 @@
+import {Applications,application,addApp,updateApp,delApp} from '../../../routeConfig';
 import { Component, ViewContainerRef,OnInit } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { ActivatedRoute,Router } from '@angular/router';
@@ -23,6 +24,7 @@ export class ApplicationComponent implements OnInit {
       $('#dt').DataTable();
 
   });
+  console.log(Applications);
   }
 
 // Var declarations
@@ -35,7 +37,7 @@ export class ApplicationComponent implements OnInit {
   apps = [];
   
   fetchData=function() {
-    this.http.get("http://localhost:3000/api/Applications").subscribe(
+    this.http.get(Applications).subscribe(
       (res: Response) => {
         this.apps = res.json();
         console.log(this.apps);
@@ -51,7 +53,7 @@ export class ApplicationComponent implements OnInit {
 
    //Del App
    deleteApp = function(id) {
-    const url = "http://localhost:3000/api/delApp/" + id;
+    const url = delApp + id;
     return this.http.delete(url, {headers: this.headers}).toPromise()
       .then(() => {
       this.fetchData();
@@ -76,14 +78,27 @@ export class ApplicationComponent implements OnInit {
         "app_displayname":a.app_displayname,
         "app_description":a.app_description
       }
-      this.http.post("http://localhost:3000/api/addApp" , this.aObj ,  {Headers : this.headers} ).subscribe(res=> {
-        console.log(res);
-      this.fetchData();
-      $('#addModal').modal('toggle');
-      this.toastr.success('Application Added.');
+      this.http.post(addApp , this.aObj ,  {Headers : this.headers} ).subscribe(res=> {
+        if(res._body=="unique") {
+          this.toastr.error('Application already exists.');
+        }
+        else{
+          console.log(res);
+          this.fetchData();
+          $('#addModal').modal('toggle');
+          this.toastr.success('Application Added.');
+        }
+    
+      // $(document).ready(function(){
+     
+      //   // $('#dt').DataTable();
+      //   $('#dt').each(function() {
+      //     this.fetchData();
+      // })
+    //});
       },
       err=> {
-        this.toastr.error('Application already exists.');
+        //this.toastr.error('Error Please .');
        })
     }
     
@@ -93,7 +108,7 @@ export class ApplicationComponent implements OnInit {
 
 editApp = function(id) {
  
- this.http.get("http://localhost:3000/api/application/"+id).subscribe(
+ this.http.get(application+id).subscribe(
     (res: Response) => {
       this.uApplication = res.json();
       console.log(res.json());
@@ -121,7 +136,7 @@ updateApp = function(updateData,id)
       "app_displayname":updateData.uapp_displayname,
       "app_description":updateData.uapp_description
     }
-    this.http.put("http://localhost:3000/api/updateApp/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+    this.http.put(updateApp+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
       console.log(res);
       $('#updateModal').modal('toggle');
       this._router.navigate(['/application']);

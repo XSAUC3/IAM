@@ -1,3 +1,4 @@
+import {Applications,updateAttribute,deleteAttribute,addAttribute,allAttributes,attributes_fetchByAppId,attributeById,filterAttributes} from '../../../routeConfig';
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
@@ -13,7 +14,7 @@ export class AttributeDataService {
     // tslint:disable-next-line:prefer-const
     let headers = new Headers();
     headers.append('Accept', 'application/json');
-    return this.http.get('http://localhost:3000/api/Applications', {headers: headers})
+    return this.http.get(Applications, {headers: headers})
     .map(res => res.json());
   }
 
@@ -21,7 +22,7 @@ export class AttributeDataService {
     // tslint:disable-next-line:prefer-const
     let headers = new Headers();
     headers.append('Accept', 'application/json');
-    return this.http.get('http://localhost:3000/api/attributes/allAttributes', {headers: headers})
+    return this.http.get(allAttributes, {headers: headers})
     .map(res => res.json());
   }
 
@@ -29,7 +30,7 @@ export class AttributeDataService {
     // tslint:disable-next-line:prefer-const
     let headers = new Headers();
     headers.append('Accept', 'application/json');
-    return this.http.get('http://localhost:3000/api/attributes/attributeById?_id=' + _id, {headers: headers})
+    return this.http.get(attributeById + _id, {headers: headers})
     .map(res => res.json());
   }
 
@@ -101,7 +102,7 @@ export class AttributeDataService {
       let headers = new Headers();
       headers.append('Content-Type', 'application/json');
       headers.append('Accept', 'application/json');
-      return this.http.post('http://localhost:3000/api/attributes/addAttribute', Obj_Attribute, {headers: headers})
+      return this.http.post(addAttribute, Obj_Attribute, {headers: headers})
       .map(res => res.json());
     }
 
@@ -114,7 +115,7 @@ export class AttributeDataService {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
-        return this.http.put('http://localhost:3000/api/attributes/updateAttribute', Obj_Attribute, {headers: headers})
+        return this.http.put(updateAttribute, Obj_Attribute, {headers: headers})
         .map(res => res.json());
     }
 
@@ -126,7 +127,7 @@ export class AttributeDataService {
       // tslint:disable-next-line:prefer-const
       let headers = new Headers();
       headers.append('Accept', 'application/json');
-      return this.http.delete('http://localhost:3000/api/attributes/deleteAttribute?_id=' + _id, {headers: headers})
+      return this.http.delete(deleteAttribute+ _id, {headers: headers})
       .map(res => res.json());
     }
 

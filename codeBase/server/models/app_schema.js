@@ -1,7 +1,7 @@
 const mongoose = require('mongoose'); 
 
 const AppSchema = mongoose.Schema({
-        "app_name"          :   { type: String,  required: true },
+        "app_name"          :   { type: String,  required: true,unique:true },
         "app_displayname"   :   { type: String },
         "app_description"   :   { type: String },
 });

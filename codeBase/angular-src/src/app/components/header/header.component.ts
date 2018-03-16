@@ -1,3 +1,4 @@
+import {Applications,application,addApp,updateApp,delApp} from '../../routeConfig';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../login/services/auth.service';
 import { Router } from '@angular/router';
@@ -15,8 +16,11 @@ export class HeaderComponent implements OnInit {
 
   selected_id = "";
 constructor(private authService: AuthService,private router: Router,private toastr: ToastrService,private http:Http) {
-    this.fetchApplication();
+   
     console.log("SID :" + sessionStorage.getItem('app_id'));
+    this.router.events.subscribe(()=>{
+      this.fetchApplication();
+    })
    }
 
   onLogoutClick() {
@@ -45,7 +49,7 @@ constructor(private authService: AuthService,private router: Router,private toas
 
 // Fetch Application
 fetchApplication=function() {
-this.http.get("http://localhost:3000/api/Applications").subscribe(
+this.http.get(Applications).subscribe(
   (res: Response) => {
     this.applications = res.json();
     console.log(this.applications);
@@ -58,7 +62,8 @@ ngOnInit() {
   if(this.se_app_id!=null) {
     this.selected_id=this.se_app_id;
   }
-  
+
+  this.fetchApplication();
 }
 
   hnu(){

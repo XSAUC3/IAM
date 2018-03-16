@@ -1,3 +1,4 @@
+import {Fetch_Resource,addResource,Resource,Resource_fetchByAppId,UpdateResource,DeleteResource,Applications,resourceTypes,allAttributes} from '../../routeConfig';
 import { Component, OnInit } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { ActivatedRoute,Router } from '@angular/router';
@@ -66,7 +67,7 @@ session_id=sessionStorage.getItem('app_id');
   }
 
   fetchData=function() {
-    this.http.get("http://localhost:3000/api/Fetch/Resource").subscribe(
+    this.http.get(Resource).subscribe(
       (res: Response) => {
         this.resource = res.json();
         console.log(this.resource);
@@ -85,7 +86,7 @@ FetchClick=function(){
 
 //Fetch Applications
 fetchApplications=function() {
-  this.http.get("http://localhost:3000/api/Applications").subscribe(
+  this.http.get(Applications).subscribe(
     (res: Response) => {
       this.applications = res.json();
       console.log(this.applications);
@@ -94,7 +95,7 @@ fetchApplications=function() {
  }
  //Fetch ResourceType
  fetchResourceType=function() {
-  this.http.get("http://localhost:3000/api/resourceTypes").subscribe(
+  this.http.get(resourceTypes).subscribe(
     (res: Response) => {
       this.resourcetype = res.json();
       console.log(this.resourcetype);
@@ -103,7 +104,7 @@ fetchApplications=function() {
  }
  //Fetch Attribute
  fetchAttribute=function() {
-  this.http.get("http://localhost:3000/api/attributes/allAttributes").subscribe(
+  this.http.get(allAttributes).subscribe(
     (res: Response) => {
       let a = [];
       let obj = res.json();
@@ -128,7 +129,7 @@ refresh = function() {
 //Del App
 deleteRes = function(id) {
  
- const url = "http://localhost:3000/api/DeleteResource/" + id;
+ const url =DeleteResource + id;
  return this.http.delete(url, {headers: this.headers}).toPromise()
    .then(() => {
     this.appRes(this.session_id);
@@ -158,7 +159,7 @@ addNewRes = function(a) {
     }
     console.log(this.aObj);
     
-    this.http.post("http://localhost:3000/api/addResource" , this.aObj ,  {Headers : this.headers} ).subscribe(res => {
+    this.http.post(addResource , this.aObj ,  {Headers : this.headers} ).subscribe(res => {
       console.log(res);
       if(res._body=="unique") {
         this.toastr.error('Resource already exists.');
@@ -183,7 +184,7 @@ addNewRes = function(a) {
 
 editRes = function(id) {
 
-this.http.get("http://localhost:3000/api/Resource/"+id).subscribe(
+this.http.get(Resource+id).subscribe(
  (res: Response) => {
    this.uresource = res.json();
    console.log(res.json());
@@ -199,7 +200,7 @@ this.http.get("http://localhost:3000/api/Resource/"+id).subscribe(
 
 appRes = function(session_id) {
 
-  this.http.get("http://localhost:3000/api/Resource/fetchByAppId/"+session_id).subscribe(
+  this.http.get(Resource_fetchByAppId+session_id).subscribe(
    (res: Response) => {
      this.resource = res.json();
 
@@ -243,7 +244,7 @@ updateRes = function(updateData,id)
     }
     console.log(this.editObj);
     
-    this.http.put("http://localhost:3000/api/UpdateResource/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+    this.http.put(UpdateResource+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
       console.log(res);
       $('#updateModal').modal('toggle');
       this._router.navigate(['/resources']);

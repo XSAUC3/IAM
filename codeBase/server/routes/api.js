@@ -51,7 +51,7 @@ router.post('/addApp', (req, res, next) => {
     app_description : req.body.app_description,
   });
   newApp.save( (err,createdObj ) => {
-    if(err)  res.send(err);   
+    if(err)  res.send("unique");   
     else     res.status(200).send(createdObj); 
   })
 });

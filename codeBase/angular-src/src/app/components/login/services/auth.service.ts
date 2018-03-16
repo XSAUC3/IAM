@@ -1,3 +1,4 @@
+import {addr,authenticate,ForgotPassword,ForgotPassword_id_token,ChangePassword} from '../../../routeConfig';
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { HttpModule } from '@angular/http';
@@ -11,19 +12,20 @@ export class AuthService {
   user: any;
 
   constructor(private http: Http) { 
-    
+    console.log(authenticate);
   }
 
   authenticateUser(user) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('http://localhost:3000/users/authenticate', user, {headers: headers})
+    return this.http.post(authenticate, user, {headers: headers})
       .map(res => res.json());
   }
 
   storeUserData(token, user) {
     localStorage.setItem('id_token', token);
     localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('user_id', user.id);
     this.authToken = token;
     this.user = user;
   }
@@ -46,14 +48,14 @@ export class AuthService {
   forgotPassword(email) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('http://localhost:3000/users/ForgotPassword', email, {headers: headers})
+    return this.http.post(ForgotPassword, email, {headers: headers})
       .map(res => res.json());
   }
 
   checkToken(uid, token){
     let headers = new Headers();
     headers.append('Accept', 'application/json');
-    return this.http.get('http://localhost:3000/users/ForgotPassword/' + uid + "/" + token, {headers: headers})
+    return this.http.get(addr+'/users/ForgotPassword/' + uid + "/" + token, {headers: headers})
     .map(res => res.json());
   }
 
@@ -61,7 +63,7 @@ export class AuthService {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     headers.append('Accept', 'application/json');
-    return this.http.put('http://localhost:3000/users/ChangePassword/', data, {headers: headers})
+    return this.http.put(ChangePassword, data, {headers: headers})
     .map(res => res.json());
   }
 

@@ -1,3 +1,4 @@
+import {Roles,user_Add,users_all,user,UpdateUser,DelUser,addr} from '../../routeConfig';
 import { Component, OnInit } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { ActivatedRoute,Router } from '@angular/router';
@@ -20,6 +21,7 @@ export class AdministrativeUsersComponent implements OnInit {
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) {
     this.fetchData();
+    
     $(document).ready(function(){
      
       $('#dt').DataTable();
@@ -55,7 +57,7 @@ removeAction = function(index) {
 }
 
 fetchRoles=function() {
-  this.http.get("http://localhost:3000/api/role/Roles").subscribe(
+  this.http.get(Roles).subscribe(
     (res: Response) => {
       this.roles = res.json();
       console.log(this.roles);
@@ -65,7 +67,7 @@ fetchRoles=function() {
 
 
 fetchData=function() {
-  this.http.get("http://localhost:3000/api/users/all").subscribe(
+  this.http.get(users_all).subscribe(
     (res: Response) => {
       this.user = res.json();
       console.log(this.user);
@@ -91,17 +93,23 @@ setDeleteAttribute = (_id, Name) => {
 
 //Del App
 deleteUser = function(id) {
- 
-  const url = "http://localhost:3000/api/DelUser/" + id;
-  return this.http.delete(url, {headers: this.headers}).toPromise()
-    .then(() => {
-    this.fetchData();
-    this.toastr.error('User Deleted.');
-    $('#deleteModal').modal('toggle');
-   this._router.navigate(['/app/admin-user']);
-  
-    })
- 
+  let local_id = localStorage.getItem('user_id');
+  console.log("id is " + local_id);
+  console.log("admin_id: "+ id);
+  if(local_id === id) {
+    this.toastr.error('User is Logged In.');
+  }
+  else{
+    const url = DelUser+ id;
+    return this.http.delete(url, {headers: this.headers}).toPromise()
+      .then(() => {
+      this.fetchData();
+      this.toastr.error('User Deleted.');
+      $('#deleteModal').modal('toggle');
+    this._router.navigate(['/app/admin-user']);
+    
+      });
+  }
  }
  
  //Add App
@@ -116,7 +124,7 @@ deleteUser = function(id) {
   }
   console.log(this.aObj);
   
-  this.http.post("http://localhost:3000/api/user/Add" , this.aObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+  this.http.post(user_Add , this.aObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
     console.log(res);
   this.fetchData();
   $('#addModal').modal('toggle');
@@ -130,7 +138,7 @@ deleteUser = function(id) {
  
   editUser = function(id) {
  //this.toastr.info('User Updated.');
- this.http.get("http://localhost:3000/api/user/"+id).subscribe(
+ this.http.get(user+id).subscribe(
   (res: Response) => {
     this.uresource = res.json();
     console.log(res.json());
@@ -165,7 +173,7 @@ deleteUser = function(id) {
      }
      console.log(this.editObj);
  
-     this.http.put("http://localhost:3000/api/UpdateUser/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+     this.http.put(UpdateUser+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
        console.log(res);
        $('#updateModal').modal('toggle');
        this._router.navigate(['/admin-user']);
@@ -180,6 +188,7 @@ deleteUser = function(id) {
  
    ngOnInit() {
      this.fetchData();
+     localStorage.getItem('app_id');
      $(document).ready(function(){
       
        $('#dt').DataTable();

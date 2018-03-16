@@ -1,3 +1,4 @@
+import {Applications,addr,resourceTypes,resourceType,ResourceType_fetchByAppId,addResourceType,updateResourceType,delResourceType,} from '../../routeConfig';
 import { Component, ViewContainerRef,OnInit } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { ActivatedRoute,Router } from '@angular/router';
@@ -53,7 +54,7 @@ export class ResourceTypesComponent implements OnInit {
     this.actions.splice(index,1);
   }
   fetchData=function() {
-    this.http.get("http://localhost:3000/api/resourceTypes").subscribe(
+    this.http.get(resourceTypes).subscribe(
       (res: Response) => {
         this.resourceTypes = res.json();
         console.log(res.json());
@@ -67,7 +68,7 @@ session_id=sessionStorage.getItem('app_id');
 
 appResT = function(session_id) {
 
-  this.http.get("http://localhost:3000/api/ResourceType/fetchByAppId/"+session_id).subscribe(
+  this.http.get(ResourceType_fetchByAppId+session_id).subscribe(
    (res: Response) => {
      this.resourceTypes = res.json();
 
@@ -83,7 +84,7 @@ appResT = function(session_id) {
   }  
 
    fetchApplications=function() {
-    this.http.get("http://localhost:3000/api/Applications").subscribe(
+    this.http.get(Applications).subscribe(
       (res: Response) => {
         this.applications = res.json();
         console.log(this.applications);
@@ -99,8 +100,8 @@ appResT = function(session_id) {
   // Delete Rt
    deleteRt = function(id) {
     
-    const url = "http://localhost:3000/api/delResourceType/" + id;
-    return this.http.delete(url, {headers: this.headers}).toPromise()
+    const url = delResourceType + id;
+    return this.http.delete(delResourceType + id, {headers: this.headers}).toPromise()
       .then(() => {
         this.appResT(this.session_id);
 
@@ -128,7 +129,7 @@ appResT = function(session_id) {
         "resourceType_actions": this.actions 
       }
     console.log(this.rtObj)
-    this.http.post("http://localhost:3000/api/addResourceType" , this.rtObj ,  {Headers : this.headers} ).subscribe(res => {
+    this.http.post(addResourceType , this.rtObj ,  {Headers : this.headers} ).subscribe(res => {
          console.log(res);
         if(res._body=="unique") {
           this.toastr.error('Resource-type already exists.');
@@ -179,7 +180,7 @@ appResT = function(session_id) {
 
 editRt = function(id) {
  
- this.http.get("http://localhost:3000/api/resourceType/"+id).subscribe(
+ this.http.get(resourceType+id).subscribe(
     (res: Response) => {
       this.uRt = res.json();
       this.uData = this.uRt;
@@ -211,7 +212,7 @@ editRt = function(id) {
         "application_id":this.session_id,
         "resourceType_actions": this.actions 
       }
-      this.http.put("http://localhost:3000/api/updateResourceType/"+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+      this.http.put(updateResourceType+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
         console.log(res);
         $('#updateModal').modal('toggle');
         this._router.navigate(['/resourceTypes']);
