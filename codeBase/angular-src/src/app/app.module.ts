@@ -25,7 +25,6 @@ import { LoginComponent } from './components/login/login.component';
 import { AttributeDataService } from './components/attributes/services/attribute-data.service';
 //login
 import { AuthService } from './components/login/services/auth.service';
-import { AuthGuard } from './components/login/guards/auth.guard';
 
 @NgModule({
   declarations: [
@@ -67,7 +66,7 @@ import { AuthGuard } from './components/login/guards/auth.guard';
       
     ])
   ],
-  providers: [AttributeDataService,AuthService, AuthGuard],
+  providers: [AttributeDataService,AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

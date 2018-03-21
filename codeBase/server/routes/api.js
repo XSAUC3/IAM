@@ -582,6 +582,7 @@ router.delete('/DeleteResource/:id' , (req,res,next) => {
  });
 });
 
+
 //------------------------------------------Policies--------------------------------------------------------
 
 
@@ -603,17 +604,43 @@ router.get('/policy/:id', (req,res,next) =>{
 
 //Add Policy
 router.post('/addPolicy', (req, res, next) => {
+
   let newPolicy = new Policy({
     policy_name       : req.body.policy_name,
     policy_type       : req.body.policy_type,
     policy_constrains : req.body.policy_constrains,
-    policy_principals : req.body.policy_principals,
-    policy_targets    : req.body.policy_targets
+    policy_principals : req.body.policy_principals//,
+    //policy_targets    : req.body.policy_targets
   });
   newPolicy.save( (err,createdObj ) => {
     if(err)  res.status(500);  
-    else     res.status(200).send(createdObj); 
+    else     res.status(200).send(createdObj);addTargets(createdObj);
   })
+
+  function addTargets(policy){
+    for ( let i=0;i< req.body.policy_targets.length;i++)
+    {
+      Resource.findById({_id : req.body.policy_targets[i].resource_id}, (err,reso) => {
+        if (err) { console.log(err) }
+        else{          
+          ResourceType.findById({_id:reso.Resource_typeid}, (err, resotype) => {
+            let policytargetobj = {
+              resource_id          : reso._id,
+              resource_name        : reso.res_name,
+              resourceType_Id      : resotype._id,
+              resourceType_actions : resotype.resourceType_actions
+            } 
+            Policy.updateOne({"_id":policy._id},
+            {
+              $push:{"policy_targets" :  policytargetobj}
+            },
+            (err, result) => { if(err) console.log(err); else console.log(result) ; } )          
+          })
+        }      
+      })
+    }
+  }
+
 });
 
 //edit App

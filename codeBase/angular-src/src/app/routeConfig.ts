@@ -16,12 +16,20 @@ var ResourceType_fetchByAppId = addr + '/ResourceType/fetchByAppId/'
 var updateResourceType = addr + '/updateResourceType/'
 var delResourceType = addr + '/delResourceType/'
 
+// var addAttribute = addr + '/attributes/addAttribute/';
+// var updateAttribute = addr + '/attributes/updateAttribute/';
+// var deleteAttribute = addr + '/attributes/deleteAttribute/';
+// var allAttributes = addr + '/attributes/allAttributes/';
+// var attributes_fetchByAppId = addr + '/attributes/fetchByAppId/';
+// var attributeById = addr + '/attributes/attributeById/';
+// var filterAttributes = addr + '/attributes/filterAttributes';
+
 var addAttribute = addr + '/attributes/addAttribute/';
 var updateAttribute = addr + '/attributes/updateAttribute/';
-var deleteAttribute = addr + '/attributes/deleteAttribute/';
+var deleteAttribute = addr + '/attributes/deleteAttribute';
 var allAttributes = addr + '/attributes/allAttributes/';
 var attributes_fetchByAppId = addr + '/attributes/fetchByAppId/';
-var attributeById = addr + '/attributes/attributeById/';
+var attributeById = addr + '/attributes/attributeById';
 var filterAttributes = addr + '/attributes/filterAttributes';
 
  var Roles        = addr + '/role/Roles';

@@ -1,3 +1,21 @@
+<script type="text/javascript">
+  $("#a").click(function() {
+    alert("dsds");
+  });
+function abc() {
+  alert("a");
+}
+
+$(document).ready(function() {
+  $("#a").click(function() {
+    alert("dsds");
+  });
+  function abc() {
+  alert("a");
+}
+});
+</script>
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
 
@@ -10,10 +28,10 @@
     </div>
     <div class="col-md-4">
       <ol id="ol" class="breadcrumb">
-        <li class="active">
+        <li class="active" name="a" id="a" onclick="abc()" >
           <b>
-            <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal">
-              <i class="material-icons">add</i>Add</a>
+            <a  style="color:#00bcd4;" data-toggle="modal" data-target="#addModal">
+              <i class="material-icons" >add</i>Add</a>
           </b>
         </li>
         <li class="Reload">
@@ -77,6 +95,9 @@
     </div>
     <!-- /.box-body -->
   </div>
+
+
+  
 
   <!-- /.box -->
 
@@ -195,3 +216,4 @@
     </div>
 
 </section>
+

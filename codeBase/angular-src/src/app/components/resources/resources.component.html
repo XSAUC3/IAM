@@ -135,6 +135,7 @@
                     <div class="form-group">
                       <label for="Resource_typeid">Resource Type</label>
                       <select class="form-control" name="Resource_typeid" id="Resource_typeid" placeholder="Select Resource Type name" ngModel>
+                        <option value="" selected disabled>Select ResourceType</option> 
                         <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.resourceType_name}}</option>
                       </select>
                     </div>
@@ -236,6 +237,7 @@
                           <div class="form-group">
                             <label for="Resource_typeid">Resource Type name</label>
                             <select class="form-control" name="uResource_typeid" id="uResource_typeid" placeholder="Select Resource Type name" [(ngModel)]="uData.Resource_typeid">
+                              <option value="" selected disabled>Select ResourceType</option> 
                               <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.resourceType_name}}</option>
                             </select>
                           </div>

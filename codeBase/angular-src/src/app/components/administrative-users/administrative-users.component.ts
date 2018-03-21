@@ -1,4 +1,4 @@
-import {Roles,user_Add,users_all,user,UpdateUser,DelUser,addr} from '../../routeConfig';
+import {Roles,role_fetchByAppId,user_Add,users_all,user,UpdateUser,DelUser,addr} from '../../routeConfig';
 import { Component, OnInit } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { ActivatedRoute,Router } from '@angular/router';
@@ -51,6 +51,8 @@ pushAction = function() {
   }
   console.log(this.addRole);
 }
+session_id=sessionStorage.getItem('app_id');
+
 
 removeAction = function(index) {
   this.addRole.splice(index,1);
@@ -98,6 +100,11 @@ deleteUser = function(id) {
   console.log("admin_id: "+ id);
   if(local_id === id) {
     this.toastr.error('User is Logged In.');
+    $('#deleteModal').modal('toggle');
+  }
+  else if(id==='5a919d1e02329e189022c97a') {
+    this.toastr.error("Admin can't be deleted.");
+    $('#deleteModal').modal('toggle');
   }
   else{
     const url = DelUser+ id;

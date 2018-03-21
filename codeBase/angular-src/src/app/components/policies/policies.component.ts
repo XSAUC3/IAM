@@ -1,13 +1,10 @@
-import {policies,addPolicy,updatePolicy,delPolicy,Fetch_Resource,addPolicyTargetActions,updatePolicyTargetActions,resourceType,Roles,Resource} from '../../routeConfig';
-import { Component, OnInit } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
-import { ToastrService } from 'ngx-toastr';
+import {Component,OnInit} from '@angular/core';
+import {Http,Response,Headers} from '@angular/http';
+import {ToastrService, Toast} from 'ngx-toastr';
 import 'rxjs/add/operator/map';
-import { Subject } from 'rxjs/Subject';
+import {Subject} from 'rxjs/Subject';
 
 declare var $;
- 
-
 @Component({
   selector: 'app-policies',
   templateUrl: './policies.component.html',
@@ -15,313 +12,152 @@ declare var $;
 })
 export class PoliciesComponent implements OnInit {
 
-  policiesurl     = policies
-  addpolicyurl    = addPolicy
-  fetchpolicyurl  = 'http://localhost:3000/api/policy/'
-  deletepolicyurl = delPolicy
-  updatepolicyurl = updatePolicy
-  addpolicytargetactionsurl= addPolicyTargetActions
-  updatepolicytargetactionsurl= updatePolicyTargetActions
-  fetchresourcebyidurl = Resource
-  fetchresourcetypebyidurl = resourceType
+  //fetch all policies for the table  
+  fetchedpolicies = [];
 
-  policies = [];
-
+  //fetched roles and users and resources for selecting while adding policy
+  allroles     = [] ; 
+  allusers     = [] ;
   allresources = [];
-  allroles = [];
 
-  fetchedresourcename ;
-  fetchedrestype ;
-  fetchedrestypeactions = []
-  fetchedrestypeid;
-  restypename;
+  //form input models value declaration
+  //policy  - data
+  policy_name : String ;
+  policy_type : String ;
+  policy_constrains : String ;
+  principaltype;
+  pp ;
+  pt ;
 
-  policy;
-  
-  role:String;
-  roles = [];
-  rolesnamearr = [];
-  roleidarr=[];
+  //making policy principal data for sending to database
+  principalsarray = [];
 
-  resource:String;
-  resources = [];
-  resnamearr = [];
-  residarr = [];
+  //making policy targets data to add to target object 
+  targetsarray = [];
 
-  policy_id :String;
-  policy_name :String;
-  policy_type : String;
-  policy_constrains:String;
+  //show policy prinicpal !
+  select: Boolean = false;
+  selectpp: Boolean;
 
-  select:Boolean = false;
-
-  constructor(public _http:Http,private toastr: ToastrService ) { }
-
-  private headers = new Headers({ 'Content-Type': 'application/json'});
-
+  constructor(public _http: Http, private toastr: ToastrService) {}
+  private headers = new Headers({
+    'Content-Type': 'application/json'
+  });
   ngOnInit() {
     this.fetchPolicies();
     this.fetchRoles();
     this.fetchResources();
-    $(document).ready(function(){ 
-       $('#dt').DataTable();
+    this.fetchUsers();
+    $(document).ready(function () {
+      $('#dt').DataTable();
     });
   }
 
-  fetchPolicies() {
-    this._http.get(this.policiesurl)
-    .map(res => res.json())
-    .subscribe(
-      policies => {this.policies = policies;} ,
-      err => console.log("error Occured while fetching Policies" , err)
-    );
-  }
-//Fetch Roles
-  fetchRoles=function() {
-    this._http.get(Roles).subscribe(
-      (res: Response) => {
-        this.allroles = res.json();
-        //console.log(this.allroles);
-       // console.log(this.role.Application_id)
-      }
-    )
-   }
-//Fetch Resources
-fetchResources=function() {
-  this._http.get(Fetch_Resource).subscribe(
-    (res: Response) => {
-      this.allresources = res.json();
-      //console.log(this.allresources);
-    }
-  )
- }
+  refresh() {window.location.reload();}
 
-  editPolicy(id) {
-    this._http.get(this.fetchpolicyurl + id)
-              .subscribe( 
-                res => { 
-                  this.policy = res.json();
-                  console.log(this.policy);
-                  this.policy_id = this.policy._id;
-                  this.policy_name = this.policy.policy_name;
-                  this.policy_type = this.policy.policy_type;
-                  this.policy_constrains = this.policy.policy_constrains;
-                  this.roles = this.policy.policy_principals;
-                  this.resources = this.policy.policy_targets
-                  var rls = this.policy.policy_principals;
-                  var ress = this.policy.policy_targets;
-                  var i,j ;
-                  for (i=0;i<rls.length;i++)
-                  {
-                    this.rolesnamearr.push(rls[i].role_name);
-                    this.roleidarr.push(rls[i].role_id);
-                  }
-                  for (j=0;j<ress.length;j++)
-                  {
-                    this.resnamearr.push(ress[j].resource_name);
-                    this.residarr.push(ress[j].resource_id);
-                  }
-                });
+  emptyarray(){
+    this.select = false; 
+    this.principalsarray = [] ; 
+    this.targetsarray = [] 
+  }
+
+  fetchPolicies() {
+    this._http.get("http://localhost:3000/api/policies").map(res => res.json()).subscribe(
+      policies => this.fetchedpolicies = policies,
+      err => console.log("error Occured while fetching Policies", err)
+    )
+  }
+
+  fetchRoles() {
+    this._http.get("http://localhost:3000/api/role/Roles").map(res => res.json()).subscribe(
+      roles => this.allroles = roles,
+      err   => this.toastr.error('error fetching the roles !',err)
+    )
+  }
+
+  fetchUsers() {
+    this._http.get("http://localhost:3000/api/users/all").map(res => res.json()).subscribe(
+      users => this.allusers = users ,
+      err   => this.toastr.error('error fetching all users',err)
+    )
+  }
+
+  fetchResources(){
+    this._http.get("http://localhost:3000/api/Fetch/Resource").map(res => res.json()).subscribe(
+      resources => this.allresources = resources,
+      err       => this.toastr.error('erroe fetchingall the resources',err)
+    )
+  }
+
+  changeppvalue(value) {
+    this.select = true;
+    this.selectpp = value;
+    this.principalsarray = [] ; 
+    this.targetsarray = [] 
+  }
+
+  pushpolicyprincipal(){
+    var fetchedprincipal = this.pp.split(',');
+    this.principalsarray.push({id:fetchedprincipal[0],type:this.principaltype,name:fetchedprincipal[1]});
+  }
+
+  removepolicyprincipal(index){
+    this.principalsarray.splice(index,1);
+  }
+
+  pushpolicytargets(){
+    var fetchedtarget = this.pt.split(',');
+    this.targetsarray.push({resource_id:fetchedtarget[0],resource_name:fetchedtarget[1]});
+  }
+
+  removepolicytarget(index){
+    this.targetsarray.splice(index,1);
   }
 
   addPolicy(data){
-    var i,j;
-    for(i=0;i<this.rolesnamearr.length;i++)
+    if ( data.policy_name === null || data.policy_name === undefined || data.policy_name === '' )
     {
-      this.roles.push({role_id:this.roleidarr[i],role_name:this.rolesnamearr[i]})
+      this.toastr.error("Policy name is requiered ! ")
     }
-    for(j=0;j<this.resnamearr.length;j++)
-    {
-      this.resources.push({resource_id:this.residarr[j],resource_name:this.resnamearr[j]})
-    }
-    let obj = {
-      policy_name : data.policy_name,
-      policy_type : data.policy_type,
-      policy_constrains : data.policy_constrains,
-      policy_principals : this.roles,
-      policy_targets : this.resources
-    }
-    console.log(obj)
-    if(data.policy_name == undefined || data.policy_type == undefined || data.policy_constrains == undefined )
-    {
-      alert('all fields are requiered !');
-    }
-    else
-    {
-      this._http.post( this.addpolicyurl , obj , {headers : this.headers } )
-                .subscribe(res => {
-                  this.fetchPolicies();
-                });
+    else{
+      let obj = {
+        "application_id"        :   sessionStorage.getItem('app_id'),
+        "policy_name"           :   data.policy_name ,
+        "policy_type"           :   data.policy_type ,
+        "policy_constrains"     :   data.policy_constrains,
+        "policy_principals"     :   this.principalsarray,
+        "policy_targets"        :   this.targetsarray
+      }
+        this._http.post("http://localhost:3000/api/addPolicy", obj ,{headers:this.headers})
+          .subscribe(
+            res => {
+              if (res.status == 200){
+                this.toastr.success('Policy added !' );
+                this.fetchPolicies();
+                this.emptyarray();
                 $('#addModal').modal('toggle');
-                this.toastr.success('Policy Added.');
+              }
+              else this.toastr.error("the fields u entered were not propper !");
+            },
+            err => this.toastr.error('ops! there was an error adding the policy', err)
+          )
     }
-    this.rolesnamearr = [];
-    this.roleidarr=[];
-    this.residarr=[];
-    this.resnamearr = [];
   }
 
-  updatePolicy(data,id){
-    var i,j;
-    for(i=0;i<this.rolesnamearr.length;i++)
-    {
-      this.roles.push({role_id:this.roleidarr[i],role_name:this.rolesnamearr[i]})
-    }
-    for(j=0;j<this.resnamearr.length;j++)
-    {
-      this.resources.push({resource_id:this.residarr[j],resource_name:this.resnamearr[j]})
-    }
-    const objwppapt = {
-      _id         : this.policy_id,
-      policy_name : data.policy_name,
-      policy_type : data.policy_type,
-      policy_constrains : data.policy_constrains,
-      policy_principals : this.roles,
-      policy_targets : this.resources
-    };
-    const obj = {
-      _id         : this.policy_id,
-      policy_name : data.policy_name,
-      policy_type : data.policy_type,
-      policy_constrains : data.policy_constrains
-    }
-    if(this.roles == [] && this.resources == [])
-    {
-      this._http.put(this.updatepolicyurl, obj , {headers:this.headers})
-              .subscribe(
-                respon => {this.toastr.success('updated policy sucessfully!');this.fetchPolicies()},
-                err => this.toastr.error("opps! smthing went wrong !") 
-              )
-    }
-    else
-    {
-      this._http.put(this.updatepolicyurl, objwppapt , {headers:this.headers})
-              .subscribe(
-                respon => {this.toastr.success('updated policy sucessfully! with the new policy principals and policy targets !');this.fetchPolicies()},
-                err => this.toastr.error("opps! smthing went wrong !") 
-              )
-    }
-    
-  }
-
-  deletePolicy(id){
+  deletePolicy(id) {
     var q = confirm("do u want to delete this policy ?")
-    if (q==true)
-    {
-      this._http.delete(this.deletepolicyurl+id)
-              .subscribe( 
-              res => {this.toastr.error('Policy Deleted !');this.fetchPolicies(); }, 
-              err => this.toastr.error('Ops! something went wrong.')
-            )
-      this.fetchPolicies();
-    }
-  }
-
-  loadPolicy(id){
-    this._http.get(this.fetchpolicyurl + id)
-    .subscribe( 
-      res => { 
-        this.policy = res.json();
-        console.log(this.policy);
-        this.policy_id = this.policy._id;
-        this.policy_name = this.policy.policy_name;
-        this.policy_type = this.policy.policy_type;
-        this.policy_constrains = this.policy.policy_constrains;
-        this.roles = this.policy.policy_principals;
-        this.resources = this.policy.policy_targets;
-      });
-
-  }
-
-  addpp(){
-    var name = this.role.split(',');
-    this.rolesnamearr.push(name[1])
-    this.roleidarr.push(name[0])
-  }
-
-  rmpp(index){
-    this.rolesnamearr.splice(index,1)
-    this.roleidarr.splice(index,1)
-  }
-
-  addpt(){
-    var name = this.resource.split(',');
-    this.resnamearr.push(name[1])
-    this.residarr.push(name[0])
-  }
-
-  rmpt(index){
-    this.resources.splice(index,1)
-    this.resnamearr.splice(index,1)
-    this.residarr.splice(index,1)
-  }
-
-  //Refresh Page
-  refresh = function() {
-    window.location.reload();
-   }
-   
-  emptyarr()
-  {
-    this.roleidarr = [];
-    this.rolesnamearr = [];
-    this.residarr = [];
-    this.resnamearr = [];
-  }
-
-  //fetch all resources on this function !
-  openPolicyta(id){
-    console.log(id)
-    this._http.get(this.fetchresourcebyidurl + id)
-    .subscribe( res => {
-      var obj = res.json();
-      this.fetchedrestypeid = obj.Resource_typeid;
-      this.fetchedresourcename = obj.res_name;
-      this._http.get(this.fetchresourcetypebyidurl + this.fetchedrestypeid) 
-      .subscribe(
+    if (q == true) {
+      this._http.delete("http://localhost:3000/api/delPolicy/" + id).subscribe(
         res => {
-          this.fetchedrestype = res.json();
-          this.restypename = this.fetchedrestype.resourceType_name
-          this.fetchedrestypeactions = this.fetchedrestype.resourceType_actions
-          console.log(this.fetchedrestype);
-          console.log(this.fetchedrestypeactions)
-        }
-      )
-    })
+          this.toastr.error('Policy Deleted !');
+          this.fetchPolicies();
+        },
+        err => this.toastr.error('Ops! something went wrong.'))
+      this.fetchPolicies();
+      $('#dt').DataTable().clear();
+      $('#dt').DataTable().draw();
+    }
   }
-
-  //addpolicytargetactions function 
-  addpolicytargetactions(data){
-    var i;
-    var actions = [];
-    var actionsname = []
-    var actionstate = []
-    for (let a of Object.keys(data))
-    {
-      actionsname.push(a)
-    }
-    for (let s of (<any>Object).values(data))
-    {
-      actionstate.push(s)
-    }
-    for(i=0;i<actionsname.length;i++)
-    {
-      actions.push({action_name:actionsname[i] , action_state : actionstate[i] })
-    }
-
-    let ptaobj ={
-      policy_Id : this.policy_id,
-      resourceType_Id: this.fetchedrestypeid ,
-      resourceType_name: this.restypename,
-      resourceType_actions: actions
-    }
-    console.log(ptaobj)
-    this._http.post(this.addpolicytargetactionsurl,ptaobj,{headers:this.headers})
-    .subscribe( res => this.toastr.success("Target Action Saved !"),
-      err => this.toastr.error("ops! Something Went Wrong !")
-  )
-  }
-
 
 
 }

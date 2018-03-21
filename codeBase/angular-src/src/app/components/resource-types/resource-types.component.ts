@@ -38,7 +38,7 @@ export class ResourceTypesComponent implements OnInit {
   applications= [];
   actions = [];
   newAction = "";
-  
+  componentVisibility :Boolean;
   pushAction = function() {
     if(this.newAction != "") {
        let object = {
@@ -237,6 +237,9 @@ editRt = function(id) {
 
   ngOnInit() {
    // this.fetchData();
+   if(this.session_id!=null||this.session_id!=undefined) {
+    this.componentVisibility = true;
+  }
    this.appResT(this.session_id);
    this.fetchApplications();
     $(document).ready(function(){

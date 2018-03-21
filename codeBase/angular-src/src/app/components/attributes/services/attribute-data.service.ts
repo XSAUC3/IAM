@@ -30,7 +30,7 @@ export class AttributeDataService {
     // tslint:disable-next-line:prefer-const
     let headers = new Headers();
     headers.append('Accept', 'application/json');
-    return this.http.get(attributeById + _id, {headers: headers})
+    return this.http.get(attributeById + "?_id=" + _id, {headers: headers})
     .map(res => res.json());
   }
 
@@ -123,13 +123,15 @@ export class AttributeDataService {
 
 //#region DELETE REQUESTS
 
-    deleteAttribute(_id) {
-      // tslint:disable-next-line:prefer-const
-      let headers = new Headers();
-      headers.append('Accept', 'application/json');
-      return this.http.delete(deleteAttribute+ _id, {headers: headers})
-      .map(res => res.json());
-    }
+deleteAttribute(_id) {
+  // tslint:disable-next-line:prefer-const
+  let headers = new Headers();
+  headers.append('Accept', 'application/json');
+  return this.http.delete(deleteAttribute + "?_id=" + _id, {headers: headers})
+  .map(res => res.json());
+}
+
+    
 
 //#endregion
 

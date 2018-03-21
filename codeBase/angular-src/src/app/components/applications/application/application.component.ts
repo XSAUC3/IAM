@@ -87,6 +87,7 @@ export class ApplicationComponent implements OnInit {
           this.fetchData();
           $('#addModal').modal('toggle');
           this.toastr.success('Application Added.');
+          
         }
     
       // $(document).ready(function(){

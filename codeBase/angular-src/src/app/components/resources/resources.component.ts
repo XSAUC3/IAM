@@ -1,4 +1,4 @@
-import {Fetch_Resource,addResource,Resource,Resource_fetchByAppId,UpdateResource,DeleteResource,Applications,resourceTypes,allAttributes} from '../../routeConfig';
+import {Fetch_Resource,addResource,Resource,Resource_fetchByAppId,UpdateResource,DeleteResource,Applications,resourceTypes,ResourceType_fetchByAppId,allAttributes,attributes_fetchByAppId} from '../../routeConfig';
 import { Component, OnInit } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { ActivatedRoute,Router } from '@angular/router';
@@ -31,6 +31,7 @@ export class ResourcesComponent implements OnInit {
       $('#dt').DataTable();
 
   });
+  console.log("app"+attributes_fetchByAppId+this.session_id);
 }
   // Var declarations
   id: number;
@@ -95,7 +96,7 @@ fetchApplications=function() {
  }
  //Fetch ResourceType
  fetchResourceType=function() {
-  this.http.get(resourceTypes).subscribe(
+  this.http.get(ResourceType_fetchByAppId+this.session_id).subscribe(
     (res: Response) => {
       this.resourcetype = res.json();
       console.log(this.resourcetype);
@@ -104,7 +105,7 @@ fetchApplications=function() {
  }
  //Fetch Attribute
  fetchAttribute=function() {
-  this.http.get(allAttributes).subscribe(
+  this.http.get(attributes_fetchByAppId+this.session_id).subscribe(
     (res: Response) => {
       let a = [];
       let obj = res.json();
@@ -120,6 +121,9 @@ fetchApplications=function() {
     }
   )
  }
+
+
+ 
 
 //Refresh Page
 refresh = function() {
@@ -145,7 +149,7 @@ deleteRes = function(id) {
 //Add App
 addNewRes = function(a) {
 
-  if(a.res_name==undefined) {
+  if(a.res_name==undefined||a.res_name==""||a.res_name==null) {
     this.toastr.error("Resource name required.")
    }
    else {

@@ -113,7 +113,7 @@ appAttr = function(session_id) {
         this.appAttr(this.session_id);
         // this.fetchData();
         $('#deleteModal').modal('toggle');
-        this.toastr.error('Something Went Wrong.');
+        console.log(err);
         this._router.navigate(['/attributes']);
       }
     );
