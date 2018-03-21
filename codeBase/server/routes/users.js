@@ -11,10 +11,6 @@ const Token = require('../models/Token_Schema');
 router.post('/authenticate', (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;
-
-    console.log(username + " - " + password);
-    
-  
     User.getUserByUsername(username, (err, user) => {
       if(err) throw err;
       if(!user) {
@@ -47,10 +43,7 @@ router.post('/authenticate', (req, res, next) => {
 // Profile
 router.post('/ForgotPassword', (req, res, next) => {
   let email = req.body.mail;
-
-  console.log(email);
-  
-  User.findOne({email : email}, (err, user) => {
+User.findOne({email : email}, (err, user) => {
     if(err) res.send(err);
     if(user) {
         // Generate a 16 character alpha-numeric token:
@@ -75,7 +68,6 @@ router.post('/ForgotPassword', (req, res, next) => {
         tk.save((err, tkdetail) => {
             if(err) throw err;
             if(tkdetail){
-                console.log(tkdetail);
             }
         });
 

@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","ro",{AU:"Page Break",toolbar:"Inserează separator de pagină (Page Break)"});

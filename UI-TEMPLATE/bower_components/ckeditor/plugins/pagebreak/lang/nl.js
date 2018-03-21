@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","nl",{AU:"Pagina-einde",toolbar:"Pagina-einde invoegen"});

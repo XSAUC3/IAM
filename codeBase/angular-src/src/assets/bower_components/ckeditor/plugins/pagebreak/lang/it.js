@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","it",{AU:"Interruzione di pagina",toolbar:"Inserisci interruzione di pagina per la stampa"});

@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","mn",{AU:"Page Break",toolbar:"Хуудас тусгаарлагч оруулах"});

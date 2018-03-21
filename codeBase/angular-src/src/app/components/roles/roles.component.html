@@ -69,7 +69,6 @@
             </td>
             <td><span (click)="editRole(role._id)" data-toggle="modal" data-target="#updateModal"  > <i style="color:#4caf50;cursor:pointer" class="material-icons">create</i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(role._id, role.Role_name)" data-toggle="modal" data-target="#deleteModal"><i class="material-icons" style="cursor: pointer; color:red;">delete</i></span></td>
           </tr>
-          <!-- [routerLink]="['/viewApplication',app._id]" -->
           </tbody>
         </table>
         <span style="text-align:right"><pagination-controls (pageChange)="p = $event"></pagination-controls></span>
@@ -97,17 +96,7 @@
                     <div class="form-group">
                       <label for="Role_name">Role Name</label>
                       <input autocomplete="off" type="text" class="form-control" name="Role_name" id="Role_name" placeholder="Enter name" ngModel>
-                    </div>
-                    <!-- <div class="form-group">
-                      <label for="Application_id">Application</label>
-                      <select type="text" class="form-control" name="Application_id" id="Application_id" placeholder="Enter Application" ngModel>
-                        <option value="" disabled="true" selected="true">Select Application</option>
-                        <option *ngFor="let application of applications" value={{application._id}}>{{application.app_name}}</option>
-                      </select>
-                    </div> -->
-
-                   
-                  </div>
+                    </div></div>
                   <!-- /.box-body -->
       
                   <div class="modal-footer">
@@ -142,15 +131,7 @@
                             <label for="Role_name">Role Name</label>
                             <input autocomplete="off" type="text" class="form-control" name="uRole_name" id="uRole_name" placeholder="Enter name" [(ngModel)]="uData.Role_name">
                           </div>  
-                          <!-- <div class="form-group">
-                            <label for="Application_id">Application Name</label>
-                            <select type="text" class="form-control" name="uApplication_id" id="uApplication_id" placeholder="Enter Application" [(ngModel)]="uData.Application_id">
-                                <option value="" disabled="true" selected="true">Select Application</option>
-                                <option *ngFor="let application of applications" value={{application._id}}>{{application.app_name}}</option>
-                              </select>
-                            <!-- <input type="text" class="form-control" name="uApplication_id" id="uApplication_id" placeholder="Enter name" [(ngModel)]="uData.Application_id"> -->
-                          <!-- </div>                        --> 
-                        </div>
+                         </div>
                         <!-- /.box-body -->
             
                         <div class="modal-footer">

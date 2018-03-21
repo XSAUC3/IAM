@@ -22,7 +22,7 @@ export class ResourceTypesComponent implements OnInit {
   conformationString:String = "* Please enter name";
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) { 
-    //this.fetchData();
+
   
   }
 
@@ -57,7 +57,6 @@ export class ResourceTypesComponent implements OnInit {
       this.actions.push(object);
       this.newAction = "";
     }
-    console.log(this.actions)
   }
 
   removeAction = function(index) {
@@ -67,7 +66,6 @@ export class ResourceTypesComponent implements OnInit {
     this.http.get(resourceTypes).subscribe(
       (res: Response) => {
         this.resourceTypes = res.json();
-        console.log(res.json());
      
       }
     )
@@ -80,15 +78,7 @@ appResT = function(session_id) {
 
   this.http.get(ResourceType_fetchByAppId+session_id).subscribe(
    (res: Response) => {
-     this.resourceTypes = res.json();
-
-     console.log(this.resourceTypes);
-     //this._router.navigate(['/resources']);
-     //this.uData = this.uresource;
-     //this.attributes = this.uData.attribute_id;
-     //console.log("ssion_data : " + this.uData);
-  
-  
+     this.resourceTypes = res.json();  
    }
   )
   }  
@@ -97,7 +87,6 @@ appResT = function(session_id) {
     this.http.get(Applications).subscribe(
       (res: Response) => {
         this.applications = res.json();
-        console.log(this.applications);
       }
     )
    }
@@ -114,8 +103,6 @@ appResT = function(session_id) {
     return this.http.delete(delResourceType + id, {headers: this.headers}).toPromise()
       .then(() => {
         this.appResT(this.session_id);
-
-//this.fetchData();
           this.toastr.error('Resource-Type Deleted.');
           $('#deleteModal').modal('toggle');
           this._router.navigate(['/resourceTypes']);
@@ -138,9 +125,8 @@ appResT = function(session_id) {
         "application_id":this.session_id,
         "resourceType_actions": this.actions 
       }
-    console.log(this.rtObj)
     this.http.post(addResourceType , this.rtObj ,  {Headers : this.headers} ).subscribe(res => {
-         console.log(res);
+      
         if(res._body=="unique") {
           this.toastr.error('Resource-type already exists.');
         }
@@ -171,15 +157,9 @@ editRt = function(id) {
       this.uRt = res.json();
       this.uData = this.uRt;
       this.actions = this.uData.resourceType_actions;
-      
-      console.log(this.uData);
-     // console.log(this.uData);
-     console.log(this.actions);
-
-
     }
   )
-  //this.actions=[];
+ // this.actions=[];
 }
 
 
@@ -188,8 +168,10 @@ editRt = function(id) {
   updateRt = function(updateData,id)
   {
     
-    console.log(id);
-    if(updateData.uRt_name != "") {
+    if(updateData.uRt_name===undefined||updateData.uRt_name==''||updateData.uRt_name===null) {
+      this.toastr.error("Resource-Type name required.")
+     }
+    else{
       console.log(updateData.uRt_name);
       this.editObj = {
         "resourceType_name":updateData.uRt_name,
@@ -199,7 +181,7 @@ editRt = function(id) {
         "resourceType_actions": this.actions 
       }
       this.http.put(updateResourceType+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
-        console.log(res);
+     
         $('#updateModal').modal('toggle');
         this._router.navigate(['/resourceTypes']);
         this.appResT(this.session_id);

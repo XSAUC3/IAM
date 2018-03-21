@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","id",{AU:"Halaman Istirahat",toolbar:"Sisip Halaman Istirahat untuk Pencetakan "});

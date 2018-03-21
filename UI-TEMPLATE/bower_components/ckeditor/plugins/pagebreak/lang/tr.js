@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","tr",{AU:"Sayfa Sonu",toolbar:"Sayfa Sonu Ekle"});

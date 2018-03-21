@@ -5,16 +5,6 @@
       </a>
   </div>
   <div class="sidebar-wrapper">
-      <!-- <ul *ngIf="!componentVisibility" class="nav">
-          <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}"  data-toggle="tooltip" data-placement="right" title="Select Application">
-              <a [routerLink]="[menuItem.path]" >
-                 <i class="material-icons">{{menuItem.icon}}</i>
-                 <p ><b style="color:#a9afbb">{{menuItem.title}}</b></p>
-              </a>
-          </li>
-      </ul> -->
-
-
       <ul *ngIf="componentVisibility" class="nav">
       
         <li [routerLink]="['/dashboard']" [routerLinkActive]="['active']">

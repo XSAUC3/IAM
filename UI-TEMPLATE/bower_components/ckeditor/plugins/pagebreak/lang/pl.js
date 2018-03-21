@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","pl",{AU:"Wstaw podział strony",toolbar:"Wstaw podział strony"});

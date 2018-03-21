@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","lt",{AU:"Puslapio skirtukas",toolbar:"Įterpti puslapių skirtuką"});

@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","eu",{AU:"Orrialde-jauzia",toolbar:"Txertatu orrialde-jauzia inprimatzean"});

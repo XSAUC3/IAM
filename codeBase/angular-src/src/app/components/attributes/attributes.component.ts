@@ -59,8 +59,6 @@ export class AttributesComponent implements OnInit {
     this.attributeDataService.getAllAttributes().subscribe(
       data => {
         this.attributes = data.Attributes;
-        console.log(this.attributes);
-        //this.toastr.success('Attributes Fetched Successfully.');
       },
       err => {
         this.toastr.error('Something Went Wrong While Fetching Attributes.');
@@ -81,12 +79,6 @@ appAttr = function(session_id) {
    (res: Response) => {
      this.attributes = res.json();
 
-     //console.log(this.attributes);
-     //this._router.navigate(['/resources']);
-     //this.uData = this.uresource;
-     //this.attributes = this.uData.attribute_id;
-     //console.log("ssion_data : " + this.uData);
-  
   
    }
   )
@@ -105,13 +97,11 @@ appAttr = function(session_id) {
       data => {
         if (data.success === true ) {
           this.appAttr(this.session_id);
-          // this.fetchData();
           $('#deleteModal').modal('toggle');
           this.toastr.error('Attribute Deleted.');
           this._router.navigate(['/attributes']);
         } else if (data.success === false) {
           this.appAttr(this.session_id);
-          // this.fetchData();
           $('#deleteModal').modal('toggle');
           this.toastr.error('Attribute Not Found. Refreshing The Attribute List.');
           this._router.navigate(['/attributes']);
@@ -119,9 +109,8 @@ appAttr = function(session_id) {
       },
       err => {
         this.appAttr(this.session_id);
-        // this.fetchData();
         $('#deleteModal').modal('toggle');
-        console.log(err);
+   
         this._router.navigate(['/attributes']);
       }
     );
@@ -132,12 +121,12 @@ appAttr = function(session_id) {
   getApplications = () => {
     this.attributeDataService.getAllApplications().subscribe(
       data => {
-        console.log(data);
+  
         this.applications = data;
         //this.toastr.info('Fetched Apllication List Successfully.');
       },
       err => {
-        console.log(err);
+  
         this.toastr.error('Something Went Wrong.');
       }
     );
@@ -148,13 +137,8 @@ appAttr = function(session_id) {
 
 
     
-    if (attribute.Name === (undefined || null||'') ||
-        attribute.Type === (undefined || null||'') ||
-        attribute.DataType === (undefined || null||'') ||
-        attribute.Description === (undefined || null||'') ||
-        attribute.Application_Id === (undefined || null||'') ||
-        attribute.Single_Multiple === (undefined || null||'')) {
-          this.toastr.error('Please Provide All The Necessary Fields.');
+    if (attribute.Name===undefined||attribute.Name===null||attribute.Name==='') {
+          this.toastr.error('Attribute name required.');
     } else {
 
        // tslint:disable-next-line:prefer-const
@@ -169,8 +153,7 @@ appAttr = function(session_id) {
 
       this.attributeDataService.addAttribute(Obj_Attribute).subscribe(
         res => {
-        console.log(res._body);
-          console.log(res);
+    
                 if(res._body=="unique") {
                   this.toastr.error('Attribute already exists.');
                 }
@@ -195,7 +178,6 @@ appAttr = function(session_id) {
       data => {
         if (data.success === true) {
           this.uData = data.Attribute;
-          console.log(data);
         } else if (data.success === false) {
           this.appAttr(this.session_id);
           //this.fetchData();
@@ -218,14 +200,8 @@ appAttr = function(session_id) {
 
   updateAttribute = (updateData, _id) => {
 
-    if (_id === (undefined || null) ||
-        updateData.Name === (undefined || null) ||
-        updateData.Type === (undefined || null) ||
-        updateData.DataType === (undefined || null) ||
-        updateData.Description === (undefined || null) ||
-        updateData.Application_Id === (undefined || null) ||
-        updateData.Single_Multiple === (undefined || null)) {
-      this.toastr.error('Please Provide All The Necessary Fields.');
+    if (updateData.Name===undefined||updateData.Name===null||updateData.Name==='') {
+      this.toastr.error('Attribute name required.');
     } else {
 
     // tslint:disable-next-line:prefer-const
@@ -266,183 +242,6 @@ appAttr = function(session_id) {
     }
   }
 
-  addFilters = (filter) => {
-
-    if (filter.Name === null &&
-        filter.Type === null &&
-        filter.DataType === null) {
-
-          this.appAttr(this.session_id);
-          //this.fetchData();
-
-          this.filterApplied = false;
-          this.filterName = filter.Name;
-          this.filterType = filter.Type;
-          this.filterDataType = filter.DataType;
-
-    } else if (filter.Name !== null &&
-               filter.Type === null &&
-               filter.DataType === null) {
-          this.attributeDataService.filterByName(filter.Name).subscribe(
-            data => {
-              if (data.success === true) {
-                console.log(data.Attributes);
-                this.filteredAttributes = data.Attributes;
-              } else if (data.success === false) {
-                console.log(data.msg);
-                this.filteredAttributes = data.Attributes;
-              }
-            },
-            err => {
-              console.log(err);
-            }
-          );
-
-          this.filterApplied = true;
-          this.filterName = filter.Name;
-          this.filterType = filter.Type;
-          this.filterDataType = filter.DataType;
-
-    } else if (filter.Name === null &&
-               filter.Type !== null &&
-               filter.DataType === null) {
-          this.attributeDataService.filterByType(filter.Type).subscribe(
-            data => {
-              if (data.success === true) {
-                console.log(data.Attributes);
-                this.filteredAttributes = data.Attributes;
-              } else if (data.success === false) {
-                console.log(data.msg);
-                this.filteredAttributes = data.Attributes;
-              }
-            },
-            err => {
-              console.log(err);
-            }
-          );
-
-          this.filterApplied = true;
-          this.filterName = filter.Name;
-          this.filterType = filter.Type;
-          this.filterDataType = filter.DataType;
-
-    } else if (filter.Name === null &&
-               filter.Type === null &&
-               filter.DataType !== null) {
-          this.attributeDataService.filterByDataType(filter.DataType).subscribe(
-            data => {
-              if (data.success === true) {
-                console.log(data.Attributes);
-                this.filteredAttributes = data.Attributes;
-              } else if (data.success === false) {
-                console.log(data.msg);
-                this.filteredAttributes = data.Attributes;
-              }
-            },
-            err => {
-              console.log(err);
-            }
-          );
-
-          this.filterApplied = true;
-          this.filterName = filter.Name;
-          this.filterType = filter.Type;
-          this.filterDataType = filter.DataType;
-
-    } else if (filter.Name !== null &&
-               filter.Type !== null &&
-               filter.DataType === null) {
-          this.attributeDataService.filterByNameType(filter.Name, filter.Type).subscribe(
-            data => {
-              if (data.success === true) {
-                console.log(data.Attributes);
-                this.filteredAttributes = data.Attributes;
-              } else if (data.success === false) {
-                console.log(data.msg);
-                this.filteredAttributes = data.Attributes;
-              }
-            },
-            err => {
-              console.log(err);
-            }
-          );
-
-          this.filterApplied = true;
-          this.filterName = filter.Name;
-          this.filterType = filter.Type;
-          this.filterDataType = filter.DataType;
-
-    } else if (filter.Name === null &&
-               filter.Type !== null &&
-               filter.DataType !== null) {
-          this.attributeDataService.filterByTypeDataType(filter.Type, filter.DataType).subscribe(
-            data => {
-              if (data.success === true) {
-                console.log(data.Attributes);
-                this.filteredAttributes = data.Attributes;
-              } else if (data.success === false) {
-                console.log(data.msg);
-                this.filteredAttributes = data.Attributes;
-              }
-            },
-            err => {
-              console.log(err);
-            }
-          );
-
-          this.filterApplied = true;
-          this.filterName = filter.Name;
-          this.filterType = filter.Type;
-          this.filterDataType = filter.DataType;
-
-    } else if (filter.Name !== null &&
-               filter.Type === null &&
-               filter.DataType !== null) {
-          this.attributeDataService.filterByDataTypeName(filter.DataType, filter.Name).subscribe(
-            data => {
-              if (data.success === true) {
-                console.log(data.Attributes);
-                this.filteredAttributes = data.Attributes;
-              } else if (data.success === false) {
-                console.log(data.msg);
-                this.filteredAttributes = data.Attributes;
-              }
-            },
-            err => {
-              console.log(err);
-            }
-          );
-
-          this.filterApplied = true;
-          this.filterName = filter.Name;
-          this.filterType = filter.Type;
-          this.filterDataType = filter.DataType;
-
-    } else if (filter.Name !== null &&
-               filter.Type !== null &&
-               filter.DataType !== null) {
-          this.attributeDataService.filterByNameTypeDataType(filter.Name, filter.Type, filter.DataType).subscribe(
-            data => {
-              if (data.success === true) {
-                console.log(data.Attributes);
-                this.filteredAttributes = data.Attributes;
-              } else if (data.success === false) {
-                console.log(data.msg);
-                this.filteredAttributes = data.Attributes;
-              }
-            },
-            err => {
-              console.log(err);
-            }
-          );
-
-          this.filterApplied = true;
-          this.filterName = filter.Name;
-          this.filterType = filter.Type;
-          this.filterDataType = filter.DataType;
-    }
-
-
-  }
+ 
 
 }

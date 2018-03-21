@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","es",{AU:"SAUo de página",toolbar:"Insertar SAUo de Página"});

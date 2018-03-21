@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","pt-br",{AU:"Quebra de Página",toolbar:"Inserir Quebra de Página"});

@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("colordialog","sv",{clear:"Rensa",highlight:"Markera",options:"FärgaUniversityrnativ",selected:"Vald färg",title:"Välj färg"});

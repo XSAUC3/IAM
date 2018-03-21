@@ -33,14 +33,11 @@ export class LoginComponent implements OnInit {
       this.authService.authenticateUser(user).subscribe(data => {
         if(data.success) {
           this.authService.storeUserData(data.token, data.user);
-          //Toast
-          //this.toastr.success('You are now logged in Successfully.');
-          //this.flashMessage.show('You are now logged in', {cssClass: 'alert-success', timeout: 5000});
+    
           this.router.navigate(['dashboard']);
         } else {
           //Toast
           this.toastr.error(data.msg);
-          //this.flashMessage.show(data.msg, {cssClass: 'alert-danger', timeout: 5000});
           this.router.navigate(['login']);
         }
     });
@@ -48,8 +45,6 @@ export class LoginComponent implements OnInit {
 
   // Forgot Password
   ForgotPassword = () => {
-    console.log("Done..!");
-    
     let Email_Id = this.email;
 
     if (Email_Id == (undefined || null)) {
@@ -103,7 +98,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     let url = window.location.href;
-    console.log(url);
     
     if(url != 'http://localhost:4200/'){
       let para = url.split('$')[1];
@@ -116,7 +110,6 @@ export class LoginComponent implements OnInit {
         }
         else{
           this.rsp = true;
-          // console.log(para,this.uid,this.token);
           this.uid = id;
         }
       });

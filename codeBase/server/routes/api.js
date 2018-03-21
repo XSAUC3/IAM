@@ -40,11 +40,6 @@ router.get('/application/:id', (req,res,next) =>{
 
 //Add App
 router.post('/addApp', (req, res, next) => {
-  // let newApp = new App({
-  //   app_name        : validator.blacklist(req.body.app_name,        blacklistedExp ) ,
-  //   app_displayname : validator.blacklist(req.body.app_displayname, blacklistedExp ) ,
-  //   app_description : validator.blacklist(req.body.app_description, blacklistedExp )
-  // });
   let newApp = new App({
     app_name        : req.body.app_name, 
     app_displayname : req.body.app_displayname, 
@@ -55,7 +50,6 @@ router.post('/addApp', (req, res, next) => {
     else     res.status(200).send(createdObj); 
   })
 });
-//res.status(500).json({Error:"Not working"});
 
 //edit App
 router.put('/updateApp/:id' , (req,res,next) => {
@@ -110,13 +104,6 @@ router.post('/addResourceType', (req, res, next) => {
     if(data==0) {
     
       let actions = [];
-      console.log(req.body.resourceType_actions);
-        //  for( i=1; i<= req.body.resourceType_actions.length ; i++ ){
-        //    actions.push({
-        //      action_name: req.body.resourceType_actions[i].action_name
-        //    });
-        //   }
-          console.log(req.body.resourceType_actions)
         let newResourceType = new ResourceType({
           resourceType_name        : req.body.resourceType_name, 
           resourceType_displayname : req.body.resourceType_displayname, 
@@ -131,37 +118,14 @@ router.post('/addResourceType', (req, res, next) => {
          }
          else {
           res.send("unique");
-          console.log("hello");
            
          }
    });
-
-
-//    let actions = [];
-// console.log(req.body.resourceType_actions);
-//   //  for( i=1; i<= req.body.resourceType_actions.length ; i++ ){
-//   //    actions.push({
-//   //      action_name: req.body.resourceType_actions[i].action_name
-//   //    });
-//   //   }
-//     console.log(req.body.resourceType_actions)
-//   let newResourceType = new ResourceType({
-//     resourceType_name        : req.body.resourceType_name, 
-//     resourceType_displayname : req.body.resourceType_displayname, 
-//     resourceType_description : req.body.resourceType_description,
-//     application_id           :req.body.application_id,
-//     resourceType_actions     : req.body.resourceType_actions
-//   });
-//   newResourceType.save( (err,createdObj ) => {
-//     if(err) res.status(500).json({Error:"Not working"}); 
-//     else     res.status(200).send(createdObj); 
-//   })
 });
 
 //fetch by app_id
 router.get('/ResourceType/fetchByAppId/:app_id', (req,res,next) =>{
   ResourceType.find({application_id: req.params.app_id}, (err, app) => {  
-    console.log( req.params.app_id);
   if (err) {res.json(err);} 
   else {res.json(app);}
 });
@@ -199,7 +163,6 @@ router.delete('/delResourceType/:id' , (req,res,next) => {
 
 
     Attribute.find({Name:req.body.Name}).where('Application_Id').equals(req.body.Application_Id).count((err,data)=>{
-      console.log(data);
       if(data==0) {
   
     let newAttribute = new Attribute({
@@ -225,39 +188,6 @@ router.delete('/delResourceType/:id' , (req,res,next) => {
              }
      });
 
-    //  Role.find({Role_name:req.body.Role_name}).where('Application_id').equals(req.body.Application_id).count((err,data)=>{
-    //   if(data==0) {
-      
-    //     let newRole = new Role({
-    //       Role_name : req.body.Role_name, 
-    //       Application_id : req.body.Application_id, 
-    //     });
-    //     console.log(req.body);
-    //     newRole.save( (err,createdObj ) => {
-    //       if(err)  res.send(err);  
-    //       else     res.status(200).send(createdObj); 
-    //     })
-    //        }
-    //        else {
-    //         res.send("unique");
-    //         console.log("hello");
-             
-    //        }
-    //  });
-    
-    // let newAttribute = new Attribute({
-    //   Name            :req.body.Name,
-    //   Type            :req.body.Type,
-    //   DataType        :req.body.DataType,
-    //   Description     :req.body.Description,
-    //   Application_Id  :req.body.Application_Id,
-    //   Single_Multiple :req.body.Single_Multiple
-    // });
-    // Attribute.addAttribute(newAttribute ,(err, attribute) =>{
-    //   if(err) { res.status(500).json({Error: err.message}); }
-    //   else if(attribute == null) { res.status(500).json({success: false, msg: 'Something Went Wrong'}); }
-    //   else    { res.status(200).json({success: true, Attribute: attribute}); }
-    // });
   });
 
   //edit Attribute
@@ -289,7 +219,6 @@ router.delete('/delResourceType/:id' , (req,res,next) => {
   //fetch by app_id
   router.get('/attributes/fetchByAppId/:app_id', (req,res,next) =>{
     Attribute.find({Application_Id: req.params.app_id}, (err, app) => {  
-      console.log( req.params.app_id);
     if (err) {res.json(err);} 
     else {res.json(app);}
   });
@@ -448,7 +377,6 @@ router.post('/role/addRole', (req, res, next) => {
         Role_name : req.body.Role_name, 
         Application_id : req.body.Application_id, 
       });
-      console.log(req.body);
       newRole.save( (err,createdObj ) => {
         if(err)  res.send(err);  
         else     res.status(200).send(createdObj); 
@@ -456,8 +384,6 @@ router.post('/role/addRole', (req, res, next) => {
          }
          else {
           res.send("unique");
-          console.log("hello");
-           
          }
    });
 
@@ -478,7 +404,6 @@ var id = req.params.id;
 //fetch by appid
 router.get('/role/fetchByAppId/:app_id', (req,res,next) =>{
   Role.find({Application_id: req.params.app_id}, (err, app) => {  
-    console.log( req.params.app_id);
   if (err) {res.json(err);} 
   else {res.json(app);}
 });
@@ -521,7 +446,6 @@ Resource.find({res_name:req.body.res_name}).where('application_id').equals(req.b
       attribute_value : req.body.attribute_value, 
       application_id : req.body.application_id
     });
-    console.log(newApp);
     
     newApp.save( (err,createdObj ) => {
       if(err)  res.status(500).json({Error : 'Not Working.'});  
@@ -530,7 +454,6 @@ Resource.find({res_name:req.body.res_name}).where('application_id').equals(req.b
        }
        else {
         res.send("unique");
-        console.log("hello");
          
        }
  });
@@ -727,16 +650,6 @@ router.get('/user/:id', (req,res,next) =>{
     res.json(user);
   });
 });
-
-
-// router.get('/application/:id', (req,res,next) =>{
-//   App.findById( {_id:req.params.id}, (err, app) => {  
-//     if (err) {res.json(err);} 
-//     res.json(app);
-//   });
-// });
-
-
 
 //edit user
 router.put('/UpdateUser/:id' , (req,res,next) => {

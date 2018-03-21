@@ -55,7 +55,6 @@
             <th (click)="sort('resourceType_name')">Resource Type name <span class="material-icons" *ngIf="key =='resourceType_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
             <th (click)="sort('application')">Application name <span class="material-icons" *ngIf="key =='application'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
             <th (click)="sort('attribute')">Attributes <span class="material-icons" *ngIf="key =='attribute'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
-            <!-- <th>Attribute value</th> -->
             <th (click)="sort('description')">Description <span class="material-icons" *ngIf="key =='description'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
             <th >Actions</th>
           </tr>
@@ -73,7 +72,6 @@
                   </ng-template>
                 </ng-container>
             </td>
-            <!-- <td>{{res.Resource_typeid}}</td> -->
             <td>
               <ng-container *ngFor="let application of applications">
                 <ng-container *ngIf="res.application_id == application._id; then thenBlockApp"></ng-container>
@@ -82,7 +80,6 @@
                 </ng-template>
               </ng-container>
           </td>
-            <!-- <td>{{res.application_id}}{{att.attribute_id+" | "}}</td> -->
             <td>
                 <span *ngFor="let att of res.attribute_id"><ng-container *ngFor="let attr of attribute">
                     <ng-container *ngIf="att.attribute_id == attr._id; then thenBlockApp"></ng-container>
@@ -90,19 +87,10 @@
                     {{attr.Name}} &nbsp; : &nbsp; {{att.attribute_value}} <br>
                     </ng-template>
                   </ng-container></span>
-                <!-- <ng-container *ngFor="let attr of attribute">
-                  <ng-container *ngIf="att.attribute_id == attr._id; then thenBlockApp"></ng-container>
-                  <ng-template #thenBlockApp>
-                  {{attr.Name}}
-                  </ng-template>
-                </ng-container> -->
             </td>
-            <!-- <td>{{res.attribute_id}}</td> -->
-            <!-- <td>{{res.attribute_value}}</td> -->
             <td>{{res.res_descrpition}}</td>
             <td><span (click)="editRes(res._id);fetchResourceType();fetchApplications();fetchAttribute();" data-toggle="modal" data-target="#updateModal"  > <i style="color:#4caf50;cursor:pointer" class="material-icons">create</i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(res._id, res.res_name)" data-toggle="modal" data-target="#deleteModal"><i class="material-icons" style="cursor: pointer; color:red;">delete</i></span></td>
           </tr>
-          <!-- [routerLink]="['/viewApplication',app._id]" -->
           </tbody>
           
         </table>
@@ -143,23 +131,14 @@
                         <option value="" selected disabled>Select ResourceType</option> 
                         <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.resourceType_name}}</option>
                       </select>
-                    </div>
-                    <!-- <div class="form-group">
-                      <label for="application_id">Application Name</label>
-                      <select class="form-control" name="application_id" id="application_id" placeholder="Select Application name" ngModel>
-                        <option *ngFor="let app of applications" value={{app._id}}>{{app.app_name}}</option>
-                      </select>
-                    </div> -->
-                    
-                    <div class="form-group">
+                    </div> <div class="form-group">
                       <label for="attribute_id">Attribute Name</label>
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       <label for="attribute_value">Attribute Value</label>
                       <div class="row">
                           <div class="col-md-5" >
-                            <!-- <input [(ngModel)]="newAction" name="newAction" type="text" placeholder="Add Action" class="form-control"> -->
-                            <select class="form-control" name="attribute_id" id="attribute_id" placeholder="Select Attribute name" [(ngModel)]="attribute_id">
+                           <select class="form-control" name="attribute_id" id="attribute_id" placeholder="Select Attribute name" [(ngModel)]="attribute_id">
                                 <option value="" selected disabled>Select Attribute</option> 
 
                               <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
@@ -191,10 +170,6 @@
                             </ul>
                           </div>
                     </div>
-                    <!-- <div class="form-group">
-                      <label for="attribute_value">Attribute Value</label>
-                      <input type="text" class="form-control" name="attribute_value" id="attribute_value" placeholder="Enter Attribute value" ngModel>
-                    </div> -->
                     <div class="form-group">
                       <label for="exampleInputEmail1">Resource Description</label>
                       <textarea autocomplete="off" class="form-control" name="res_descrpition" id="res_descrpition" placeholder="Enter description" ngModel></textarea>
@@ -246,12 +221,6 @@
                               <option *ngFor="let restype of resourcetype" value={{restype._id}}>{{restype.resourceType_name}}</option>
                             </select>
                           </div>
-                          <!-- <div class="form-group">
-                            <label for="application_id">Application name</label>
-                            <select class="form-control" name="uapplication_id" id="uapplication_id" placeholder="Select Application Type name" [(ngModel)]="uData.application_id">
-                            <option *ngFor="let app of applications" value={{app._id}}>{{app.app_name}}</option>
-                            </select>
-                            </div> -->
                             <div class="form-group">
                                 <label for="attribute_id">Attribute Name</label>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -259,7 +228,6 @@
                                 <label for="attribute_value">Attribute Value</label>
                                 <div class="row">
                                     <div class="col-md-5" >
-                                      <!-- <input [(ngModel)]="newAction" name="newAction" type="text" placeholder="Add Action" class="form-control"> -->
                                       <select class="form-control" name="attribute_id" id="attribute_id" placeholder="Select Attribute name" [(ngModel)]="attribute_id">
                                         <option value="" selected disabled>Select Attribute</option> 
                                         <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
@@ -291,14 +259,8 @@
                                         </li>
                                       </ul>
                                     </div>
-                            <!-- <select class="form-control" name="uattribute_id" id="uattribute_id" placeholder="Select Attribute name" [(ngModel)]="uData.attribute_id">
-                            <option *ngFor="let att of attribute" value={{att._id}}>{{att.Name}}</option>
-                          </select> -->
                           </div>
-                          <!-- <div class="form-group">
-                            <label for="attribute_value">Attribtue value</label>
-                            <input type="text" class="form-control" name="uattribute_value" id="uattribute_value" placeholder="Enter Attribute value" [(ngModel)]="uData.attribute_value">
-                          </div> -->
+                       
                           <div class="form-group">
                             <label for="exampleInputEmail1">Resource Description</label>
                             <textarea class="form-control" name="ures_descrpition" id="ures_descrpition" placeholder="Enter description" [(ngModel)]="uData.res_descrpition"></textarea>

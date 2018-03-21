@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","th",{AU:"ตัวแบ่งหน้า",toolbar:"แทรกตัวแบ่งหน้า Page Break"});

@@ -22,11 +22,7 @@ export class ApplicationComponent implements OnInit {
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) { 
     this.fetchData();
-  //   $(document).ready(function(){
-     
-  //     $('#dt').DataTable();
-
-  // });
+  
   console.log(Applications);
   }
 
@@ -77,10 +73,10 @@ export class ApplicationComponent implements OnInit {
 
 //Add App
   addNewApp = function(a) {
-    console.log(a);
+  
     if(a.app_name===undefined||a.app_name===null||a.app_name==='') {
       this.toastr.error('Application name required.');
-      //this.isEmpty = true;
+ 
     }
     else {
 
@@ -95,20 +91,13 @@ export class ApplicationComponent implements OnInit {
           this.toastr.error('Application already exists.');
         }
         else{
-          console.log(res);
           this.fetchData();
           $('#addModal').modal('toggle');
           this.toastr.success('Application Added.');
           
         }
     
-      // $(document).ready(function(){
-     
-      //   // $('#dt').DataTable();
-      //   $('#dt').each(function() {
-      //     this.fetchData();
-      // })
-    //});
+    
       },
       err=> {
         //this.toastr.error('Error Please .');
@@ -124,9 +113,7 @@ editApp = function(id) {
  this.http.get(application+id).subscribe(
     (res: Response) => {
       this.uApplication = res.json();
-      console.log(res.json());
       this.uData = this.uApplication;
-      console.log(this.uData);
 
 
     }
@@ -139,11 +126,13 @@ editApp = function(id) {
 
 updateApp = function(updateData,id)
 {
-  
-  console.log(id);
+  if(updateData.uapp_name===undefined||updateData.uapp_name===null||updateData.uapp_name==='') {
+    this.toastr.error('Application name required.');
 
-  if(updateData.uapp_name != "") {
-    console.log(updateData.uapp_name);
+  }
+
+  else {
+   
     this.editObj = {
       "app_name":updateData.uapp_name,
       "app_displayname":updateData.uapp_displayname,
@@ -173,10 +162,7 @@ applicationNameToBeDeleted : String;
 
   ngOnInit() {
     this.fetchData();
-  //   $(document).ready(function(){
-     
-  //     $('#dt').DataTable();
-  // });
+  
     this.fetchData();
     
   

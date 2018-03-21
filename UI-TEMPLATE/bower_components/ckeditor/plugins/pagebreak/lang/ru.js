@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","ru",{AU:"Разрыв страницы",toolbar:"Вставить разрыв страницы для печати"});

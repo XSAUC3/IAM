@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","uk",{AU:"Розрив Сторінки",toolbar:"Вставити розрив сторінки"});

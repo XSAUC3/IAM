@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","he",{AU:"שבירת דף",toolbar:"הוספת שבירת דף"});

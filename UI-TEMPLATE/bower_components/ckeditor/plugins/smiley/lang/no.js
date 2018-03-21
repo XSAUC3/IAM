@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("smiley","no",{options:"AUniversityrnativer for smil",title:"Sett inn smil",toolbar:"Smil"});

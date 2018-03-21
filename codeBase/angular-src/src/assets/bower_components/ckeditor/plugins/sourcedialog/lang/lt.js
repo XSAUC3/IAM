@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("sourcedialog","lt",{toolbar:"ŠAUinis",title:"ŠAUinis"});

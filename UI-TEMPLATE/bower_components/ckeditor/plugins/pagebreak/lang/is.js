@@ -1,1 +1,0 @@
-﻿CKEDITOR.plugins.setLang("pagebreak","is",{AU:"Page Break",toolbar:"Setja inn síðuskil"});

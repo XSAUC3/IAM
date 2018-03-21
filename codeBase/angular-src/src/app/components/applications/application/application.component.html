@@ -11,7 +11,7 @@
     </div>
     <div class="col-md-4">
       <ol id="ol" class="breadcrumb">
-        <li class="active" name="a" id="a" onclick="abc()" >
+        <li class="active">
           <b>
             <a  style="color:#00bcd4;" data-toggle="modal" data-target="#addModal">
               <i class="material-icons" >add</i>Add</a>
@@ -50,7 +50,6 @@
           
           <thead class="thead-inverse">
             <tr>
-              <!-- <th style="width: 10%;">#Id</th> -->
               <!-- <th>#</th> -->
               <th (click)="sort('app_name')">Name <span class="material-icons" *ngIf="key =='app_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
               <th (click)="sort('app_displayname')">Display name<span class="material-icons" *ngIf="key =='app_displayname'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
@@ -61,8 +60,6 @@
           <tbody>
             <tr *ngFor=" let app of apps | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 5, currentPage: p };let i=index ">
               <!-- <td>{{app._id}}</td> -->
-              <!-- {{ (currentPage - 1) * itemsPerPage + i +1 }} -->
-              <!-- <td>{{ (currentPage - 1) * itemsPerPage + i +1 }}</td>  -->
               <td>{{app.app_name}}</td>
               <td>{{app.app_displayname}}</td>
               <td>{{app.app_description}}</td>
@@ -75,7 +72,6 @@
                 </span>
               </td>
             </tr>
-            <!-- [routerLink]="['/viewApplication',app._id]" -->
           </tbody>
         </table>
         <span style="text-align:right"><pagination-controls (pageChange)="p = $event"></pagination-controls></span>
