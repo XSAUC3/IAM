@@ -7,6 +7,9 @@ import { ToastrService } from 'ngx-toastr';
 import { Http, Headers } from '@angular/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import 'rxjs/add/operator/map';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
+import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
 declare var $;
 
 @Component({
@@ -26,7 +29,14 @@ export class AttributesComponent implements OnInit {
   filterDataType: String;
   attributeNameToBeDeleted: String;
   attributeIdToBeDeleted: String;
-
+  p: number = 1;
+  collection: any[] = this.attributes;  
+  key: string = 'name';
+  reverse: boolean = false;
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
+  }
   constructor(private _router: Router,
               private http: Http,
               private route: ActivatedRoute,
@@ -37,9 +47,7 @@ export class AttributesComponent implements OnInit {
 
   //  this.fetchData();
     this.appAttr(this.session_id);
-    $(document).ready(() => {
-       $('#dt').DataTable();
-  });
+  
 
     //this.fetchData();
     this.getApplications();
@@ -138,43 +146,6 @@ appAttr = function(session_id) {
   // Add Attribute
   addNewAttribute = (attribute) => {
 
-  //   if(a.res_name==undefined) {
-  //     this.toastr.error("Resource name required.")
-  //    }
-  //    else {
-  //     this.aObj = {
-  //       "res_name":a.res_name,
-  //       "res_displayname":a.res_displayname,
-  //       "Resource_typeid":a.Resource_typeid,
-  //       "application_id":this.session_id,
-  //       "attribute_id":this.attributes,
-  //       "res_descrpition":a.res_descrpition
-  //     }
-  //     console.log(this.aObj);
-      
-  //     this.http.post("http://localhost:3000/api/addResource" , this.aObj ,  {Headers : this.headers} ).subscribe(res => {
-  //       console.log(res);
-  //       if(res._body=="unique") {
-  //         this.toastr.error('Resource already exists.');
-  //       }
-  //       else {
-  //         this.appRes(this.session_id);
-  //         $('#addModal').modal('toggle');
-  //         this.toastr.success('Resource Added.');
-  //       }
-      
-  //     },
-  //     err=> {
-  //       //this.toastr.error('Resource already exists.');
-  //      })
-  
-  
-  // }
-
-
-
-
-
 
     
     if (attribute.Name === (undefined || null||'') ||
@@ -211,11 +182,7 @@ appAttr = function(session_id) {
 
         },
         err => {
-          // this.appAttr(this.session_id);  
-          // //this.fetchData();
-          //   $('#addModal').modal('toggle');
-            // this.toastr.error('sOMETHING WENT WRONG');
-          //   console.log(err);
+    
         }
       );
     }

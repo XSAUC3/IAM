@@ -6,7 +6,9 @@ import 'rxjs/add/operator/toPromise';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ToastrService } from 'ngx-toastr';
-
+import {NgxPaginationModule} from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
+import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
 declare var $;
 
 @Component({
@@ -21,12 +23,7 @@ export class AdministrativeUsersComponent implements OnInit {
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) {
     this.fetchData();
-    
-    $(document).ready(function(){
-     
-      $('#dt').DataTable();
-
-  });
+ 
 }
 
 // Var declarations
@@ -41,6 +38,17 @@ roles = [];
 addRole = [];
 
 role = '';
+
+p: number = 1;
+   collection: any[] = this.user;  
+   key: string = 'name';
+   reverse: boolean = false;
+   sort(key){
+     this.key = key;
+     this.reverse = !this.reverse;
+   }
+
+
 pushAction = function() {
   if(this.role != '') {
     let object = {
@@ -49,7 +57,7 @@ pushAction = function() {
    this.addRole.push(object);
    this.role = "";
   }
-  console.log(this.addRole);
+
 }
 session_id=sessionStorage.getItem('app_id');
 
@@ -62,7 +70,7 @@ fetchRoles=function() {
   this.http.get(Roles).subscribe(
     (res: Response) => {
       this.roles = res.json();
-      console.log(this.roles);
+    
     }
   )
  }
@@ -72,7 +80,7 @@ fetchData=function() {
   this.http.get(users_all).subscribe(
     (res: Response) => {
       this.user = res.json();
-      console.log(this.user);
+   
     }
   )
  }
@@ -196,11 +204,7 @@ deleteUser = function(id) {
    ngOnInit() {
      this.fetchData();
      localStorage.getItem('app_id');
-     $(document).ready(function(){
-      
-       $('#dt').DataTable();
- 
-   });
+  
      this.fetchData();
      this.fetchRoles();
    }

@@ -42,18 +42,21 @@
       <!-- /.box-header -->
       <div class="box-body">
           <div class="table-responsive">
+              <nav class="navbar">
+                  <input class="form-control" type="text" name="search" placeholder="Search Filter" [(ngModel)]="filter">      
+                 </nav>
         <table id="dt" class="table table-bordered table-hover">
           <thead>
             <tr >
-              <th>#</th>
-              <th >Name</th>
-              <th>Application name</th>
-              <th>Action</th>
+              <!-- <th>#</th> -->
+              <th  (click)="sort('Role_name')">Name <span class="material-icons" *ngIf="key =='Role_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+              <th  (click)="sort('app_name')">Application name <span class="material-icons" *ngIf="key =='app_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+              <th>Action </th>
             </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let role of role; let i= index">
-            <td>{{i+1}}</td>
+          <tr *ngFor="let role of role | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 5, currentPage: p };let i=index ">
+            <!-- <td>{{i+1}}</td> -->
             <td>{{role.Role_name}}</td>
             <td>
                 <ng-container *ngFor="let application of applications">
@@ -69,6 +72,7 @@
           <!-- [routerLink]="['/viewApplication',app._id]" -->
           </tbody>
         </table>
+        <span style="text-align:right"><pagination-controls (pageChange)="p = $event"></pagination-controls></span>
         </div>
       </div>
       <!-- /.box-body -->

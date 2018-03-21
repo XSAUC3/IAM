@@ -9,7 +9,9 @@ import { ApplicationComponent } from './components/applications/application/appl
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-
+import {NgxPaginationModule} from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
+import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
 //toastr
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
  
@@ -46,6 +48,9 @@ import { AuthService } from './components/login/services/auth.service';
     BrowserModule,
     FormsModule,
     HttpModule,
+    Ng2SearchPipeModule, //including into imports
+    Ng2OrderModule,
+    NgxPaginationModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot({
       closeButton:true,

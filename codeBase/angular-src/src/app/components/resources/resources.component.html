@@ -42,24 +42,27 @@
      
       <!-- /.box-header -->
       <div class="box-body">
+          <nav class="navbar">
+              <input class="form-control" type="text" name="search" placeholder="Search Filter" [(ngModel)]="filter">      
+             </nav>
         <div class="table-responsive">
         <table id="dt" class="table table-bordered table-hover" >
           <thead class="thead-inverse">
           <tr>
-            <th>#</th>
-            <th >Name</th>
-            <th>Display name</th>
-            <th>Resource Type name</th>
-            <th>Application name</th>
-            <th>Attributes</th>
+            <!-- <th>#</th> -->
+            <th (click)="sort('res_name')">Name <span class="material-icons" *ngIf="key =='res_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+            <th (click)="sort('res_displayname')">Display name <span class="material-icons" *ngIf="key =='res_displayname'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+            <th (click)="sort('resourceType_name')">Resource Type name <span class="material-icons" *ngIf="key =='resourceType_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+            <th (click)="sort('application')">Application name <span class="material-icons" *ngIf="key =='application'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+            <th (click)="sort('attribute')">Attributes <span class="material-icons" *ngIf="key =='attribute'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
             <!-- <th>Attribute value</th> -->
-            <th >Description</th>
+            <th (click)="sort('description')">Description <span class="material-icons" *ngIf="key =='description'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
             <th >Actions</th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let res of resource; let i=index">
-            <td>{{i+1}}</td>
+          <tr *ngFor="let res of resource | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 5, currentPage: p };let i=index ">
+            <!-- <td>{{i+1}}</td> -->
             <td>{{res.res_name}}</td>
             <td>{{res.res_displayname}}</td>
             <td>
@@ -103,6 +106,8 @@
           </tbody>
           
         </table>
+        <span style="text-align:right"><pagination-controls (pageChange)="p = $event"></pagination-controls></span>
+
         </div>
       </div>
       <!-- /.box-body -->

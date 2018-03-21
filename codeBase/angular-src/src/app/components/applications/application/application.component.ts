@@ -6,6 +6,9 @@ import 'rxjs/add/operator/toPromise';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ToastrService } from 'ngx-toastr';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
+import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
 declare var $;
 
 @Component({
@@ -19,13 +22,14 @@ export class ApplicationComponent implements OnInit {
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) { 
     this.fetchData();
-    $(document).ready(function(){
+  //   $(document).ready(function(){
      
-      $('#dt').DataTable();
+  //     $('#dt').DataTable();
 
-  });
+  // });
   console.log(Applications);
   }
+
 
 // Var declarations
   id:number;
@@ -35,7 +39,15 @@ export class ApplicationComponent implements OnInit {
   uExist = false;
   private headers = new Headers({ 'Content-Type': 'application/json'});
   apps = [];
-  
+  p: number = 1;
+   collection: any[] = this.apps;  
+   key: string = 'name';
+   reverse: boolean = false;
+   sort(key){
+     this.key = key;
+     this.reverse = !this.reverse;
+   }
+
   fetchData=function() {
     this.http.get(Applications).subscribe(
       (res: Response) => {
@@ -161,10 +173,10 @@ applicationNameToBeDeleted : String;
 
   ngOnInit() {
     this.fetchData();
-    $(document).ready(function(){
+  //   $(document).ready(function(){
      
-      $('#dt').DataTable();
-  });
+  //     $('#dt').DataTable();
+  // });
     this.fetchData();
     
   

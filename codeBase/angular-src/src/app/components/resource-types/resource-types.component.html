@@ -43,20 +43,23 @@
       <!-- /.box-header -->
       <div class="box-body">
         <div class="table-responsive">
+            <nav class="navbar">
+                <input class="form-control" type="text" name="search" placeholder="Search Filter" [(ngModel)]="filter">      
+               </nav>
         <table id="dt" class="table table-bordered table-hover" >
           <thead class="thead-inverse">
           <tr>
             <!-- <th style="width: 10%;">#Id</th> -->
             <th>#</th>
-            <th >Name</th>
-            <th>Display name</th>
-            <th >Description</th>
-            <th >Actions</th>
+            <th (click)="sort('resourceType_name')">Name <span class="material-icons" *ngIf="key =='resourceType_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+            <th (click)="sort('resourceType_displayname')">Display name <span class="material-icons" *ngIf="key =='resourceType_displayname'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+            <th (click)="sort('resourceType_description')">Description <span class="material-icons" *ngIf="key =='resourceType_description'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+            <th (click)="sort('action')">Actions <span class="material-icons" *ngIf="key =='action'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
             <th >Operations</th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let rt of resourceTypes; let i=index">
+          <tr *ngFor="let rt of resourceTypes | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 5, currentPage: p };let i=index ">
             <!-- <td>{{app._id}}</td> -->
             <td>{{i+1}}</td>
             <td>{{rt.resourceType_name}}</td>
@@ -68,6 +71,7 @@
           </tbody>
           
         </table>
+        <span style="text-align:right"><pagination-controls (pageChange)="p = $event"></pagination-controls></span>
         </div>
       </div>
       <!-- /.box-body -->

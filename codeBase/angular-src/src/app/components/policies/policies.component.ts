@@ -3,6 +3,9 @@ import {Http,Response,Headers} from '@angular/http';
 import {ToastrService, Toast} from 'ngx-toastr';
 import 'rxjs/add/operator/map';
 import {Subject} from 'rxjs/Subject';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
+import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
 
 declare var $;
 @Component({
@@ -43,14 +46,22 @@ export class PoliciesComponent implements OnInit {
   private headers = new Headers({
     'Content-Type': 'application/json'
   });
+
+  po: number = 1;
+  collection: any[] = this.fetchedpolicies;  
+  key: string = 'name';
+  reverse: boolean = false;
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
+  }
+
   ngOnInit() {
     this.fetchPolicies();
     this.fetchRoles();
     this.fetchResources();
     this.fetchUsers();
-    $(document).ready(function () {
-      $('#dt').DataTable();
-    });
+  
   }
 
   refresh() {window.location.reload();}
@@ -154,8 +165,7 @@ export class PoliciesComponent implements OnInit {
         },
         err => this.toastr.error('Ops! something went wrong.'))
       this.fetchPolicies();
-      $('#dt').DataTable().clear();
-      $('#dt').DataTable().draw();
+  
     }
   }
 

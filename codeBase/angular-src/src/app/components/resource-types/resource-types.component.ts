@@ -6,6 +6,9 @@ import 'rxjs/add/operator/toPromise';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ToastrService } from 'ngx-toastr';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
+import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
 declare var $;
 
 @Component({
@@ -20,11 +23,7 @@ export class ResourceTypesComponent implements OnInit {
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) { 
     //this.fetchData();
-    $(document).ready(function(){
-     
-      $('#dt').DataTable();
-
-  });
+  
   }
 
 // Var declarations
@@ -38,6 +37,17 @@ export class ResourceTypesComponent implements OnInit {
   applications= [];
   actions = [];
   newAction = "";
+
+  p: number = 1;
+  collection: any[] = this.resourceTypes;  
+  key: string = 'name';
+  reverse: boolean = false;
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
+  }
+
+
   componentVisibility :Boolean;
   pushAction = function() {
     if(this.newAction != "") {
@@ -150,30 +160,6 @@ appResT = function(session_id) {
   }
 
 
-  //   console.log(rt)
-  //   if(rt.resourceType_name != "") {
-  //     this.rtObj = {
-  //       "resourceType_name":rt.resourceType_name,
-  //       "resourceType_displayname":rt.resourceType_displayname,
-  //       "resourceType_description":rt.resourceType_description,
-  //       "application_id":this.session_id,
-  //       "resourceType_actions": this.actions 
-  //     }
-  //   console.log(this.rtObj)
-  //   this.http.post("http://localhost:3000/api/addResourceType" , this.rtObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
-  //        console.log(res);
-  //      this.appResT(this.session_id);
-  //         $('#addModal').modal('toggle');
-  //         this.toastr.success('Resource-Type Added.');
-  //         },
-  //         (err: Error)=> {
-  //           this.toastr.error('Resource-Type already exists.');
-  //          });
-  //         this.actions=[];
-  // }
-  // else{
-  //   this.isEmpty = true;
-  //  }
    }
 
 //Edit Rt
@@ -242,12 +228,7 @@ editRt = function(id) {
   }
    this.appResT(this.session_id);
    this.fetchApplications();
-    $(document).ready(function(){
-     
-      $('#dt').DataTable();
-
-    });
-    //this.fetchData();
+  
     
   
   }

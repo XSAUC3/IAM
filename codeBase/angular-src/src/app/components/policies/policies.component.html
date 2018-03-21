@@ -40,22 +40,25 @@
     <!-- /.box-header -->
     <div class="box-body">
       <div class="table-responsive">
+          <nav class="navbar">
+              <input class="form-control" type="text" name="search" placeholder="Search Filter" [(ngModel)]="filter">      
+             </nav>
         <table id="dt" class="table table-bordered table-hover">
           <thead class="thead-inverse">
             <tr>
-              <th>#</th>
-              <th>Policy name</th>
-              <th>Policy Type</th>
-              <th>Policy Constrains</th>
-              <th>Principals</th>
-              <th>Targets</th>
-              <th>Action</th>
+              <!-- <th>#</th> -->
+              <th (click)="sort('policy_name')">Policy name <span class="material-icons" *ngIf="key =='policy_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+              <th (click)="sort('policy_type')">Policy Type <span class="material-icons" *ngIf="key =='policy_type'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+              <th (click)="sort('policy_constrains')">Policy Constrains <span class="material-icons" *ngIf="key =='policy_constrains'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+              <th (click)="sort('principal')">Principals <span class="material-icons" *ngIf="key =='principal'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+              <th (click)="sort('target')">Targets <span class="material-icons" *ngIf="key =='target'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+              <th >Action </th>
              
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let p of fetchedpolicies; let i=index">
-              <td>{{i+1}}</td>
+            <tr *ngFor="let p of fetchedpolicies | orderBy: key : reverse | filter:filter | paginate: { itemsPerPage: 5, currentPage: po };let i=index ">
+              <!-- <td>{{i+1}}</td> -->
               <td>{{p.policy_name}}</td>
               <td>{{p.policy_type}}</td>
               <td>{{p.policy_constrains}}</td>
@@ -83,6 +86,7 @@
             </tr>
           </tbody>
         </table>
+        <span style="text-align:right"><pagination-controls (pageChange)="po = $event"></pagination-controls></span>
       </div>
     </div>
 

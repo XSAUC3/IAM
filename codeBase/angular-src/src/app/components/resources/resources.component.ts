@@ -7,6 +7,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ToastrService } from 'ngx-toastr';
 import { resource } from 'selenium-webdriver/http';
+import {NgxPaginationModule} from 'ngx-pagination';
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
+import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
 
 declare var $;
 
@@ -26,11 +29,7 @@ export class ResourcesComponent implements OnInit {
     this.fetchApplications();
     this.fetchAttribute();
     console.log("session id Res: " + sessionStorage.getItem('app_id'));
-    $(document).ready(function(){
-     
-      $('#dt').DataTable();
-
-  });
+  
   console.log("app"+attributes_fetchByAppId+this.session_id);
 }
   // Var declarations
@@ -48,6 +47,16 @@ export class ResourcesComponent implements OnInit {
   attributes = [];
   attribute_id = "";
   attribute_value = "";
+
+  p: number = 1;
+  collection: any[] = this.resource;  
+  key: string = 'name';
+  reverse: boolean = false;
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
+  }
+
   pushAction = function() {
     if(this.attribute_id != "") {
       var object = {
@@ -105,7 +114,7 @@ fetchApplications=function() {
  }
  //Fetch Attribute
  fetchAttribute=function() {
-  this.http.get(attributes_fetchByAppId+this.session_id).subscribe(
+  this.http.get(allAttributes).subscribe(
     (res: Response) => {
       let a = [];
       let obj = res.json();
@@ -263,12 +272,7 @@ updateRes = function(updateData,id)
 
   ngOnInit() {
    // this.fetchData();
-    $(document).ready(function(){
-     
-      $('#dt').DataTable();
-
-  });
-   // this.fetchData();
+  
     this.appRes(this.session_id);
   }
 
