@@ -15,6 +15,9 @@ import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
 //toastr
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
  
+//loader
+import { LoadingModule } from 'ngx-loading';
+
 import { ToastrModule } from 'ngx-toastr';
 import { AdministrativeUsersComponent } from './components/administrative-users/administrative-users.component';
 import { AttributesComponent } from './components/attributes/attributes.component';
@@ -50,6 +53,7 @@ import { AuthService } from './components/login/services/auth.service';
     BrowserModule,
     FormsModule,
     HttpModule,
+    LoadingModule,
     Ng2SearchPipeModule, //including into imports
     Ng2OrderModule,
     NgxPaginationModule,

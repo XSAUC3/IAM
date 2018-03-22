@@ -3,6 +3,7 @@
 		<div class="container-login100">
 			<div class="wrap-login100" style="padding: 40px 55px 33px 55px;">
 				<form class="login100-form validate-form" (submit)="onLoginSubmit()">
+            <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
           <span class="login100-form-title p-b-48">
             <img src="assets/img/kavalus.png">
           </span>

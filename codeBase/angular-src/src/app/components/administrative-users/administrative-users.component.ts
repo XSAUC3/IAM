@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
+import { LoadingModule } from 'ngx-loading';
 declare var $;
 
 @Component({
@@ -17,7 +18,7 @@ declare var $;
   styleUrls: ['./administrative-users.component.css']
 })
 export class AdministrativeUsersComponent implements OnInit {
-
+  public loading = false;
   aObj:Object = {};
   conformationString:String = "* Please enter name";
   isEmpty:boolean = false;
@@ -77,8 +78,10 @@ fetchRoles=function() {
 
 
 fetchData=function() {
+  this.loading = true;
   this.http.get(users_all).subscribe(
     (res: Response) => {
+      this.loading = false;
       this.user = res.json();
    
     }

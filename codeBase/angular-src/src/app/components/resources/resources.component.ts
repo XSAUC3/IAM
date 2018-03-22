@@ -10,6 +10,7 @@ import { resource } from 'selenium-webdriver/http';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
+import { LoadingModule } from 'ngx-loading';
 
 declare var $;
 
@@ -19,6 +20,7 @@ declare var $;
   styleUrls: ['./resources.component.css']
 })
 export class ResourcesComponent implements OnInit {
+  public loading = false;
   aObj:Object = {};
   conformationString:String = "* Please enter name";
   isEmpty:boolean = false;
@@ -26,7 +28,7 @@ export class ResourcesComponent implements OnInit {
     this.appRes(this.session_id);
     //this.fetchData();
     this.fetchResourceType();
-    this.fetchApplications();
+    // this.fetchApplications();
     this.fetchAttribute();
 }
   // Var declarations
@@ -197,9 +199,10 @@ this.http.get(Resource+id).subscribe(
 
 
 appRes = function(session_id) {
-
+  this.loading = true;
   this.http.get(Resource_fetchByAppId+session_id).subscribe(
    (res: Response) => {
+    this.loading = false;
      this.resource = res.json();
      this._router.navigate(['/resources']);
    }

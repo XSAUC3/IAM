@@ -101,6 +101,8 @@
                 </tbody>
                 
               </table>
+              <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',backdropBackgroundColour: 'rgba(255,255,255,0.3)',primaryColour:'#ff9800',secondaryColour:'#ff9800',tertiaryColour:'#ff9800' }"></ngx-loading>
+        
    <span style="text-align:right"><pagination-controls (pageChange)="p = $event"></pagination-controls></span>
         </div>
       </div>

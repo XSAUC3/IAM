@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
+import { LoadingModule } from 'ngx-loading';
 declare var $;
 
 @Component({
@@ -17,7 +18,7 @@ declare var $;
   styleUrls: ['./resource-types.component.css']
 })
 export class ResourceTypesComponent implements OnInit {
-
+  public loading = false;
   rtObj:Object = {};
   conformationString:String = "* Please enter name";
   isEmpty:boolean = false;
@@ -75,9 +76,10 @@ export class ResourceTypesComponent implements OnInit {
 session_id=sessionStorage.getItem('app_id');
 
 appResT = function(session_id) {
-
+  this.loading = true;
   this.http.get(ResourceType_fetchByAppId+session_id).subscribe(
    (res: Response) => {
+    this.loading = false;
      this.resourceTypes = res.json();  
    }
   )

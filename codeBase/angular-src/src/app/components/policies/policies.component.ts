@@ -8,6 +8,7 @@ import {Subject} from 'rxjs/Subject';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
+import { LoadingModule } from 'ngx-loading';
 
 declare var $;
 @Component({
@@ -16,7 +17,7 @@ declare var $;
   styleUrls: ['./policies.component.css']
 })
 export class PoliciesComponent implements OnInit {
-
+  public loading = false;
   app_id = sessionStorage.getItem('app_id') ;
   
   //fetch all policies for the table  
@@ -86,9 +87,12 @@ export class PoliciesComponent implements OnInit {
   }
 
   fetchPolicies() {
+    this.loading = true;
     this._http.get(fetch_policy_url + this.app_id).map(res => res.json()).subscribe(
-      policies => this.fetchedpolicies = policies,
-      err => console.log("error Occured while fetching Policies", err)
+      policies => {this.loading = false;
+        this.fetchedpolicies = policies
+      },
+       err => console.log("error Occured while fetching Policies", err)
     )
   }
 
@@ -232,13 +236,12 @@ export class PoliciesComponent implements OnInit {
     this.SingleTargetResourceName = data.resource_name ;
     this.SingleTargetResource = data;
     $('#info').modal('toggle');
-    this.actions = [];
     this.fetchrestypeactions(data.resourceType_Id)
   }
 
   fetchrestypeactions(id){
     this._http.get(get_res_type_actions_url + id ).map(res => res.json()).subscribe(
-      res => { this.actions = res.policy_targets[0].resourceType_actions } , 
+      res => { this.actions = res.policy_targets[0].resourceType_actions ; } , 
       err => { console.log(err) }
     )
   }
@@ -250,7 +253,7 @@ export class PoliciesComponent implements OnInit {
         let rspns = res.json()
         if (res.status == 200 && rspns.success == true ){
           this.toastr.success('action status updated !' );
-          this.fetchPolicies();
+          // this.fetchPolicies();
           this.emptyarray();
           this.fetchrestypeactions(singleresource.resourceType_Id)
         }

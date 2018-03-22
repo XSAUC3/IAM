@@ -10,6 +10,7 @@ import 'rxjs/add/operator/map';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
+import { LoadingModule } from 'ngx-loading';
 declare var $;
 
 @Component({
@@ -18,7 +19,7 @@ declare var $;
   styleUrls: ['./attributes.component.css']
 })
 export class AttributesComponent implements OnInit {
-
+  public loading = false;
   applications = [];
   attributes = [];
   uData = {};
@@ -50,7 +51,7 @@ export class AttributesComponent implements OnInit {
   
 
     //this.fetchData();
-    this.getApplications();
+   // this.getApplications();
 
   }
 
@@ -74,9 +75,10 @@ export class AttributesComponent implements OnInit {
   //get res by app_id
 session_id=sessionStorage.getItem('app_id');
 appAttr = function(session_id) {
-
+  this.loading = true;
   this.http.get(attributes_fetchByAppId+session_id).subscribe(
    (res: Response) => {
+    this.loading = false;
      this.attributes = res.json();
 
   

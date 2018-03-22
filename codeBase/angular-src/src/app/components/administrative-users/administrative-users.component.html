@@ -83,6 +83,8 @@
           </tr>
         </tbody>
       </table>
+      <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',backdropBackgroundColour: 'rgba(255,255,255,0.3)',primaryColour:'#ff9800',secondaryColour:'#ff9800',tertiaryColour:'#ff9800' }"></ngx-loading>
+        
       <span style="text-align:right"><pagination-controls (pageChange)="p = $event"></pagination-controls></span>
     </div>
     </div>
@@ -106,25 +108,25 @@
               <div class="box-body">
                 <div class="form-group">
                   <label for="app_name">Name</label>
-                  <input type="text" class="form-control" required name="name" id="username" placeholder="Enter Full Name" ngModel>
+                  <input type="text" class="form-control" autocomplete="off" required name="name" id="name" placeholder="Enter Full Name" ngModel>
                 </div>
                 <div class="form-group">
                   <label for="app_name">UserName</label>
-                  <input type="text" class="form-control" required name="username" id="username" placeholder="Enter Username" ngModel>
+                  <input type="text" class="form-control" autocomplete="off" required name="username"   placeholder="Enter Username" ngModel>
                 </div>
                 <div class="form-group">
                   <label for="app_displayname">Password</label>
-                  <input type="password" class="form-control" required name="password" id="password" type="password" placeholder="Enter password" ngModel>
+                  <input type="password" class="form-control" autocomplete="off" required name="password"    type="password" placeholder="Enter password" ngModel>
                 </div>
                 <div class="form-group">
                   <label for="app_name">Email</label>
-                  <input type="text" class="form-control" required name="email" id="email" placeholder="Enter User Name" ngModel>
+                  <input type="text" class="form-control" autocomplete="off" required name="email"     placeholder="Enter User Name" ngModel>
                 </div>
                 <div class="form-group">
                     <label for="app_name">Role</label>
                     <div class="row">
                       <div class="col-md-9" >
-                        <select class="form-control" name="role" id="role" placeholder="Select Role" [(ngModel)]="role">
+                        <select class="form-control" name="role"     placeholder="Select Role" [(ngModel)]="role">
                          <option value=""  selected="true" disabled >Select Role</option>
                           <option *ngFor="let role of roles" value={{role._id}}>{{role.Role_name}}</option>
                         </select>  
@@ -134,10 +136,9 @@
                       </div>
                     </div>
                     <div>
-                        <ul style=" height:130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                        <ul style=" height:130px; color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
                           <li *ngFor="let action of addRole; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
-                            <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
-                            fa-wrench"></i>
+                            <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="material-icons">build</i>
                             &nbsp; &nbsp;
                             <ng-container *ngFor="let role of roles">
                                 <ng-container *ngIf="action.role_id == role._id; then thenBlockApp"></ng-container>
@@ -179,29 +180,29 @@
             </button>
           </div>
           <div class="modal-body">
-            <form role="form" #updateData="ngForm" (ngSubmit)="updateUser(updateData.value,uData._id); updateData.reset()">
+            <form role="form" #updateData="ngForm" autocomplete="off" (ngSubmit)="updateUser(updateData.value,uData._id); updateData.reset()">
               <div class="box-body">
                 <div class="form-group">
                   <label for="app_name">Name</label>
-                  <input type="text" class="form-control" required name="name" id="username" placeholder="Enter Full Name" [(ngModel)]="uData.name">
+                  <input type="text" class="form-control" autocomplete="off" required name="name"   placeholder="Enter Full Name" [(ngModel)]="uData.name">
                 </div>
                 <div class="form-group">
                   <label for="app_name">UserName</label>
-                  <input type="text" class="form-control" required name="username" id="username" placeholder="Enter Username" [(ngModel)]="uData.username">
+                  <input type="text" class="form-control" autocomplete="off" required name="username"   placeholder="Enter Username" [(ngModel)]="uData.username">
                 </div>
                 <div class="form-group">
                   <label for="app_displayname">Password</label>
-                  <input type="password" class="form-control" required name="password" id="password" placeholder="Enter Password" ngModel>
+                  <input type="password" class="form-control" autocomplete="off" required name="password"    placeholder="Enter Password" ngModel>
                 </div>
                 <div class="form-group">
                   <label for="app_name">Email</label>
-                  <input type="text" class="form-control" required name="email" id="email" placeholder="Enter Email" [(ngModel)]="uData.email">
+                  <input type="text" class="form-control" autocomplete="off" required name="email"     placeholder="Enter Email" [(ngModel)]="uData.email">
                 </div>
                 <div class="form-group">
                     <label for="app_name">Role</label>
                     <div class="row">
                       <div class="col-md-9" >
-                        <select class="form-control" name="role" id="role" placeholder="Select Role" [(ngModel)]="role">
+                        <select class="form-control" name="role"     placeholder="Select Role" [(ngModel)]="role">
                           <option *ngFor="let role of roles" value={{role._id}}>{{role.Role_name}}</option>
                         </select>  
                       </div>
@@ -210,7 +211,7 @@
                       </div>
                     </div>
                     <div>
-                        <ul style=" height:130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                        <ul style=" height:130px;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
                           <li *ngFor="let action of addRole; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
                             <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
                             fa-wrench"></i>

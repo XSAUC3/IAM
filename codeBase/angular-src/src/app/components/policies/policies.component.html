@@ -80,6 +80,8 @@
             </tr>
           </tbody>
         </table>
+        <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px',backdropBackgroundColour: 'rgba(255,255,255,0.3)',primaryColour:'#ff9800',secondaryColour:'#ff9800',tertiaryColour:'#ff9800' }"></ngx-loading>
+        
         <span style="text-align:right"><pagination-controls (pageChange)="p = $event"></pagination-controls></span>
       </div>
     </div>
@@ -160,7 +162,7 @@
                 <ul class="list-group">
                   <li class="list-group-item" style="background:whitesmoke;" *ngFor="let p of principalsarray;let i=index">{{p.name}}
                     <div style="float:right">
-                      <i class="fa fa-times" (click)="removepolicyprincipal(index)"></i>
+                      <i class="material-icons" (click)="removepolicyprincipal(index)">clear</i>
                     </div>
                   </li>
                 </ul>
@@ -184,7 +186,7 @@
                 <ul class="list-group ">
                   <li class="list-group-item" style="background:whitesmoke;" *ngFor="let tn of targetsarray;let i=index">{{tn.resource_name}}
                     <div style="float:right">
-                      <i class="fa fa-times" (click)="removepolicytarget(index)" ></i>
+                      <i class="material-icons" (click)="removepolicytarget(index)" >clear</i>
                     </div>
                   </li>
                 </ul>
@@ -281,7 +283,7 @@
                 <ul class="list-group">
                   <li class="list-group-item" style="background:whitesmoke;" *ngFor="let p of principalsarray;let i=index">{{p.name}}
                     <div style="float:right">
-                      <i class="fa fa-times" (click)="removepolicyprincipal(index)"></i>
+                      <i class="material-icons" (click)="removepolicyprincipal(index)">clear</i>
                     </div>
                   </li>
                 </ul>
@@ -305,7 +307,7 @@
                 <ul class="list-group ">
                   <li class="list-group-item" style="background:whitesmoke;" *ngFor="let tn of targetsarray;let i=index">{{tn.resource_name}}
                     <div style="float:right">
-                      <i class="fa fa-times" (click)="removepolicytarget(index)" ></i>
+                      <i class="material-icons" (click)="removepolicytarget(index)" >clear</i>
                     </div>
                   </li>
                 </ul>

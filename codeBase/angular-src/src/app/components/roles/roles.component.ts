@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
+import { LoadingModule } from 'ngx-loading';
 declare var $;
 
 @Component({
@@ -17,6 +18,7 @@ declare var $;
   styleUrls: ['./roles.component.css']
 })
 export class RolesComponent implements OnInit {
+  public loading = false;
   aObj:Object = {};
   conformationString:String = "* Please enter name";
   isEmpty:boolean = false;
@@ -137,9 +139,10 @@ editRole = function(id) {
  }
 
 appRole = function(session_id) {
-
+  this.loading = true;
   this.http.get(role_fetchByAppId+session_id).subscribe(
    (res: Response) => {
+    this.loading = false;
      this.role = res.json();
    }
   )

@@ -483,6 +483,10 @@
       opacity: 1;
     }
   }
+
+  .btn-dark {
+    background-color: #666666
+  }
   
   
   
