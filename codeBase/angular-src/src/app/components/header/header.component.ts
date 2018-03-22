@@ -16,16 +16,20 @@ export class HeaderComponent implements OnInit {
 
   selected_id = "";
 constructor(private authService: AuthService,private router: Router,private toastr: ToastrService,private http:Http) {
-   
-
     this.router.events.subscribe(()=>{
       this.fetchApplication();
     })
    }
 
    toggleFullScreen() {
-    var fsi = document.getElementById('fsi')
-    fsi.innerHTML = 'fullscreen' ? 'fullscreen_exit' : 'fullscreen' ;
+
+    var x = document.getElementById("fsi");
+    if (x.innerHTML === "fullscreen") {
+      x.innerHTML = "fullscreen_exit";
+    } else {
+      x.innerHTML = "fullscreen";
+    }
+
     if ((document.fullscreenElement && document.fullscreenElement !== null) ||    
      (!document.fullscreenElement && !document.webkitIsFullScreen)) {
       if (document.documentElement.requestFullscreen) {  
@@ -51,9 +55,10 @@ constructor(private authService: AuthService,private router: Router,private toas
 
   getAppId() {
  
-    sessionStorage.setItem('app_id',this.selected_id);
-   window.location.reload();
-
+  sessionStorage.setItem('app_id',this.selected_id);
+  sessionStorage.setItem('componentVisibility','true')
+  var currentLocation = window.location.pathname;
+    this.router.navigate(['']);
   }
 
   se_app_id = sessionStorage.getItem('app_id');

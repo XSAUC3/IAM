@@ -12,7 +12,7 @@
       <ol id="ol" class="breadcrumb">
         <li class="active">
           <b>
-            <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal">
+            <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal" (click)="removealldata()">
               <i class="material-icons">add</i>Add</a>
           </b>
         </li>
@@ -146,7 +146,7 @@
                                 {{role.Role_name}}
                                 </ng-template>
                               </ng-container>
-                            <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                            <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="material-icons">clear</i></span>
                           </li>
                         </ul>
                     </div>
@@ -213,8 +213,7 @@
                     <div>
                         <ul style=" height:130px;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
                           <li *ngFor="let action of addRole; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
-                            <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
-                            fa-wrench"></i>
+                            <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="material-icons">build</i>
                             &nbsp; &nbsp;
                             <ng-container *ngFor="let role of roles">
                                 <ng-container *ngIf="action.role_id == role._id; then thenBlockApp"></ng-container>
@@ -222,7 +221,7 @@
                                 {{role.Role_name}}
                                 </ng-template>
                               </ng-container>
-                            <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                            <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="material-icons">clear</i></span>
                           </li>
                         </ul>
                     </div>

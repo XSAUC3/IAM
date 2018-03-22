@@ -2,7 +2,7 @@
   "name": "application",
   "version": "0.0.0",
   "license": "MIT",
-  "author": "Ronak",
+  "author": "Chinmay",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

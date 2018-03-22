@@ -146,6 +146,7 @@ deleteUser = function(id) {
     console.log(res);
   this.fetchData();
   $('#addModal').modal('toggle');
+  this.addRole = [];
   this.toastr.success('User Added.');
   })
  }
@@ -170,6 +171,11 @@ deleteUser = function(id) {
  )
  }
  
+
+ //remove all data
+ removealldata = function(){
+  this.addRole = [];
+ }
  
  //Upd App
  
@@ -196,6 +202,7 @@ deleteUser = function(id) {
        $('#updateModal').modal('toggle');
        this._router.navigate(['/admin-user']);
      this.fetchData();
+     this.addRole = [];
      this.toastr.info('User Updated.');
  
    

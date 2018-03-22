@@ -8,6 +8,10 @@ const config = require('../config/database');
 const User = require('../models/user_schema');
 const Token = require('../models/Token_Schema');
 
+require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+    console.log('addr: '+add);
+  })
+
 router.post('/authenticate', (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;

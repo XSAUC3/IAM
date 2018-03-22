@@ -89,7 +89,8 @@ export class PoliciesComponent implements OnInit {
   fetchPolicies() {
     this.loading = true;
     this._http.get(fetch_policy_url + this.app_id).map(res => res.json()).subscribe(
-      policies => {this.loading = false;
+      policies => {
+        this.loading = false;
         this.fetchedpolicies = policies
       },
        err => console.log("error Occured while fetching Policies", err)
@@ -157,9 +158,13 @@ export class PoliciesComponent implements OnInit {
         "policy_targets"        :   this.targetsarray
       }
         this._http.post(add_policy_url, obj ,{headers:this.headers})
+        .map(res => res.json())
           .subscribe(
             res => {
-              if (res.status == 200){
+              if (res.message == "unique" ){
+                this.toastr.error('Policy Name Should be Unique');
+              }
+              if(res.state == 200 ){
                 this.toastr.success('Policy added !' );
                 this.fetchPolicies();
                 this.emptyarray();
@@ -209,12 +214,23 @@ export class PoliciesComponent implements OnInit {
       "policy_principals"     :   this.principalsarray,
       "policy_targets"        :   this.targetsarray
     }
-    this._http.put(update_policy_url, updtobj, {headers: this.headers}).subscribe(
+    this._http.put(update_policy_url, updtobj, {headers: this.headers})
+    .map(respon => respon.json())
+    .subscribe(
       respon => {
-        this.toastr.info('updated policy sucessfully!');
-        $('#editModal').modal('toggle');
-        this.fetchPolicies();
-        this.emptyarray();
+        if(respon.message == 'unique')
+        {
+          this.toastr.error('Policy Name Should be Unique');
+        }
+        if(respon.status == 200) {
+          this.toastr.info('updated policy sucessfully!');
+          $('#editModal').modal('toggle');
+          this.fetchPolicies();
+          this.emptyarray();
+        }
+        else{
+          this.toastr.error("the fields u entered were not propper !")
+        }
       }, 
       err => {this.toastr.error("opps! smthing went wrong !"); this.emptyarray();} )
   }
@@ -247,7 +263,7 @@ export class PoliciesComponent implements OnInit {
   }
 
   pushtarget(id,singleresource,name,state){    
-    let data = { 'policyid' : id , 'resourcetypeid' : singleresource.resourceType_Id  , 'name' : name , 'state' : state }
+    let data = { 'policyid' : id , 'resourcetypeid' : singleresource.resourceType_Id  , 'name' : name , 'state' : state };
     this._http.put(add_targets_url , data , { headers : this.headers } ).subscribe(
       res => {
         let rspns = res.json()

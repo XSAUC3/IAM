@@ -32,6 +32,9 @@ import { AttributeDataService } from './components/attributes/services/attribute
 //login
 import { AuthService } from './components/login/services/auth.service';
 
+// Guard
+import { RouteGuardGuard } from './route-guard/route-guard.guard';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -65,19 +68,19 @@ import { AuthService } from './components/login/services/auth.service';
       {path: '', component:DashboardComponent},
       {path: "application",component:ApplicationComponent},
       {path: "dashboard",component:DashboardComponent},
-      {path: "resourceTypes",component:ResourceTypesComponent},
-      {path: 'attributes', component: AttributesComponent},
-      {path: 'attributes/:id', component: AttributesComponent},
-      {path: "roles",component:RolesComponent},
-      {path: "resources",component:ResourcesComponent},
+      {path: "resourceTypes",component:ResourceTypesComponent, canActivate:[RouteGuardGuard]},
+      {path: 'attributes', component: AttributesComponent, canActivate:[RouteGuardGuard]},
+      {path: 'attributes/:id', component: AttributesComponent, canActivate:[RouteGuardGuard]},
+      {path: "roles",component:RolesComponent, canActivate:[RouteGuardGuard]},
+      {path: "resources",component:ResourcesComponent, canActivate:[RouteGuardGuard]},
       {path: 'adminUsers', component: AdministrativeUsersComponent},
-      {path: 'policies', component: PoliciesComponent},
+      {path: 'policies', component: PoliciesComponent, canActivate:[RouteGuardGuard]},
       {path: 'ldap-config', component:LdapconfigComponent },
       {path: '**', component:DashboardComponent}
       
     ])
   ],
-  providers: [AttributeDataService,AuthService],
+  providers: [AttributeDataService,AuthService, RouteGuardGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
