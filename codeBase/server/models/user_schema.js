@@ -24,7 +24,7 @@ module.exports.getUserById = function(id, callback) {
   
   module.exports.comparePassword = function(candidatePassword, hash, callback) {
 	  bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
-		if(err) throw err;
+		if(err) console.log(err);
 		callback(null, isMatch);
 	  });
 	}
@@ -32,7 +32,7 @@ module.exports.getUserById = function(id, callback) {
 	module.exports.addUser = function(newUser, callback) {
 		bcrypt.genSalt(10, (err, salt) => {
 			bcrypt.hash(newUser.password, salt, (err, hash) => {
-				if(err) throw err;
+				if(err) console.log(err);
 				newUser.password = hash;
 				newUser.save(callback);
 			});
@@ -42,7 +42,7 @@ module.exports.getUserById = function(id, callback) {
 	module.exports.changePassword = function(data, callback) {
 	  bcrypt.genSalt(10, (err, salt) => {
 			bcrypt.hash(data.password, salt, (err, hash) => {
-				if(err) throw err;
+				if(err) console.log(err);
 				data.password = hash;
 				User.findByIdAndUpdate(data.id, { $set: { password: data.password}}, function (err, data) {
 					if (err) return handleError(err);
@@ -55,7 +55,7 @@ module.exports.getUserById = function(id, callback) {
 	module.exports.UpdateUser = function(id, UpdateUser, callback) {
 	  bcrypt.genSalt(10, (err, salt) => {
 			bcrypt.hash(UpdateUser.password, salt, (err, hash) => {
-				if(err) throw err;
+				if(err) console.log(err);
 				UpdateUser.password = hash;
 				User.findByIdAndUpdate(id, UpdateUser, function (err, data) {
 					if (err) return handleError(err);

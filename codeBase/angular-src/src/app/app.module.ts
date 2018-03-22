@@ -23,6 +23,7 @@ import { ResourceTypesComponent } from './components/resource-types/resource-typ
 import { ResourcesComponent } from './components/resources/resources.component';
 import { PoliciesComponent } from './components/policies/policies.component';
 import { LoginComponent } from './components/login/login.component';
+import { LdapconfigComponent } from './components/ldapconfig/ldapconfig.component';
 
 import { AttributeDataService } from './components/attributes/services/attribute-data.service';
 //login
@@ -41,7 +42,8 @@ import { AuthService } from './components/login/services/auth.service';
     ResourceTypesComponent,
     ResourcesComponent,
     PoliciesComponent,
-    LoginComponent
+    LoginComponent,
+    LdapconfigComponent
    
   ],
   imports: [
@@ -56,18 +58,18 @@ import { AuthService } from './components/login/services/auth.service';
       closeButton:true,
     }), // ToastrModule added
     RouterModule.forRoot([
-      { path: '', component:DashboardComponent},
-      //{ path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-       {path: "application",component:ApplicationComponent},
-       {path: "dashboard",component:DashboardComponent},
-       {path: "resourceTypes",component:ResourceTypesComponent},
-       {path: 'attributes', component: AttributesComponent},
-       {path: 'attributes/:id', component: AttributesComponent},
-       {path: "roles",component:RolesComponent},
-       {path: "resources",component:ResourcesComponent},
-       {path: 'adminUsers', component: AdministrativeUsersComponent},
-       {path: 'policies', component: PoliciesComponent}
-
+      {path: '', component:DashboardComponent},
+      {path: "application",component:ApplicationComponent},
+      {path: "dashboard",component:DashboardComponent},
+      {path: "resourceTypes",component:ResourceTypesComponent},
+      {path: 'attributes', component: AttributesComponent},
+      {path: 'attributes/:id', component: AttributesComponent},
+      {path: "roles",component:RolesComponent},
+      {path: "resources",component:ResourcesComponent},
+      {path: 'adminUsers', component: AdministrativeUsersComponent},
+      {path: 'policies', component: PoliciesComponent},
+      {path: 'ldap-config', component:LdapconfigComponent },
+      {path: '**', component:DashboardComponent}
       
     ])
   ],

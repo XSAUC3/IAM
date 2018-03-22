@@ -18,7 +18,7 @@
     "mongoose": "*",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1",
-    "validator": "*",
+    "ldapjs": "*",
     "rand-token": "^0.4.0",
     "nodemailer": "^4.1.0"
   },

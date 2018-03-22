@@ -1,11 +1,7 @@
 const express = require('express');
-var validator = require('validator');
 var bcrypt = require('bcrypt-nodejs');
 const router = express.Router();
 var store_password;
-
-//blacklisted characters [RegularExpression] that cannot go in the database
-const blacklistedExp = '^[^<>{}\"/|;:.,~!?@#$%^=&*\\]\\\\()\\[¿§«»ω⊙¤°℃℉€¥£¢¡®©0-9_+]*$';
 
 // bring in the model
 const App = require('../models/app_schema');
@@ -14,7 +10,6 @@ const Attribute = require('../models/attribute_schema');
 const Role = require('../models/role_schema');
 const Resource = require('../models/resource_schema');
 const Policy = require('../models/policy_schema');
-const PolicyTargetAction = require('../models/PolicyTargetActions_schema');
 const User = require('../models/user_schema');
 
 
@@ -55,9 +50,9 @@ router.post('/addApp', (req, res, next) => {
 router.put('/updateApp/:id' , (req,res,next) => {
   var id = req.params.id;
     let editedApp = new App({
-      app_name        : validator.blacklist(req.body.app_name,        blacklistedExp ) ,
-      app_displayname : validator.blacklist(req.body.app_displayname, blacklistedExp ) ,
-      app_description : validator.blacklist(req.body.app_description, blacklistedExp )
+      app_name        : req.body.app_name,       
+      app_displayname : req.body.app_displayname, 
+      app_description : req.body.app_description, 
     });
     App.update({_id : id  },{$set:req.body },(err , result) => {
       if(err) res.status(500).send(err); 
@@ -135,9 +130,9 @@ router.get('/ResourceType/fetchByAppId/:app_id', (req,res,next) =>{
 router.put('/updateResourceType/:id' , (req,res,next) => {
   var id = req.params.id;
     let editedResourceType = new ResourceType({
-      resourceType_name        : validator.blacklist(req.body.resourceType_name,        blacklistedExp ) ,
-      resourceType_displayname : validator.blacklist(req.body.resourceType_displayname, blacklistedExp ) ,
-      resourceType_description : validator.blacklist(req.body.resourceType_description, blacklistedExp )
+      resourceType_name        : req.body.resourceType_name,        
+      resourceType_displayname : req.body.resourceType_displayname,
+      resourceType_description : req.body.resourceType_description,
     });
     ResourceType.update({_id : id  },{$set:req.body },(err , result) => {
       if(err) res.status(500).send(err); 
@@ -393,8 +388,8 @@ router.post('/role/addRole', (req, res, next) => {
 router.put('/role/updateRole/:id' , (req,res,next) => {
 var id = req.params.id;
   let editedRole = new Role({
-    Role_name : validator.blacklist(req.body.Role_name,blacklistedExp ) ,
-    Application_id : validator.blacklist(req.body.Application_id, blacklistedExp ) ,
+    Role_name : req.body.Role_name ,
+    Application_id : req.body.Application_id
   });
   Role.update({_id : id  },{$set:req.body },(err , result) => {
     if(err) res.status(500).send(err); 
@@ -471,7 +466,6 @@ router.get('/Resource/:id', (req,res,next) =>{
 //fetch by app_id
 router.get('/Resource/fetchByAppId/:app_id', (req,res,next) =>{
   Resource.find({application_id: req.params.app_id}, (err, app) => {  
-    console.log( req.params.app_id);
   if (err) {res.json(err);} 
   else {res.json(app);}
 });
@@ -517,6 +511,14 @@ router.get('/policies', (req, res, next) => {
   });
 });
 
+//fetch by app_id
+router.get('/policies/fetchByAppId/:app_id', (req,res,next) =>{
+  Policy.find({application_id: req.params.app_id}, (err, app) => {  
+    if (err) {res.json(err);} 
+    else {res.json(app);}
+  });
+});
+
 //fetch single Policy by id:
 router.get('/policy/:id', (req,res,next) =>{
   Policy.findById( { _id : req.params.id}, (err, app) => {  
@@ -525,56 +527,125 @@ router.get('/policy/:id', (req,res,next) =>{
   });
 });
 
+//fetch policy by app_id
+router.get('/Policy/fetchByAppId/:app_id', (req,res,next) =>{
+  Policy.find({application_id: req.params.app_id}, (err, app) => {  
+    if (err) {res.json(err);} 
+    else {res.json(app);}
+  });
+});
+
 //Add Policy
 router.post('/addPolicy', (req, res, next) => {
 
   let newPolicy = new Policy({
     policy_name       : req.body.policy_name,
+    application_id    : req.body.application_id,
     policy_type       : req.body.policy_type,
     policy_constrains : req.body.policy_constrains,
-    policy_principals : req.body.policy_principals//,
-    //policy_targets    : req.body.policy_targets
+    policy_principals : req.body.policy_principals
   });
+
   newPolicy.save( (err,createdObj ) => {
     if(err)  res.status(500);  
-    else     res.status(200).send(createdObj);addTargets(createdObj);
+    else     {addTargets(createdObj)};
   })
 
   function addTargets(policy){
     for ( let i=0;i< req.body.policy_targets.length;i++)
     {
-      Resource.findById({_id : req.body.policy_targets[i].resource_id}, (err,reso) => {
-        if (err) { console.log(err) }
-        else{          
-          ResourceType.findById({_id:reso.Resource_typeid}, (err, resotype) => {
-            let policytargetobj = {
-              resource_id          : reso._id,
-              resource_name        : reso.res_name,
-              resourceType_Id      : resotype._id,
-              resourceType_actions : resotype.resourceType_actions
-            } 
-            Policy.updateOne({"_id":policy._id},
-            {
-              $push:{"policy_targets" :  policytargetobj}
-            },
-            (err, result) => { if(err) console.log(err); else console.log(result) ; } )          
-          })
-        }      
-      })
+      if ( req.body.policy_targets[i].resource_id === undefined ) res.json({"message":"error","message":"resource error"})
+      else {
+        Resource.findById({_id : req.body.policy_targets[i].resource_id}, (err,reso) => {
+          if (err) { console.log(err) }
+          else{          
+            ResourceType.findById({_id:reso.Resource_typeid}, (err, resotype) => {
+              let policytargetobj = {
+                resource_id          : reso._id,
+                resource_name        : reso.res_name,
+                resourceType_Id      : resotype._id,
+                resourceType_actions : resotype.resourceType_actions
+              } 
+              Policy.updateOne({"_id":policy._id},
+              {
+                $push:{"policy_targets" :  policytargetobj}
+              },
+              (err, result) => { if(err) console.log(err) ; else { res.status(200).send(result); } } )          
+            })
+          }      
+        })
+      }
     }
   }
 
 });
 
-//edit App
+// edit Policy
 router.put('/updatePolicy' , (req,res,next) => {
-    Policy.findByIdAndUpdate({ _id : req.body._id  },{$set:req.body},{new: true },(err , result) => {
-      if(err) res.status(500).send(err); 
-      else    res.status(200).send(result);
+  let updtedPolicy = {
+    policy_name       : req.body.policy_name,
+    policy_type       : req.body.policy_type,
+    application_id    : req.body.application_id,
+    policy_constrains : req.body.policy_constrains,
+    policy_principals : req.body.policy_principals,
+    policy_targets    : []
+  };
+    Policy.findByIdAndUpdate({ _id : req.body._id  },{$set:updtedPolicy},(err , result) => {
+      if(err) {console.log(err); res.status(500).send(err); }
+      else { updateTargets(req.body); }
     });
+
+    function updateTargets(policy){
+      for ( let i=0;i< req.body.policy_targets.length;i++)
+      {
+        if ( req.body.policy_targets[i].resource_id === undefined ) res.json({"message":"error","message":"resource error"})
+        else{
+          Resource.findById({_id : req.body.policy_targets[i].resource_id}, (err,reso) => {
+            if (err) { console.log(err) }
+            else{          
+              ResourceType.findById({_id:reso.Resource_typeid}, (err, resotype) => {
+                let policytargetobj = {
+                  resource_id          : reso._id,
+                  resource_name        : reso.res_name,
+                  resourceType_Id      : resotype._id,
+                  resourceType_actions : resotype.resourceType_actions
+                } 
+                Policy.updateOne({"_id":policy._id},
+                {
+                  $push:{"policy_targets" :  policytargetobj}
+                },
+                (err, result) => { if(err) {console.log(err);} else{ res.status(200).send(result); } } )          
+              })
+            }      
+          })
+        }
+      }
+    }
 })
 
-//Delete App
+//restypeactions
+router.get('/policy/res_type_actions/:id' , (req,res,next) =>{
+  Policy.findOne({'policy_targets.resourceType_Id' : req.params.id} , {'policy_targets.resourceType_actions.$':1} , (err,respo) => {
+    if (err) {console.log(err)}
+    else {res.json(respo);}
+  })
+}) 
+
+//add Policy Target Actions
+router.put('/addTarges' , (req,res,next) => {
+  if (req.body != ''){
+    Policy.update(
+      { '_id' : req.body.policyid },
+      { $set  : { 'policy_targets.$[i].resourceType_actions.$[j].action_state' : req.body.state } },
+      { arrayFilters : [ {'i.resourceType_Id' : req.body.resourcetypeid }, { 'j.action_name' : req.body.name } ] },(err,ress) =>{
+        if(err) console.log(err)
+        else if (ress.nModified === 1) res.status(200).json({'success':true});
+      } 
+    )
+  }
+})
+
+//Delete Policy
 router.delete('/delPolicy/:id' , (req,res,next) => {
   Policy.findByIdAndRemove( req.params.id, 
     function(err, docs){
@@ -583,34 +654,6 @@ router.delete('/delPolicy/:id' , (req,res,next) => {
  });
 });
 
-//find policy target action by ID
-router.get('/:id', (req,res,next) =>{
-  PolicyTargetAction.findById({_id: req.params.id}, (err, app) => {  
-    if (err) {res.json(err);} 
-    res.json(app);
-  });
-});
-
-//Add Policy Target Actions
-router.post('/addPolicyTargetActions',(req,res,next)=>{
-  let pta = new PolicyTargetAction({
-    policy_Id             :   req.body.policy_Id,
-    resourceType_Id       :   req.body.resourceType_Id,
-    resourceType_name     :   req.body.resourceType_name,
-    resourceType_actions  :   req.body.resourceType_actions
-  })
-  pta.save( (err,createdObj ) => {
-    if(err)  res.status(500);  
-    else     res.status(200).send(createdObj); 
-  })
-});
-
-router.put('/updatePolicyTargetActions' , (req,res,next) => {
-  PolicyTargetAction.findByIdAndUpdate({ _id : req.body._id  },{$set:req.body},{new: true },(err , result) => {
-    if(err) res.status(500).send(err); 
-    else    res.status(200).send(result);
-  });
-})
 
 //end region policy
 

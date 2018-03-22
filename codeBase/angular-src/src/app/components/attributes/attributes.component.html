@@ -43,10 +43,10 @@
       <!-- /.box-header -->
       <div class="box-body">
         <div class="table-responsive">
-            <nav class="navbar">
+            <nav id="tablesearchbars" >
                 <input class="form-control" type="text" name="search" placeholder="Search Filter" [(ngModel)]="filter">      
                </nav>
-            <table id="dt" class="table table-bordered table-hover" >
+            <table id="dt" class="table table-hover" >
               
               <thead class="thead-inverse">
                
@@ -56,7 +56,7 @@
                   <th (click)="sort('Type')">Type <span class="material-icons" *ngIf="key =='app_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
                   <th (click)="sort('DataType')">Data Type <span class="material-icons" *ngIf="key =='app_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
                   <th (click)="sort('Description')">Description <span class="material-icons" *ngIf="key =='app_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
-                  <th (click)="sort('Application')">Application Name <span class="material-icons" *ngIf="key =='app_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
+                  <!-- <th (click)="sort('Application')">Application Name <span class="material-icons" *ngIf="key =='app_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th> -->
                   <th (click)="sort('Single_Multiple')">Single | Multiple <span class="material-icons" *ngIf="key =='app_name'" [ngClass]="{'arrow_drop_down':reverse,'arrow_drop_up':!reverse}"></span></th>
                   <th>Operations</th>
                 </tr>
@@ -69,12 +69,12 @@
                       <td>{{attribute.Type}}</td>
                       <td>{{attribute.DataType}}</td>
                       <td>{{attribute.Description}}</td>
-                      <ng-container *ngFor="let application of applications">
+                      <!-- <ng-container *ngFor="let application of applications">
                           <ng-container *ngIf="attribute.Application_Id == application._id; then thenBlockApp"></ng-container>
                           <ng-template #thenBlockApp>
                            <td>{{application.app_name}}</td>
                           </ng-template>
-                      </ng-container>
+                      </ng-container> -->
                       <td>{{attribute.Single_Multiple}}</td>
                       <td><span   (click)="editAttribute(attribute._id)" data-toggle="modal" data-target="#updateModal"  > <i style="color:#4caf50;cursor:pointer" class="material-icons">create</i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(attribute._id, attribute.Name)" data-toggle="modal" data-target="#deleteModal"> <i class="material-icons" style="color:#f44336;cursor:pointer">delete</i></span></td>
                     </tr>
@@ -88,12 +88,12 @@
                         <td>{{attribute.Type}}</td>
                         <td>{{attribute.DataType}}</td>
                         <td>{{attribute.Description}}</td>
-                        <ng-container *ngFor="let application of applications">
+                        <!-- <ng-container *ngFor="let application of applications">
                             <ng-container *ngIf="attribute.Application_Id == application._id; then thenBlockApp"></ng-container>
                             <ng-template #thenBlockApp>
                              <td>{{application.app_name}}</td>
                             </ng-template>
-                        </ng-container>
+                        </ng-container> -->
                         <td>{{attribute.Single_Multiple}}</td>
                         <td><span   (click)="editAttribute(attribute._id)" data-toggle="modal" data-target="#updateModal"  > <i style="color:#4caf50;cursor:pointer" class="material-icons">create</i></span> &nbsp;&nbsp;&nbsp;<span (click)="setDeleteAttribute(attribute._id, attribute.Name)" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash" style="cursor: pointer; color:red;"></i></span></td>
                       </tr>

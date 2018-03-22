@@ -42,11 +42,12 @@
      
       <!-- /.box-header -->
       <div class="box-body">
-          <nav class="navbar">
-              <input class="form-control" type="text" name="search" placeholder="Search Filter" [(ngModel)]="filter">      
-             </nav>
+          
         <div class="table-responsive">
-        <table id="dt" class="table table-bordered table-hover" >
+            <nav id="tablesearchbars">
+                <input class="form-control" type="text" name="search" placeholder="Search Filter" [(ngModel)]="filter">      
+               </nav>
+        <table id="dt" class="table table-hover" >
           <thead class="thead-inverse">
           <tr>
             <!-- <th>#</th> -->

@@ -7,22 +7,22 @@
 
 @font-face {
     font-family: Poppins-Regular;
-    src: url('../fonts/poppins/Poppins-Regular.ttf'); 
+    src: url('./assets/fonts/Poppins-Regular.ttf')  ; 
   }
   
   @font-face {
     font-family: Poppins-Medium;
-    src: url('../fonts/poppins/Poppins-Medium.ttf'); 
+    src: url('./assets/fonts/Poppins-Medium.ttf')  ; 
   }
   
   @font-face {
     font-family: Poppins-Bold;
-    src: url('../fonts/poppins/Poppins-Bold.ttf'); 
+    src: url('./assets/fonts/Poppins-Bold.ttf')  ; 
   }
   
   @font-face {
     font-family: Poppins-SemiBold;
-    src: url('../fonts/poppins/Poppins-SemiBold.ttf'); 
+    src: url('./assets/fonts/Poppins-SemiBold.ttf') ; 
   }
   
   
@@ -31,11 +31,6 @@
   /*//////////////////////////////////////////////////////////////////
   [ RESTYLE TAG ]*/
   
-  * {
-      margin: 0px; 
-      padding: 0px; 
-      box-sizing: border-box;
-  }
   
   body, html {
       height: 100%;
@@ -61,11 +56,11 @@
   
   a:hover {
       text-decoration: none;
-    color: #6a7dfe;
-    color: -webkit-linear-gradient(left, #21d4fd, #b721ff);
-    color: -o-linear-gradient(left, #21d4fd, #b721ff);
-    color: -moz-linear-gradient(left, #21d4fd, #b721ff);
-    color: linear-gradient(left, #21d4fd, #b721ff);
+    color: #ff9800;
+    color: -webkit-linear-gradient(left, #fc9e23, #ff9800);
+    color: -o-linear-gradient(left, #fc9e23, #ff9800);
+    color: -moz-linear-gradient(left, #fc9e23, #ff9800);
+    color: linear-gradient(left, #fc9e23, #ff9800);
   }
   
   /*---------------------------------------------*/

@@ -1,8 +1,10 @@
-import {Component,OnInit} from '@angular/core';
+import {fetch_policy_url,fetch_roles_url,fetch_users_url,fetch_resource_url,fetch_policyById_url,add_policy_url,add_targets_url,update_policy_url,delete_policy_url,get_res_type_actions_url} from '../../routeConfig';
+import {Component,OnInit, Input} from '@angular/core';
 import {Http,Response,Headers} from '@angular/http';
 import {ToastrService, Toast} from 'ngx-toastr';
 import 'rxjs/add/operator/map';
 import {Subject} from 'rxjs/Subject';
+
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; //importing the module
 import { Ng2OrderModule } from 'ng2-order-pipe'; //importing the module
@@ -15,8 +17,13 @@ declare var $;
 })
 export class PoliciesComponent implements OnInit {
 
+  app_id = sessionStorage.getItem('app_id') ;
+  
   //fetch all policies for the table  
   fetchedpolicies = [];
+
+  //fetched policy for edit
+  fetchedpolicy ;
 
   //fetched roles and users and resources for selecting while adding policy
   allroles     = [] ; 
@@ -25,6 +32,7 @@ export class PoliciesComponent implements OnInit {
 
   //form input models value declaration
   //policy  - data
+  policy_id   : String ;
   policy_name : String ;
   policy_type : String ;
   policy_constrains : String ;
@@ -38,6 +46,12 @@ export class PoliciesComponent implements OnInit {
   //making policy targets data to add to target object 
   targetsarray = [];
 
+  SingleTargetResource;
+  singletargetactions  = [] ;
+  SingleTargetResourceName ;
+
+  actions ;
+
   //show policy prinicpal !
   select: Boolean = false;
   selectpp: Boolean;
@@ -47,7 +61,7 @@ export class PoliciesComponent implements OnInit {
     'Content-Type': 'application/json'
   });
 
-  po: number = 1;
+  p: number = 1;
   collection: any[] = this.fetchedpolicies;  
   key: string = 'name';
   reverse: boolean = false;
@@ -61,7 +75,6 @@ export class PoliciesComponent implements OnInit {
     this.fetchRoles();
     this.fetchResources();
     this.fetchUsers();
-  
   }
 
   refresh() {window.location.reload();}
@@ -73,28 +86,28 @@ export class PoliciesComponent implements OnInit {
   }
 
   fetchPolicies() {
-    this._http.get("http://localhost:3000/api/policies").map(res => res.json()).subscribe(
+    this._http.get(fetch_policy_url + this.app_id).map(res => res.json()).subscribe(
       policies => this.fetchedpolicies = policies,
       err => console.log("error Occured while fetching Policies", err)
     )
   }
 
   fetchRoles() {
-    this._http.get("http://localhost:3000/api/role/Roles").map(res => res.json()).subscribe(
+    this._http.get(fetch_roles_url + this.app_id).map(res => res.json()).subscribe(
       roles => this.allroles = roles,
       err   => this.toastr.error('error fetching the roles !',err)
     )
   }
 
   fetchUsers() {
-    this._http.get("http://localhost:3000/api/users/all").map(res => res.json()).subscribe(
+    this._http.get(fetch_users_url).map(res => res.json()).subscribe(
       users => this.allusers = users ,
       err   => this.toastr.error('error fetching all users',err)
     )
   }
 
   fetchResources(){
-    this._http.get("http://localhost:3000/api/Fetch/Resource").map(res => res.json()).subscribe(
+    this._http.get(fetch_resource_url + this.app_id ).map(res => res.json()).subscribe(
       resources => this.allresources = resources,
       err       => this.toastr.error('erroe fetchingall the resources',err)
     )
@@ -132,14 +145,14 @@ export class PoliciesComponent implements OnInit {
     }
     else{
       let obj = {
-        "application_id"        :   sessionStorage.getItem('app_id'),
+        "application_id"        :   this.app_id,
         "policy_name"           :   data.policy_name ,
         "policy_type"           :   data.policy_type ,
         "policy_constrains"     :   data.policy_constrains,
         "policy_principals"     :   this.principalsarray,
         "policy_targets"        :   this.targetsarray
       }
-        this._http.post("http://localhost:3000/api/addPolicy", obj ,{headers:this.headers})
+        this._http.post(add_policy_url, obj ,{headers:this.headers})
           .subscribe(
             res => {
               if (res.status == 200){
@@ -158,16 +171,95 @@ export class PoliciesComponent implements OnInit {
   deletePolicy(id) {
     var q = confirm("do u want to delete this policy ?")
     if (q == true) {
-      this._http.delete("http://localhost:3000/api/delPolicy/" + id).subscribe(
+      this._http.delete(delete_policy_url + id).subscribe(
         res => {
           this.toastr.error('Policy Deleted !');
           this.fetchPolicies();
         },
         err => this.toastr.error('Ops! something went wrong.'))
-      this.fetchPolicies();
-  
+        this.fetchPolicies();
+        this.emptyarray();
     }
   }
 
+  editPolicy(id){
+    this._http.get(fetch_policyById_url + id).map(res => res.json()).subscribe(res => {
+        this.fetchedpolicy = res;
+        this.select = true;
+        this.policy_id = this.fetchedpolicy._id;
+        this.policy_name = this.fetchedpolicy.policy_name;
+        this.policy_type = this.fetchedpolicy.policy_type;
+        this.policy_constrains = this.fetchedpolicy.policy_constrains;
+        this.principalsarray =  this.fetchedpolicy.policy_principals;
+        this.targetsarray = this.fetchedpolicy.policy_targets
+      });
+  }
+
+  updatePolicy(id,formdata){
+    let updtobj = {
+      "_id"                   :   id,
+      "application_id"        :   this.app_id,
+      "policy_name"           :   this.policy_name ,
+      "policy_type"           :   this.policy_type ,
+      "policy_constrains"     :   this.policy_constrains,
+      "policy_principals"     :   this.principalsarray,
+      "policy_targets"        :   this.targetsarray
+    }
+    this._http.put(update_policy_url, updtobj, {headers: this.headers}).subscribe(
+      respon => {
+        this.toastr.info('updated policy sucessfully!');
+        $('#editModal').modal('toggle');
+        this.fetchPolicies();
+        this.emptyarray();
+      }, 
+      err => {this.toastr.error("opps! smthing went wrong !"); this.emptyarray();} )
+  }
+
+  loadtargetactions(id){
+    this._http.get(fetch_policyById_url + id).map(res => res.json()).subscribe(res => {
+      this.fetchedpolicy = res;
+      this.policy_id = this.fetchedpolicy._id;
+      this.policy_name = this.fetchedpolicy.policy_name;
+      this.policy_type = this.fetchedpolicy.policy_type;
+      this.policy_constrains = this.fetchedpolicy.policy_constrains;
+      this.principalsarray =  this.fetchedpolicy.policy_principals;
+      this.targetsarray = this.fetchedpolicy.policy_targets      
+    });
+  }
+
+  addTarget(data){
+    this.singletargetactions = data.resourceType_actions;
+    this.SingleTargetResourceName = data.resource_name ;
+    this.SingleTargetResource = data;
+    $('#info').modal('toggle');
+    this.actions = [];
+    this.fetchrestypeactions(data.resourceType_Id)
+  }
+
+  fetchrestypeactions(id){
+    this._http.get(get_res_type_actions_url + id ).map(res => res.json()).subscribe(
+      res => { this.actions = res.policy_targets[0].resourceType_actions } , 
+      err => { console.log(err) }
+    )
+  }
+
+  pushtarget(id,singleresource,name,state){    
+    let data = { 'policyid' : id , 'resourcetypeid' : singleresource.resourceType_Id  , 'name' : name , 'state' : state }
+    this._http.put(add_targets_url , data , { headers : this.headers } ).subscribe(
+      res => {
+        let rspns = res.json()
+        if (res.status == 200 && rspns.success == true ){
+          this.toastr.success('action status updated !' );
+          this.fetchPolicies();
+          this.emptyarray();
+          this.fetchrestypeactions(singleresource.resourceType_Id)
+        }
+        else {
+          this.toastr.error("actions were not updated !");
+        }
+      },
+      err => this.toastr.error('ops! there was an error adding the target actions', err)
+    )
+  }
 
 }

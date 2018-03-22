@@ -23,6 +23,25 @@ constructor(private authService: AuthService,private router: Router,private toas
     })
    }
 
+   toggleFullScreen() {
+    var fsi = document.getElementById('fsi')
+    fsi.innerHTML = 'fullscreen' ? 'fullscreen_exit' : 'fullscreen' ;
+    if ((document.fullscreenElement && document.fullscreenElement !== null) ||    
+     (!document.fullscreenElement && !document.webkitIsFullScreen)) {
+      if (document.documentElement.requestFullscreen) {  
+        document.documentElement.requestFullscreen();  
+      } else if (document.documentElement.requestFullscreen) {  
+        document.documentElement.requestFullscreen();  
+      } else if (document.documentElement.webkitRequestFullScreen) {  
+        document.documentElement.webkitRequestFullScreen();  
+      }  
+    } else {  
+      if (document.webkitCancelFullScreen) {  
+        document.webkitCancelFullScreen();  
+      }  
+    }  
+  }
+
   onLogoutClick() {
     sessionStorage.clear();
     this.authService.logout();

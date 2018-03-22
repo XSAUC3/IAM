@@ -67,7 +67,6 @@ export class ApplicationComponent implements OnInit {
       this.fetchData();
       this.toastr.error('Application Deleted.');
       $('#deleteModal').modal('toggle');
-      this._router.navigate(['/app/application']);
       })
 }
 

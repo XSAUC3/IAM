@@ -23,6 +23,9 @@ const app = express();
 
 const api = require('./routes/api');
 const users = require('./routes/users');
+const ConfigRoute = require('./routes/configRoute') 
+const LDAPRoute = require('./routes/ldapRoute') 
+
 
 // Port Number
 const port = 3000;
@@ -35,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Body Parser Middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 
 // Passport Middleware
 app.use(passport.initialize());
@@ -44,6 +48,8 @@ require('./config/passport')(passport);
 
 app.use('/api', api);
 app.use('/users', users);
+app.use('/configure',ConfigRoute)
+app.use('/connectLDAP',LDAPRoute )
 
 // Index Route
 app.get('/', (req, res) => {

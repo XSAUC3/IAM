@@ -25,22 +25,29 @@ export class LoginComponent implements OnInit {
     private toastr: ToastrService) { }
 
     onLoginSubmit() {
-      const user = {
-        username: this.username,
-        password: this.password
-      }
 
-      this.authService.authenticateUser(user).subscribe(data => {
-        if(data.success) {
-          this.authService.storeUserData(data.token, data.user);
-    
-          this.router.navigate(['dashboard']);
-        } else {
-          //Toast
-          this.toastr.error(data.msg);
-          this.router.navigate(['login']);
+      if (this.username === '' || this.username === undefined || this.password === '' || this.password === undefined)
+      {
+        this.toastr.error('Please Provide username and password !')
+      }
+      else{
+        const user = {
+          username: this.username,
+          password: this.password
         }
-    });
+  
+        this.authService.authenticateUser(user).subscribe(data => {
+          if(data.success) {
+            this.authService.storeUserData(data.token, data.user);
+      
+            this.router.navigate(['dashboard']);
+          } else {
+            //Toast
+            this.toastr.error(data.msg);
+            this.router.navigate(['login']);
+          }
+        });
+      }
   }
 
   // Forgot Password
@@ -99,7 +106,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     let url = window.location.href;
     
-    if(url != 'http://localhost:4200/'){
+    if(url.startsWith(url+'/$')){
       let para = url.split('$')[1];
       let id = para.split('&')[0];
       let token = para.split('&')[1];
