@@ -4,26 +4,21 @@ const config = require('../config/database');
 const ResourceSchema = mongoose.Schema({
     res_name: 
     {
-        type:String,
-        required:true
+        type:String
     },
     res_displayname:   
     { 
-        type: String,  
-        required: true 
+        type: String
     },
     res_descrpition:
     {
-        type:String,
-        required:true
+        type:String
     },
     Resource_typeid:{
-        type:String,
-        required:true
+        type:String
      },
      attribute_id:{
-        type:Array,
-       required:true
+        type:Array
     },
     application_id:{
        type:String,

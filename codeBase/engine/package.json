@@ -1,0 +1,20 @@
+{
+  "name": "engine",
+  "version": "1.0.0",
+  "description": "KIAM engine",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "test": "npm start"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "cors": "*",
+    "express": "*",
+    "mongoose": "*",
+    "ldapjs": "*",
+    "assert": "*"
+  },
+  "author": "Ronak",
+  "license": "ISC"
+}

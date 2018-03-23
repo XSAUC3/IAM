@@ -108,10 +108,12 @@ fetchApplications=function() {
  }
  //Fetch Attribute
  fetchAttribute=function() {
-  this.http.get(allAttributes).subscribe(
-    (res: Response) => {
+  this.http.get(allAttributes)
+  .map(res => res.json() )
+  .subscribe(
+    res => {
       let a = [];
-      let obj = res.json();
+      let obj = res;
       let att = obj.Attributes;
       for(let i = 0 ; i < att.length ; i++){
         //console.log(i);
@@ -167,11 +169,13 @@ addNewRes = function(a) {
     this.http.post(addResource , this.aObj ,  {Headers : this.headers} ).subscribe(res => {
       if(res._body=="unique") {
         this.toastr.error('Resource already exists.');
+        this.attributes=[];
       }
       else {
         this.appRes(this.session_id);
         $('#addModal').modal('toggle');
         this.toastr.success('Resource Added.');
+        this.attributes=[];
       }
     
     },
