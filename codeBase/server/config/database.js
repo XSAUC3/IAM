@@ -1,4 +1,5 @@
 module.exports = {
-  database: 'mongodb://localhost:27017/KIAM',
+  args: '?authSource=admin',
+  database: 'mongodb://chinmay:kiam@localhost:27017/KIAM',
   secret: 'yoursecret'
 }

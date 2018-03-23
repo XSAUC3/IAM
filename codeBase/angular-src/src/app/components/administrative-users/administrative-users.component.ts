@@ -195,18 +195,25 @@ deleteUser = function(id) {
        "role":this.addRole,
 	   "status":updateData.status
      }
-     console.log(this.editObj);
+     //console.log(this.editObj);
  
-     this.http.put(UpdateUser+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
-       console.log(res);
-       $('#updateModal').modal('toggle');
-       this._router.navigate(['/admin-user']);
-     this.fetchData();
-     this.addRole = [];
-     this.toastr.info('User Updated.');
- 
-   
-     })
+     if(this.editobj.name != ( '' || undefined ) )
+     {
+      this.http.put(UpdateUser+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+        console.log(res);
+        $('#updateModal').modal('toggle');
+        this._router.navigate(['/admin-user']);
+      this.fetchData();
+      this.addRole = [];
+      this.toastr.info('User Updated.');
+  
+    
+      })
+     }
+     else{
+       this.toastr.error("name is required !")
+     }
+
  }
  }
  

@@ -8,9 +8,13 @@ const config = require('../config/database');
 const User = require('../models/user_schema');
 const Token = require('../models/Token_Schema');
 
+var address; 
+
 require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-    console.log('addr: '+add);
-  })
+    console.log('Server ip: '+add);
+    address = "http://"+add+":4200/";
+});
+
 
 router.post('/authenticate', (req, res, next) => {
     const username = req.body.username;
@@ -53,7 +57,7 @@ User.findOne({email : email}, (err, user) => {
         // Generate a 16 character alpha-numeric token:
         var token = randtoken.generate(16);
         var user_id = user._id;
-        let link = "http://localhost:4200/$" + user_id + "&" + token;
+        let link =  address + "$" + user_id + "&" + token;
 
         //res.send(link);
 

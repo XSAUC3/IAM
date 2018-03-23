@@ -15,10 +15,9 @@
       </button>
       <a class="navbar-brand">KIAM</a>
     </div>
-    
-      <ul class="nav navbar-nav navbar-right nav-mobile-menu">
-          <li class="navbar-form">
-            <a>
+      <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a class="dropdown-toggle">
               <i class="material-icons">folder_open</i>
               <select style="border: none; background: #fff; border:2px solid orange;" (change)="getAppId()" placeholder="app" [(ngModel)]="selected_id">
                 <option value="" selected disabled="true">Select Application</option>
@@ -28,13 +27,13 @@
             </a>
           </li>
         <li style="cursor:pointer">
-          <a class="dropdown-toggle">
+          <a class="dropdown-toggle" (click)="toggleFullScreen()" >
             <i class="material-icons" id="fsi">fullscreen</i>
             <div class="ripple-container"></div>
           </a>
         </li>
         <li style="cursor:pointer">
-          <a class="dropdown-toggle">
+          <a class="dropdown-toggle" (click)="onLogoutClick()" >
             <i class="material-icons">power_settings_new</i> Logout
             <div class="ripple-container"></div>
           </a>

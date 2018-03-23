@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class LdapconfigComponent implements OnInit {
 
   rsp : Boolean = true;
+  showbutton : Boolean = false;
   obj : Object;
   configs : Object;
   ans : Object;
@@ -80,16 +81,17 @@ export class LdapconfigComponent implements OnInit {
 
     this.http.post(SetLDAPConfiguration, obj ,  {Headers : this.headers} ).subscribe(res => {
       this.ans = res.json();
-      console.log(this.ans);
-      console.log(this.ans['success']);
-      console.log(this.ans['msg']);
-      console.log(this.ans['data']);
+      // console.log(this.ans);
+      // console.log(this.ans['success']);
+      // console.log(this.ans['msg']);
+      // console.log(this.ans['data']);
       let temp = this.ans['data'];
       
       if(this.ans['success'] == true){
         this.toastr.success(this.ans['msg']);
         this.configs = temp;
         this.rsp = true;
+        this.showbutton = true;
       }
       else if(this.ans['success'] == false){
         this.toastr.console.error(this.ans['msg']);
@@ -109,12 +111,12 @@ export class LdapconfigComponent implements OnInit {
     this.http.get(GetLDAPConfiguration).subscribe(
       (res: Response) => {
         this.obj = res.json();
-        console.log(this.obj);
+        // console.log(this.obj);
         if(this.obj['success'] == true) {
           this.http.get(connectLDAP).subscribe(
             (res: Response) => {
               this.obj1 = res.json();
-              console.log(this.obj1);
+              // console.log(this.obj1);
               if(this.obj1['success'] == true) {
                 this.toastr.success(this.obj1['msg']);
               }
@@ -161,7 +163,7 @@ export class LdapconfigComponent implements OnInit {
     this.http.get(GetLDAPConfiguration).subscribe(
       (res: Response) => {
         this.obj = res.json();
-        console.log(this.obj);
+        // console.log(this.obj);
         if(this.obj['success'] == true) {
           this.configs = this.obj['obj'];
           console.log('config', this.configs);

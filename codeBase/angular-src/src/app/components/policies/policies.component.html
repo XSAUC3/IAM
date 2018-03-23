@@ -105,18 +105,18 @@
             <div class="box-body">
               <div class="form-group">
                 <label for="app_name">Policy Name</label>
-                <input type="text" class="form-control" name="policy_name" id="policy_name" placeholder="Enter name for policy" ngModel required >
+                <input type="text" class="form-control" autocomplete="off" name="policy_name" id="policy_name" placeholder="Enter name for policy" ngModel required >
               </div>
               <div class="form-group">
                 <label for="app_displayname">Policy type</label>
-                <select class="form-control" name="policy_type" id="policy_type" ngModel required>
+                <select class="form-control" name="policy_type"  id="policy_type" ngModel required>
                   <option value="grant" selected="selected" >Grant</option>
                   <option value="deny">Deny</option>
                 </select>
               </div>
               <div class="form-group">
                 <label for="exampleInputEmail1">policy constrains</label>
-                <textarea class="form-control" name="policy_constrains" id="policy_constrains" rows="3" placeholder="Enter policy constrains" required
+                <textarea class="form-control" name="policy_constrains" autocomplete="off" id="policy_constrains" rows="3" placeholder="Enter policy constrains" required
                   ngModel></textarea>
               </div>
               <h4>
@@ -226,7 +226,7 @@
             <div class="box-body">
               <div class="form-group">
                 <label for="app_name">Policy Name</label>
-                <input type="text" class="form-control" name="policy_name" id="policy_name" placeholder="Enter name for policy" [(ngModel)]="policy_name" required >
+                <input type="text" class="form-control" autocomplete="off" name="policy_name" id="policy_name" placeholder="Enter name for policy" [(ngModel)]="policy_name" required >
               </div>
               <div class="form-group">
                 <label for="app_displayname">Policy type</label>
@@ -237,7 +237,7 @@
               </div>
               <div class="form-group">
                 <label for="exampleInputEmail1">policy constrains</label>
-                <textarea class="form-control" name="policy_constrains" id="policy_constrains" rows="3" placeholder="Enter policy constrains" required
+                <textarea class="form-control" name="policy_constrains" autocomplete="off" id="policy_constrains" rows="3" placeholder="Enter policy constrains" required
                   [(ngModel)]="policy_constrains" ></textarea>
               </div>
               <h4>

@@ -34,10 +34,10 @@ export class MenuComponent implements OnInit {
 
   }
 
-  isMobileMenu() {
-      if ($(window).width() > 991) {
-          return false;
-      }
-      return true;
-  };
+  // isMobileMenu() {
+  //     if ($(window).width() > 991) {
+  //         return false;
+  //     }
+  //     return true;
+  // };
 }

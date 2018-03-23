@@ -214,25 +214,26 @@ export class PoliciesComponent implements OnInit {
       "policy_principals"     :   this.principalsarray,
       "policy_targets"        :   this.targetsarray
     }
-    this._http.put(update_policy_url, updtobj, {headers: this.headers})
-    .map(respon => respon.json())
-    .subscribe(
-      respon => {
-        if(respon.message == 'unique')
-        {
-          this.toastr.error('Policy Name Should be Unique');
-        }
-        if(respon.status == 200) {
-          this.toastr.info('updated policy sucessfully!');
-          $('#editModal').modal('toggle');
-          this.fetchPolicies();
-          this.emptyarray();
-        }
-        else{
-          this.toastr.error("the fields u entered were not propper !")
-        }
-      }, 
-      err => {this.toastr.error("opps! smthing went wrong !"); this.emptyarray();} )
+    if(updtobj.policy_name != ('' || undefined) ){
+      this._http.put(update_policy_url, updtobj, {headers: this.headers})
+      .subscribe(
+        respon => {
+          if(respon.status == 200) {
+            this.toastr.info('updated policy sucessfully!');
+            $('#editModal').modal('toggle');
+            this.fetchPolicies();
+            this.emptyarray();
+          }
+          else{
+            this.toastr.error("the fields u entered were not propper !")
+          }
+        }, 
+        err => {this.toastr.error("opps! smthing went wrong !"); this.emptyarray();} )
+    }
+    else{
+      this.toastr.error("policy name is required !")
+    }
+
   }
 
   loadtargetactions(id){

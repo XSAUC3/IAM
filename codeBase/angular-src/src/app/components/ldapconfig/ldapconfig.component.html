@@ -6,10 +6,10 @@
   </div>
   <form role="form" #aData="ngForm" (ngSubmit)="addconfig(aData.value);">
     <div class="box-body">
-      <div>
+      <div style="display:none;" >
         <input type="hidden" autocomplete="off" class="form-control" name="id" id="id" [(ngModel)]="id">
       </div>
-      <h4 class="title">Server Details</h4>
+      <h3 class="title">Server Details</h3>
       <div class="row">
         <div class="col-md-6 form-group">
           <h4>URL</h4>
@@ -29,7 +29,7 @@
             [(ngModel)]="admin_password">
         </div>
       </div>
-      <h4 class="title">User Details</h4>
+      <h3 class="title">User Details</h3>
       <div class="row">
         <div class="col-md-6 form-group">
           <h4>Base DN</h4>
@@ -88,7 +88,7 @@
             [(ngModel)]="designation">
         </div>
       </div>
-      <h4 class="title">Role(Groups) Details</h4>
+      <h3 class="title">Role(Groups) Details</h3>
       <div class="row">
         <div class="col-md-6 form-group">
           <h4>Base DN</h4>
@@ -124,7 +124,7 @@
         </div>
         <div class="col-md-6 form-group">
           <button type="submit" class="btn btn-primary">Add</button>
-          <button class="btn btn-danger" (click)="close_add();">Close</button>
+          <button class="btn btn-danger" *ngIf="showbutton" (click)="close_add();">Close</button>
         </div>
       </div>
     </div>
