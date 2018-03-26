@@ -99,18 +99,25 @@ appResT = function(session_id) {
    }
 
   // Delete Rt
-   deleteRt = function(id) {
-    
-    const url = delResourceType + id;
-    return this.http.delete(delResourceType + id, {headers: this.headers}).toPromise()
-      .then(() => {
-        this.appResT(this.session_id);
-          this.toastr.error('Resource-Type Deleted.');
-          $('#deleteModal').modal('toggle');
-          this._router.navigate(['/resourceTypes']);
-      })
-  
-    }
+
+    deleteRt = function(id) {
+      this.http.delete(delResourceType + id).subscribe(
+        res => {
+          if(res._body=="used"||res._body=="used1") {
+            this.appResT(this.session_id);
+            this.toastr.error('Resource-Type is already in used.');
+            $('#deleteModal').modal('toggle');
+          }
+         
+          else {
+            this.appResT(this.session_id);
+            this.toastr.error('Resource-Type Deleted.');
+            $('#deleteModal').modal('toggle');
+          }
+         
+        },
+        err => this.toastr.error('Ops! something went wrong.'))
+  }
 
 //Add Rt
   addNewRt = function(rt) {

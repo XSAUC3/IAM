@@ -164,13 +164,13 @@ export class PoliciesComponent implements OnInit {
               if (res.message == "unique" ){
                 this.toastr.error('Policy Name Should be Unique');
               }
-              if(res.state == 200 ){
+              else{
                 this.toastr.success('Policy added !' );
                 this.fetchPolicies();
                 this.emptyarray();
                 $('#addModal').modal('toggle');
               }
-              else this.toastr.error("the fields u entered were not propper !");
+              //else this.toastr.error("the fields u entered were not propper !");
             },
             err => this.toastr.error('ops! there was an error adding the policy', err)
           )

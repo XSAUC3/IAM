@@ -62,11 +62,19 @@ router.put('/updateApp/:id' , (req,res,next) => {
 
 //Delete App
 router.delete('/delApp/:id' , (req,res,next) => {
-  App.findByIdAndRemove({_id: req.params.id}, 
-    function(err, docs){
-   if(err) { res.sendStatus(403); }
-   else    { res.sendStatus(200); }
- });
+  Policy.find({application_id:req.params.id}).count((err,data)=>{
+   
+     if(data==0) {
+      App.findByIdAndRemove({_id: req.params.id},function(err, docs){
+      if(err) { res.sendStatus(403); }
+      else    { res.sendStatus(200); }
+    });
+     }
+     else{
+       res.send("used");
+     }
+  })
+
 });
 
 
@@ -142,11 +150,23 @@ router.put('/updateResourceType/:id' , (req,res,next) => {
 
 //Delete rt
 router.delete('/delResourceType/:id' , (req,res,next) => {
-  ResourceType.findByIdAndRemove({_id: req.params.id}, 
-    function(err, docs){
-   if(err) { res.sendStatus(403); }
-   else    { res.sendStatus(200); }
- });
+
+   Resource.find({Resource_typeid:req.params.id}).count((err,data)=>{
+    console.log(data);
+    if(data==0) {
+      
+      ResourceType.findByIdAndRemove({_id: req.params.id}, 
+        function(err, docs){
+       if(err) { res.sendStatus(403); }
+       else    { res.sendStatus(200); }
+     });
+    }
+  else {
+    res.send("used");
+  }
+
+  });
+  
 });
 
 //------------------------------------------------Attributes------------------------------------------------------------------------
@@ -196,11 +216,21 @@ router.delete('/delResourceType/:id' , (req,res,next) => {
 
   //Delete Attribute
   router.delete('/attributes/deleteAttribute' , (req,res,next) => {
-    Attribute.findByIdAndRemove({_id: req.query._id}, (err, attribute) => {
+
+    Resource.find({attribute_id:{$elemMatch:{attribute_id:req.query._id}}}).count((err,data)=>{
+      if(data==0) {
+   Attribute.findByIdAndRemove({_id: req.query._id}, (err, attribute) => {
     if(err) { res.status(500).json({Error: err["errmsg"]}); console.log(err);}
     else if(attribute == null) { res.status(404).json({success: false, msg: 'Attribute Not Found'}); }
     else    { res.status(200).json({success: true, Deleted_Attribute: attribute}); }
   });
+      }
+      else {
+
+        res.send("used");
+      }
+    })
+ 
   });
 
   // fetch Attributes
@@ -492,11 +522,20 @@ router.put('/UpdateResource/:id' , (req,res,next) => {
 
 //Delete App
 router.delete('/DeleteResource/:id' , (req,res,next) => {
+
+  Policy.find({policy_targets:{$elemMatch : {resource_id:req.params.id}}}).count((err,data)=>{
+    console.log(data);
+    if(data==0) {
   Resource.findByIdAndRemove({_id: req.params.id}, 
     function(err, docs){
    if(err) { res.sendStatus(403); }
    else    { res.sendStatus(200); }
  });
+    } 
+    else {
+res.send("used");
+    }
+  })
 });
 
 

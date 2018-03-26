@@ -143,7 +143,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form role="form" #updateData="ngForm" (ngSubmit)="updateApp(updateData.value,uData._id); updateData.reset()">
+          <form role="form" #updateData="ngForm" (ngSubmit)="updateApp(updateData.value,uData._id);">
             <div class="box-body">
               <div class="form-group">
                 <label for="app_name">Application Name</label>

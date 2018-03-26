@@ -180,7 +180,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form role="form" #updateData="ngForm" autocomplete="off" (ngSubmit)="updateUser(updateData.value,uData._id); updateData.reset()">
+            <form role="form" #updateData="ngForm" autocomplete="off" (ngSubmit)="updateUser(updateData.value,uData._id);">
               <div class="box-body">
                 <div class="form-group">
                   <label for="app_name">Name</label>

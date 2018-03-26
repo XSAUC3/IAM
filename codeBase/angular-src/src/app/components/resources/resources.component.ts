@@ -126,6 +126,18 @@ fetchApplications=function() {
   )
  }
 
+ appAttr = function(session_id) {
+  this.loading = true;
+  this.http.get(attributes_fetchByAppId+session_id).subscribe(
+   (res: Response) => {
+    this.loading = false;
+     this.attributes = res.json();
+
+  
+   }
+  )
+  }  
+
 
  
 
@@ -136,18 +148,21 @@ refresh = function() {
 
 //Del App
 deleteRes = function(id) {
- 
- const url =DeleteResource + id;
- return this.http.delete(url, {headers: this.headers}).toPromise()
-   .then(() => {
-    this.appRes(this.session_id);
-  // this.fetchData();
-   this.toastr.error('Resource Deleted.');
-   $('#deleteModal').modal('toggle');
-  this._router.navigate(['/resources']);
- 
-   })
-
+  this.http.delete(DeleteResource + id).subscribe(
+    res => {
+      if(res._body=="used") {
+        this.appRes(this.session_id);
+        this.toastr.error('Resource is already in used.');
+        $('#deleteModal').modal('toggle');
+      }
+      else {
+        this.appRes(this.session_id);
+        this.toastr.error('Resource Deleted..');
+        $('#deleteModal').modal('toggle');
+      }
+     
+    },
+    err => this.toastr.error('Ops! something went wrong.'))
 }
 
 //Add App

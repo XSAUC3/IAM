@@ -65,14 +65,25 @@ export class ApplicationComponent implements OnInit {
 
    //Del App
    deleteApp = function(id) {
-    const url = delApp + id;
-    return this.http.delete(url, {headers: this.headers}).toPromise()
-      .then(() => {
-      this.fetchData();
-      this.toastr.error('Application Deleted.');
-      $('#deleteModal').modal('toggle');
-      })
+    this.http.delete(delApp + id).subscribe(
+      res => {
+        if(res._body=="used") {
+          this.fetchData();
+          this.toastr.error('Application is already in used.');
+          $('#deleteModal').modal('toggle');
+        }
+        else {
+          this.fetchData();
+          this.toastr.error('Application Deleted.');
+          $('#deleteModal').modal('toggle');
+        }
+       
+      },
+      err => this.toastr.error('Ops! something went wrong.'))
 }
+
+
+
 
 //Add App
   addNewApp = function(a) {
