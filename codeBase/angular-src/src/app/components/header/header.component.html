@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-transparent" style=" height: 70px;background-color:#fff;">
   <div class="container-fluid">
     <div class="navbar-minimize">
-      <button id="minimizeSidebar" class="btn btn-round btn-warning btn-fill btn-just-icon">
+      <button (click)="collapse()" class="btn btn-round btn-warning btn-fill btn-just-icon">
         <i class="material-icons visible-on-sidebar-regular">more_vert</i>
         <i class="material-icons visible-on-sidebar-mini">view_list</i>
       </button>
@@ -16,7 +16,7 @@
       <a class="navbar-brand">KIAM</a>
     </div>
       <ul class="nav navbar-nav navbar-right">
-          <li>
+          <li class="navbar-form">
             <a class="dropdown-toggle">
               <i class="material-icons">folder_open</i>
               <select style="border: none; background: #fff; border:2px solid orange;" (change)="getAppId()" placeholder="app" [(ngModel)]="selected_id">

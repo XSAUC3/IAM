@@ -108,38 +108,25 @@ fetchApplications=function() {
  }
  //Fetch Attribute
  fetchAttribute=function() {
-  this.http.get(allAttributes)
+  this.http.get("http://localhost:3000/api/attribute/fetchByAppAndType/"+this.session_id)
   .map(res => res.json() )
   .subscribe(
     res => {
-      let a = [];
-      let obj = res;
-      let att = obj.Attributes;
-      for(let i = 0 ; i < att.length ; i++){
-        //console.log(i);
-        if(att[i].Type == "Fixed"){
-          a.push(att[i]);
-        }
-      }
-      this.attribute = a;
+      console.log(res);
+      // let a = [];
+      // let obj = res;
+      // let att = obj.Attributes;
+      // for(let i = 0 ; i < att.length ; i++){
+      //   //console.log(i);
+      //   if(att[i].Type == "Fixed"){
+      //     a.push(att[i]);
+      //   }
+      // }
+      this.attribute = res;
     }
   )
  }
 
- appAttr = function(session_id) {
-  this.loading = true;
-  this.http.get(attributes_fetchByAppId+session_id).subscribe(
-   (res: Response) => {
-    this.loading = false;
-     this.attributes = res.json();
-
-  
-   }
-  )
-  }  
-
-
- 
 
 //Refresh Page
 refresh = function() {
@@ -167,7 +154,6 @@ deleteRes = function(id) {
 
 //Add App
 addNewRes = function(a) {
-
   if(a.res_name==undefined||a.res_name==""||a.res_name==null) {
     this.toastr.error("Resource name required.")
    }
@@ -177,9 +163,10 @@ addNewRes = function(a) {
       "res_displayname":a.res_displayname,
       "Resource_typeid":a.Resource_typeid,
       "application_id":this.session_id,
-      "attribute_id":this.attributes,
+      "attributes":this.attributes,
       "res_descrpition":a.res_descrpition
     }
+
   
     this.http.post(addResource , this.aObj ,  {Headers : this.headers} ).subscribe(res => {
       if(res._body=="unique") {
@@ -211,7 +198,7 @@ this.http.get(Resource+id).subscribe(
  (res: Response) => {
    this.uresource = res.json();
    this.uData = this.uresource;
-   this.attributes = this.uData.attribute_id;
+   this.attributes = this.uData.attributes;
  }
 )
 }
@@ -250,7 +237,7 @@ updateRes = function(updateData,id)
       "res_displayname":updateData.ures_displayname,
       "Resource_typeid":updateData.uResource_typeid,
       "application_id":this.session_id,
-      "attribute_id":this.attributes,
+      "attributes":this.attributes,
       "attribute_value":updateData.uattribute_value,
       "res_description":updateData.ures_descrpition
     }

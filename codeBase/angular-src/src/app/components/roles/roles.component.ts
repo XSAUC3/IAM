@@ -24,7 +24,7 @@ export class RolesComponent implements OnInit {
   isEmpty:boolean = false;
   constructor(private _router: Router,  private http:Http, private route: ActivatedRoute, private toastr: ToastrService) { 
     //this.fetchData();
-    this.fetchApplication();
+    //this.fetchApplication();
 
   }
 
@@ -61,13 +61,13 @@ sort(key){
    }
 
    // Fetch Application
-   fetchApplication=function() {
-    this.http.get(Applications).subscribe(
-      (res: Response) => {
-        this.applications = res.json();
-      }
-    )
-   }
+  //  fetchApplication=function() {
+  //   this.http.get(Applications).subscribe(
+  //     (res: Response) => {
+  //       this.applications = res.json();
+  //     }
+  //   )
+  //  }
 
    //Refresh Page
    refresh = function() {
@@ -151,20 +151,23 @@ appRole = function(session_id) {
  //Update Role
  updateRole = function(updateData,id)
 {
-  if(updateData.uRole_name != "") {
-    this.editObj = {
-      "Role_id":updateData.id,
-      "Role_name":updateData.uRole_name,
-      "Application_id":this.session_id
-    }
-    this.http.put(updateRole+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
-      $('#updateModal').modal('toggle');
-      this._router.navigate(['/roles']);
-      this.appRole(this.session_id);
-    this.toastr.info('Role Updated.');
+  if(updateData.uRole_name == ""||updateData.uRole_name == null||updateData.uRole_name == undefined) {
+    this.toastr.error('Role Name required.');
+}
+else {
+  this.editObj = {
+    "Role_id":updateData.id,
+    "Role_name":updateData.uRole_name,
+    "Application_id":this.session_id
+  }
+  this.http.put(updateRole+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+    $('#updateModal').modal('toggle');
+    this._router.navigate(['/roles']);
+    this.appRole(this.session_id);
+  this.toastr.info('Role Updated.');
 
-  
-    })
+
+  })
 }
 }
 ngOnInit() {

@@ -4,87 +4,86 @@
     </style>
     <h2 class="title">LDAP Configuration</h2>
   </div>
-  <form role="form" #aData="ngForm" (ngSubmit)="addconfig(aData.value);">
+  <form #aData="ngForm" (ngSubmit)="addconfig(aData.value);">
     <div class="box-body">
       <div style="display:none;" >
-        <input type="hidden" autocomplete="off" class="form-control" name="id" id="id" [(ngModel)]="id">
+        <input type="hidden"  class="form-control" name="id" [(ngModel)]="id">
       </div>
       <h3 class="title">Server Details</h3>
       <div class="row">
         <div class="col-md-6 form-group">
           <h4>URL</h4>
-          <input type="text" autocomplete="off" class="form-control" name="url" id="url" placeholder="Enter URL" [(ngModel)]="url">
+          <input type="text"  class="form-control" name="url" placeholder="Enter URL" [(ngModel)]="url">
         </div>
         <div class="col-md-6 form-group">
           <h4>PORT</h4>
-          <input type="text" autocomplete="off" class="form-control" name="port" id="port" placeholder="Enter PORT" [(ngModel)]="port">
+          <input type="text"  class="form-control" name="port" placeholder="Enter PORT" [(ngModel)]="port">
         </div>
         <div class="col-md-6 form-group">
           <h4>Admin UID</h4>
-          <input type="text" autocomplete="off" class="form-control" name="admin_uid" id="admin_uid" placeholder="Enter Admin ID" [(ngModel)]="admin_uid">
+          <input type="text"  class="form-control" name="admin_uid" placeholder="Enter Admin ID" [(ngModel)]="admin_uid">
         </div>
         <div class="col-md-6 form-group">
           <h4>Admin Password</h4>
-          <input type="password" autocomplete="off" class="form-control" name="admin_password" id="admin_password" placeholder="Enter Password"
-            [(ngModel)]="admin_password">
+          <input type="password"  class="form-control" name="admin_password" placeholder="Enter Password" [(ngModel)]="admin_password">
         </div>
       </div>
       <h3 class="title">User Details</h3>
       <div class="row">
         <div class="col-md-6 form-group">
           <h4>Base DN</h4>
-          <input type="text" autocomplete="off" class="form-control" name="user_base_dn" id="user_base_dn" placeholder="Enter Base DN"
+          <input type="text"  class="form-control" name="user_base_dn" placeholder="Enter Base DN"
             [(ngModel)]="user_base_dn">
         </div>
         <div class="col-md-6 form-group">
           <h4>Object Class</h4>
-          <input type="text" autocomplete="off" class="form-control" name="user_object_class" id="user_object_class" placeholder="Enter Object Class"
+          <input type="text"  class="form-control" name="user_object_class" placeholder="Enter Object Class"
             [(ngModel)]="user_object_class">
         </div>
         <div class="col-md-6 form-group">
           <h4>Filter</h4>
-          <input type="text" autocomplete="off" class="form-control" name="user_base_filter" id="user_base_filter" placeholder="Enter Base Filter"
+          <input type="text"  class="form-control" name="user_base_filter" placeholder="Enter Base Filter"
             [(ngModel)]="user_base_filter">
         </div>
         <div class="col-md-6 form-group">
           <h4>Search Scope</h4>
-          <select class="form-control" name="user_search_scope" id="user_search_scope" [(ngModel)]="user_search_scope">
+          <select class="form-control" name="user_search_scope" [(ngModel)]="user_search_scope">
             <option value="" disabled="disabled">--- Select Scope ---</option>
             <option value="sub">sub</option>
           </select>
         </div>
         <div class="col-md-6 form-group">
           <h4>UserName Attribute</h4>
-          <input type="text" autocomplete="off" class="form-control" name="username" id="username" placeholder="Enter Username Attribute"
+          <input type="text"  class="form-control" name="username" placeholder="Enter Username Attribute"
             [(ngModel)]="username">
         </div>
         <div class="col-md-6 form-group">
           <h4>UserPassword Attribute</h4>
-          <input type="text" autocomplete="off" class="form-control" name="user_password" id="user_password" placeholder="Enter UserPassword Attribute"
+          <input type="text"  class="form-control" name="user_password"  placeholder="Enter UserPassword Attribute"
             [(ngModel)]="user_password">
         </div>
         <div class="col-md-6 form-group">
           <h4>First Name Attribute</h4>
-          <input type="text" autocomplete="off" class="form-control" name="firstname" id="firstname" placeholder="Enter FirstName Attribute"
+          <input type="text"  class="form-control" name="firstname" placeholder="Enter FirstName Attribute"
             [(ngModel)]="firstname">
         </div>
         <div class="col-md-6 form-group">
           <h4>Last Name Attribute</h4>
-          <input type="text" autocomplete="off" class="form-control" name="lastname" id="lastname" placeholder="Enter LastName Attribute"
+          <input type="text"  class="form-control" name="lastname"  placeholder="Enter LastName Attribute"
             [(ngModel)]="lastname">
         </div>
         <div class="col-md-6 form-group">
           <h4>Mobile No. Attribute</h4>
-          <input type="text" autocomplete="off" class="form-control" name="mobile_no" id="mobile_no" placeholder="Enter Mobile Attribute"
+          <input type="text" class="form-control" name="mobile_no"  placeholder="Enter Mobile Attribute"
             [(ngModel)]="mobile_no">
         </div>
         <div class="col-md-6 form-group">
           <h4>Email Attribute</h4>
-          <input type="text" autocomplete="off" class="form-control" name="email" id="email" placeholder="Enter Email Attribute" [(ngModel)]="email">
+          <input type="text"  class="form-control" name="email"  placeholder="Enter Email Attribute" [(ngModel)]="email">
         </div>
         <div class="col-md-6 form-group">
           <h4>Designation Attribute</h4>
-          <input type="text" autocomplete="off" class="form-control" name="designation" id="designation" placeholder="Enter Designation Attribute"
+          <input type="text"  class="form-control" name="designation"  placeholder="Enter Designation Attribute"
             [(ngModel)]="designation">
         </div>
       </div>
@@ -92,34 +91,34 @@
       <div class="row">
         <div class="col-md-6 form-group">
           <h4>Base DN</h4>
-          <input type="text" autocomplete="off" class="form-control" name="role_base_dn" id="role_base_dn" placeholder="Enter Base DN"
+          <input type="text"  class="form-control" name="role_base_dn"  placeholder="Enter Base DN"
             [(ngModel)]="role_base_dn">
         </div>
         <div class="col-md-6 form-group">
           <h4>Object Class</h4>
-          <input type="text" autocomplete="off" class="form-control" name="role_object_class" id="role_object_class" placeholder="Enter Object Class"
+          <input type="text"  class="form-control" name="role_object_class" placeholder="Enter Object Class"
             [(ngModel)]="role_object_class">
         </div>
         <div class="col-md-6 form-group">
           <h4>Filter</h4>
-          <input type="text" autocomplete="off" class="form-control" name="role_base_filter" id="role_base_filter" placeholder="Enter Base Filter"
+          <input type="text"  class="form-control" name="role_base_filter"  placeholder="Enter Base Filter"
             [(ngModel)]="role_base_filter">
         </div>
         <div class="col-md-6 form-group">
           <h4>Search Scope</h4>
-          <select class="form-control" name="role_search_scope" id="role_search_scope" [(ngModel)]="role_search_scope">
+          <select class="form-control" name="role_search_scope"  [(ngModel)]="role_search_scope">
             <option value="" disabled="disabled">--- Select Scope ---</option>
             <option value="sub">sub</option>
           </select>
         </div>
         <div class="col-md-6 form-group">
           <h4>Role Name Attribute</h4>
-          <input type="text" autocomplete="off" class="form-control" name="role_name" id="role_name" placeholder="Enter Role Name Attribute"
+          <input type="text"  class="form-control" name="role_name" placeholder="Enter Role Name Attribute"
             [(ngModel)]="role_name">
         </div>
         <div class="col-md-6 form-group">
           <h4>Role ID Attribute</h4>
-          <input type="text" autocomplete="off" class="form-control" name="role_id" id="role_id" placeholder="Enter Role ID Attribute"
+          <input type="text"  class="form-control" name="role_id" placeholder="Enter Role ID Attribute"
             [(ngModel)]="role_id">
         </div>
         <div class="col-md-6 form-group">

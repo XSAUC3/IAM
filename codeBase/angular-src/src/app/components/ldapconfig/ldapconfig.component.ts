@@ -94,7 +94,8 @@ export class LdapconfigComponent implements OnInit {
         this.showbutton = true;
       }
       else if(this.ans['success'] == false){
-        this.toastr.console.error(this.ans['msg']);
+        // console.log(this.ans['msg']);
+        this.toastr.error(this.ans['msg']);
       }
     },
     err=> {

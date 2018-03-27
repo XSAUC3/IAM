@@ -123,7 +123,7 @@
                           <ul style=" height: 130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
                             <li *ngFor="let action of actions; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
                               <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
-                              fa-wrench"></i>&nbsp; &nbsp;{{action.action_name}} <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                              fa-wrench"></i>&nbsp; &nbsp;{{action.action_name}} <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="material-icons">clear</i></span>
                             </li>
                           </ul>
                         </div>
@@ -188,7 +188,7 @@
                                   <ul style=" height:130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
                                     <li *ngFor="let action of actions; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
                                       <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="fa 
-                                      fa-wrench"></i>&nbsp; &nbsp;{{action.action_name}} <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="fa fa-times"></i></span>
+                                      fa-wrench"></i>&nbsp; &nbsp;{{action.action_name}} <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="material-icons">clear</i></span>
                                     </li>
                                   </ul>
                                 </div>
@@ -219,7 +219,7 @@
                           <button type="button" style="color: red" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
-                        <h4 class="modal-title" id="exampleModalLabel">Delete Attribute</h4>
+                        <h4 class="modal-title" id="exampleModalLabel">Delete Resource-Type</h4>
                         <hr style="border-top: 1px solid #000; margin-bottom:0;">
                       </div>
                       <div class="modal-body">

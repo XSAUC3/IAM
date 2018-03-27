@@ -31,13 +31,13 @@ router.post('/SetConfig/', (req, res, next) => {
     
     if(id == undefined || id == null || id == ''){
         ldap_config.find({},(err, object) => {
-            if(err) throw err;
+            if(err) console.log('Problem in Finding Token..!');;
     
             let obj = new ldap_config(data);
 
             if(object.length == 0){
                 obj.save((err, createdObj) => {
-                    if(err) throw err;
+                    if(err) res.json({success : false, msg : 'Field should not be Empty..!'});
                     else res.status(200).json({success : true, msg : 'Configuration is being added Successfully..!', data : [createdObj]});
                 });
             } else {

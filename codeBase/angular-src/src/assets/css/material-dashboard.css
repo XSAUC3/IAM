@@ -11650,6 +11650,7 @@ footer .btn {
 
   .navbar-nav {
     margin: 1px 0;
+    display: none !important;
   }
   .navbar-nav .open .dropdown-menu > li > a {
     padding: 15px 15px 5px 50px;

@@ -108,19 +108,19 @@
               <div class="box-body">
                 <div class="form-group">
                   <label for="app_name">Name</label>
-                  <input type="text" class="form-control" autocomplete="off" required name="name" id="name" placeholder="Enter Full Name" ngModel>
+                  <input type="text" class="form-control" autocomplete="off" name="name" required name="name" id="name" placeholder="Enter Full Name" ngModel>
                 </div>
                 <div class="form-group">
                   <label for="app_name">UserName</label>
-                  <input type="text" class="form-control" autocomplete="off" required name="username"   placeholder="Enter Username" ngModel>
+                  <input type="text" class="form-control" autocomplete="off"  name="username" id="username"   placeholder="Enter Username" ngModel>
                 </div>
                 <div class="form-group">
                   <label for="app_displayname">Password</label>
-                  <input type="password" class="form-control" autocomplete="off" required name="password"    type="password" placeholder="Enter password" ngModel>
+                  <input type="password" class="form-control" autocomplete="off"  name="password" id="password"    type="password" placeholder="Enter password" ngModel>
                 </div>
                 <div class="form-group">
                   <label for="app_name">Email</label>
-                  <input type="text" class="form-control" autocomplete="off" required name="email"     placeholder="Enter User Name" ngModel>
+                  <input type="email" class="form-control" autocomplete="off"  name="email" id="email"    placeholder="Enter User Name" ngModel>
                 </div>
                 <div class="form-group">
                     <label for="app_name">Role</label>
@@ -128,27 +128,21 @@
                       <div class="col-md-9" >
                         <select class="form-control" name="role"     placeholder="Select Role" [(ngModel)]="role">
                          <option value=""  selected="true" disabled >Select Role</option>
-                          <option *ngFor="let role of roles" value={{role._id}}>{{role.Role_name}}</option>
+                          <option *ngFor="let role of roles" value="{{role._id}},{{role.Role_name}}">{{role.Role_name}}</option>
                         </select>  
                       </div>
                      <div class="col-md-3" >
                         <a  (click)="pushAction()" class="btn btn-success"><i class="material-icons">add</i></a>
                       </div>
                     </div>
-                    <div>
-                        <ul style=" height:130px; color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
-                          <li *ngFor="let action of addRole; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
-                            <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="material-icons">build</i>
-                            &nbsp; &nbsp;
-                            <ng-container *ngFor="let role of roles">
-                                <ng-container *ngIf="action.role_id == role._id; then thenBlockApp"></ng-container>
-                                <ng-template #thenBlockApp>
-                                {{role.Role_name}}
-                                </ng-template>
-                              </ng-container>
-                            <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="material-icons">clear</i></span>
-                          </li>
-                        </ul>
+                    
+                        <div>
+                            <ul style=" height: 130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                                <li *ngFor="let role of rolesarray; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
+                                    {{role.role_name}}
+                                <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="material-icons">clear</i></span>
+                              </li>
+                            </ul>
                     </div>
                 </div>
               </div>
@@ -184,26 +178,27 @@
               <div class="box-body">
                 <div class="form-group">
                   <label for="app_name">Name</label>
-                  <input type="text" class="form-control" autocomplete="off" required name="name"   placeholder="Enter Full Name" [(ngModel)]="uData.name">
+                  <input type="text" class="form-control" autocomplete="off"  name="name" id="name"   placeholder="Enter Full Name" [(ngModel)]="uData.name">
                 </div>
                 <div class="form-group">
                   <label for="app_name">UserName</label>
-                  <input type="text" class="form-control" autocomplete="off" required name="username"   placeholder="Enter Username" [(ngModel)]="uData.username">
+                  <input type="text" class="form-control" autocomplete="off"  name="username" id="username"   placeholder="Enter Username" [(ngModel)]="uData.username">
                 </div>
                 <div class="form-group">
                   <label for="app_displayname">Password</label>
-                  <input type="password" class="form-control" autocomplete="off" required name="password"    placeholder="Enter Password" ngModel>
+                  <input type="password" class="form-control" autocomplete="off"  name="password" id="password"    placeholder="Enter Password" ngModel>
                 </div>
                 <div class="form-group">
                   <label for="app_name">Email</label>
-                  <input type="text" class="form-control" autocomplete="off" required name="email"     placeholder="Enter Email" [(ngModel)]="uData.email">
+                  <input type="text" class="form-control" autocomplete="off"  name="email" id="email"     placeholder="Enter Email" [(ngModel)]="uData.email">
                 </div>
                 <div class="form-group">
                     <label for="app_name">Role</label>
                     <div class="row">
                       <div class="col-md-9" >
                         <select class="form-control" name="role"     placeholder="Select Role" [(ngModel)]="role">
-                          <option *ngFor="let role of roles" value={{role._id}}>{{role.Role_name}}</option>
+                            <option value="" selected disabled>Select Role</option> 
+                          <option *ngFor="let role of roles" value="{{role._id}},{{role.Role_name}}">{{role.Role_name}}</option>
                         </select>  
                       </div>
                      <div class="col-md-3" style="text-align:right">
@@ -211,16 +206,9 @@
                       </div>
                     </div>
                     <div>
-                        <ul style=" height:130px;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
-                          <li *ngFor="let action of addRole; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
-                            <i style="  cursor: pointer;position: relative; margin-top:5px;float: left;margin-left: 10px" class="material-icons">build</i>
-                            &nbsp; &nbsp;
-                            <ng-container *ngFor="let role of roles">
-                                <ng-container *ngIf="action.role_id == role._id; then thenBlockApp"></ng-container>
-                                <ng-template #thenBlockApp>
-                                {{role.Role_name}}
-                                </ng-template>
-                              </ng-container>
+                        <ul style=" height: 130px; overflow-y: scroll;list-style: none;color: #686866;font-size: 15px;margin-left: -40px;margin-bottom:0px;">
+                            <li *ngFor="let role of rolesarray; let ind=index" style=" border-bottom: 1px solid #bfbfbf; background-color: #d7d7d7; padding: 7px 0px;margin-bottom: 1px;">
+                                {{role.role_name}}
                             <span style="  cursor: pointer;position: relative;float: right;margin-right: 10px" (click)="removeAction(ind)"><i class="material-icons">clear</i></span>
                           </li>
                         </ul>
@@ -261,7 +249,7 @@
                 <button type="button" style="color: red" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
-              <h4 class="modal-title" id="exampleModalLabel">Delete Attribute</h4>
+              <h4 class="modal-title" id="exampleModalLabel">Delete User</h4>
               <hr style="border-top: 1px solid #000; margin-bottom:0;">
             </div>
             <div class="modal-body">

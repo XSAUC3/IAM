@@ -3,13 +3,19 @@ const config = require('../config/database');
 const bcrypt = require('bcryptjs');
 
 const UserSchema = mongoose.Schema({
-	"name"   :   { type: String,  required: true },
-  "username"   :   { type: String,  required: true },
-  "password"   :   { type: String,  required: true },
-	"email"   :   { type: String,  required: true },
-	"role"   :   { type: Array,  required: true },
+	"name"   :   { type: String},
+  "username"   :   { type: String},
+  "password"   :   { type: String },
+	"email"   :   { type: String, },
+	"role"   :   [
+		{
+			"role_id" : {type:String},
+			"role_name": {type:String}
+		}
+	],
 	"status"   :   { type: Boolean,  default: true }
 });
+
 
 const User = module.exports = mongoose.model('users', UserSchema);
 

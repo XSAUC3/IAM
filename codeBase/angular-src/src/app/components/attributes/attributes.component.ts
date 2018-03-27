@@ -93,41 +93,63 @@ appAttr = function(session_id) {
   }
 
   // Delete Attribute
-  deleteAttribute = (_id) => {
 
-    this.attributeDataService.deleteAttribute(_id).map(res => res.json()).subscribe(
+  deleteAttribute = function(id) {
+    console.log(deleteAttribute+id);
+    this.http.delete(deleteAttribute + id).subscribe(
       res => {
-        console.log("res");
-        // if (data.success === true ) {
-        //   this.appAttr(this.session_id);
-        //   $('#deleteModal').modal('toggle');
-        //   this.toastr.error('Attribute Deleted.');
-        //   this._router.navigate(['/attributes']);
-        // } else if (data.success === false) {
-        //   this.appAttr(this.session_id);
-        //   $('#deleteModal').modal('toggle');
-        //   this.toastr.error('Attribute Not Found. Refreshing The Attribute List.');
-        //   this._router.navigate(['/attributes']);
-        // }
-        if(res._body=="used") {
+        if(res._body=="used"||res._body=="used1") {
           this.appAttr(this.session_id);
           this.toastr.error('Attribute is already in used.');
           $('#deleteModal').modal('toggle');
         }
+       
         else {
           this.appAttr(this.session_id);
           this.toastr.error('Attribute Deleted.');
           $('#deleteModal').modal('toggle');
         }
+       
       },
-      err => {
-        this.appAttr(this.session_id);
-        $('#deleteModal').modal('toggle');
+      err => this.toastr.error('Opps! something went wrong.'))
+}
+
+
+  // deleteAttribute = (_id) => {
+
+  //   this.attributeDataService.deleteAttribute(_id).map(res => res.json()).subscribe(
+  //     res => {
+  //       console.log("res");
+  //       // if (data.success === true ) {
+  //       //   this.appAttr(this.session_id);
+  //       //   $('#deleteModal').modal('toggle');
+  //       //   this.toastr.error('Attribute Deleted.');
+  //       //   this._router.navigate(['/attributes']);
+  //       // } else if (data.success === false) {
+  //       //   this.appAttr(this.session_id);
+  //       //   $('#deleteModal').modal('toggle');
+  //       //   this.toastr.error('Attribute Not Found. Refreshing The Attribute List.');
+  //       //   this._router.navigate(['/attributes']);
+  //       // }
+  //       if(res._body=="used") {
+  //         this.appAttr(this.session_id);
+  //         this.toastr.error('Attribute is already in used.');
+  //         $('#deleteModal').modal('toggle');
+  //       }
+  //       else {
+  //         this.appAttr(this.session_id);
+  //         this.toastr.error('Attribute Deleted.');
+  //         $('#deleteModal').modal('toggle');
+  //       }
+  //     },
+  //     err => {
+  //       this.appAttr(this.session_id);
+  //       $('#deleteModal').modal('toggle');
    
-        this._router.navigate(['/attributes']);
-      }
-    );
-  }
+  //       this._router.navigate(['/attributes']);
+  //     }
+  //   );
+  // }
 
   // Get All Applications
 

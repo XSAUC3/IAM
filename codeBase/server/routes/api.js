@@ -173,6 +173,14 @@ router.delete('/delResourceType/:id' , (req,res,next) => {
 
  //#region  Add, Edit, Delete & Fetch Attributes
 
+//attribute by type : fixed
+router.get('/attribute/fetchByAppAndType/:app_id', (req,res,next) =>{
+  Attribute.find({Application_Id: req.params.app_id,Type:'Fixed'}, (err, app) => {  
+  if (err) {res.json(err);} 
+  else {res.json(app);}
+});
+});
+
   // Add Attribute
   router.post('/attributes/addAttribute', (req, res, next) => {
 
@@ -214,21 +222,38 @@ router.delete('/delResourceType/:id' , (req,res,next) => {
     });
   });
 
+
+
   //Delete Attribute
-  router.delete('/attributes/deleteAttribute' , (req,res,next) => {
+  router.delete('/attributes/deleteAttribute/:id' , (req,res,next) => {
 
-    Resource.find({attribute_id:{$elemMatch:{attribute_id:req.query._id}}}).count((err,data)=>{
+    Resource.find({attribute_id:{$elemMatch:{attribute_id:req.params.id}}}).count((err,data)=>{
+
       if(data==0) {
-   Attribute.findByIdAndRemove({_id: req.query._id}, (err, attribute) => {
-    if(err) { res.status(500).json({Error: err["errmsg"]}); console.log(err);}
-    else if(attribute == null) { res.status(404).json({success: false, msg: 'Attribute Not Found'}); }
-    else    { res.status(200).json({success: true, Deleted_Attribute: attribute}); }
-  });
+      
+        Attribute.findByIdAndRemove({_id: req.params.id}, 
+          function(err, docs){
+         if(err) { res.sendStatus(403); }
+         else    { res.sendStatus(200); }
+       });
       }
-      else {
+    else {
+      res.send("used");
+    }
+    //////////////
 
-        res.send("used");
-      }
+
+  //     if(data==0) {
+  //  Attribute.findByIdAndRemove({_id: req.query._id}, (err, attribute) => {
+  //   if(err) { res.status(500).json({Error: err["errmsg"]}); console.log(err);}
+  //   else if(attribute == null) { res.status(404).json({success: false, msg: 'Attribute Not Found'}); }
+  //   else    { res.status(200).json({success: true, Deleted_Attribute: attribute}); }
+  // });
+  //     }
+  //     else {
+
+  //       res.send("used");
+  //     }
     })
  
   });
@@ -461,13 +486,16 @@ router.post('/addResource', (req, res, next) => {
 
 Resource.find({res_name:req.body.res_name}).where('application_id').equals(req.body.application_id).count((err,data)=>{
   if(data==0) {
+
+    console.log(req.body.attributes);
+    
   
     let newApp = new Resource({
       res_name        : req.body.res_name, 
       res_displayname : req.body.res_displayname, 
       res_descrpition : req.body.res_descrpition,
       Resource_typeid : req.body.Resource_typeid,
-      attribute_id : req.body.attribute_id,
+      attributes : req.body.attributes,
       attribute_value : req.body.attribute_value, 
       application_id : req.body.application_id
     });
@@ -589,14 +617,14 @@ router.post('/addPolicy', (req, res, next) => {
       });
 
       newPolicy.save( (err,createdObj ) => {
-        if(err)  res.status(500);  
+        if(err)  {console.log(err);}  
         else     {addTargets(createdObj)};
       })
 
       function addTargets(policy){
         for ( let i=0;i< req.body.policy_targets.length;i++)
         {
-          if ( req.body.policy_targets[i].resource_id === undefined ) res.json({"message":"error","message":"resource error"})
+          if ( req.body.policy_targets[i].resource_id === undefined ) {console.log("resource id is not proper")}
           else {
             Resource.findById({_id : req.body.policy_targets[i].resource_id}, (err,reso) => {
               if (err) { console.log(err) }
@@ -612,12 +640,13 @@ router.post('/addPolicy', (req, res, next) => {
                   {
                     $push:{"policy_targets" :  policytargetobj}
                   },
-                  (err, result) => { if(err) console.log(err) ; else { res.status(200).send(result); } } )          
+                  (err, result) => { if(err) {console.log(err);} else { console.log(result) } } )          
                 })
               }      
             })
           }
         }
+        res.send({"message":"ok"});
       }
     }
     else{
@@ -646,7 +675,7 @@ router.put('/updatePolicy' , (req,res,next) => {
       function updateTargets(policy){
         for ( let i=0;i< req.body.policy_targets.length;i++)
         {
-          if ( req.body.policy_targets[i].resource_id === undefined ) res.json({"message":"error","message":"resource error"})
+          if ( req.body.policy_targets[i].resource_id === undefined ) console.log("resource Error")
           else{
             Resource.findById({_id : req.body.policy_targets[i].resource_id}, (err,reso) => {
               if (err) { console.log(err) }
@@ -662,12 +691,13 @@ router.put('/updatePolicy' , (req,res,next) => {
                   {
                     $push:{"policy_targets" :  policytargetobj}
                   },
-                  (err, result) => { if(err) {console.log(err);} else{ res.status(200).send(result); } } )          
+                  (err, result) => { if(err) {console.log(err);} else{ console.log(result); } } )          
                 })
               }      
             })
           }
         }
+        res.status(200).json({"message":"ok","message":"resource error"})
       }
 
 })

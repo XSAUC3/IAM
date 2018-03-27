@@ -23,7 +23,7 @@ var delResourceType             = addr + '/delResourceType/'
 
 var addAttribute            = addr + '/attributes/addAttribute/';
 var updateAttribute         = addr + '/attributes/updateAttribute/';
-var deleteAttribute         = addr + '/attributes/deleteAttribute';
+var deleteAttribute         = addr + '/attributes/deleteAttribute/';
 var allAttributes           = addr + '/attributes/allAttributes/';
 var attributes_fetchByAppId = addr + '/attributes/fetchByAppId/';
 var attributeById           = addr + '/attributes/attributeById';

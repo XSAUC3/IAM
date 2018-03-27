@@ -139,6 +139,15 @@ export class PoliciesComponent implements OnInit {
     this.targetsarray.push({resource_id:fetchedtarget[0],resource_name:fetchedtarget[1]});
   }
 
+policyIdToBeDeleted : String;
+policyNameToBeDeleted : String;
+
+  // Set Delete Attribute
+  setDeletePolicy = (_id, Name) => {
+    this.policyIdToBeDeleted = _id;
+    this.policyNameToBeDeleted = Name;
+  }
+
   removepolicytarget(index){
     this.targetsarray.splice(index,1);
   }
@@ -162,7 +171,7 @@ export class PoliciesComponent implements OnInit {
           .subscribe(
             res => {
               if (res.message == "unique" ){
-                this.toastr.error('Policy Name Should be Unique');
+                this.toastr.error('Policy already exists.');
               }
               else{
                 this.toastr.success('Policy added !' );
@@ -178,8 +187,6 @@ export class PoliciesComponent implements OnInit {
   }
 
   deletePolicy(id) {
-    var q = confirm("do u want to delete this policy ?")
-    if (q == true) {
       this._http.delete(delete_policy_url + id).subscribe(
         res => {
           this.toastr.error('Policy Deleted !');
@@ -188,7 +195,7 @@ export class PoliciesComponent implements OnInit {
         err => this.toastr.error('Ops! something went wrong.'))
         this.fetchPolicies();
         this.emptyarray();
-    }
+        $('#deleteModal').modal('toggle');
   }
 
   editPolicy(id){

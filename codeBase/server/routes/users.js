@@ -20,13 +20,14 @@ router.post('/authenticate', (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;
     User.getUserByUsername(username, (err, user) => {
-      if(err) throw err;
+      if(err) console.log('Problem in Get Username..!');
+      ;
       if(!user) {
         return res.json({success: false, msg: 'Invalid Username & Password...!'});
       }
   
       User.comparePassword(password, user.password, (err, isMatch) => {
-        if(err) throw err;
+        if(err) console.log('Problem in Compare Password..!');
         if(isMatch) {
           const token = jwt.sign({data: user}, config.secret, {
             expiresIn: 86400 // 1 Day
@@ -70,11 +71,11 @@ User.findOne({email : email}, (err, user) => {
         // console.log(tk);
 
         Token.findOneAndRemove({email : email}, (err) => {
-            if(err) throw err;
+            if(err) console.log('Problem in Deleting TOken..!');;
         });
 
         tk.save((err, tkdetail) => {
-            if(err) throw err;
+            if(err) console.log('Problem in Saving Token..!');;
             if(tkdetail){
             }
         });
@@ -125,7 +126,7 @@ User.findOne({email : email}, (err, user) => {
         // Deleting Token After 10 Minutes
         function delToken() {
           Token.remove({ email: email}, function(err, deldata) {
-              if (err) throw err;
+              if (err) console.log('Problem in Deleting Token..!');
               if(deldata){
                   console.log("Token has been deleted successfully..!");
               }
@@ -148,7 +149,7 @@ router.get('/ForgotPassword/:id/:token', (req, res) => {
     let R_token = req.params.token;
 
     Token.findOne({uid : R_id , token : R_token} ,(err, tkdetail) => {
-        if(err) throw err;
+        if(err) console.log('Problem in Find Token..!');
         if(tkdetail){
             res.json({success : true});
         }
@@ -173,7 +174,7 @@ router.put('/ChangePassword', (req, res) => {
             res.json({success: true});
         }
         Token.remove({ uid: R_id}, function(err, deldata) {
-            if (err) throw err;
+            if (err) console.log('Problem in Deleting Token..!');;
             if(deldata){
                 console.log("Token has been deleted successfully..!");
             }

@@ -18,7 +18,7 @@ function ldapfunction(res,object){
         
     const client = ldap.createClient({
         url:object[0].Url
-    })
+    });
 
     // Filter for Fetching Data of User which is now fetch *.
     const opts = {
@@ -31,7 +31,7 @@ function ldapfunction(res,object){
         else {
             let arr = [];
             client.search(object[0].UserBase_DN, opts, function(error, abc) {
-                if(err) throw err;
+                if(err) console.log('Problem in Search..!');
 
                 console.log('abc is ' + JSON.stringify(abc) + '\n');
                 

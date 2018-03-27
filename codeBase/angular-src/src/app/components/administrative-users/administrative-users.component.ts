@@ -36,7 +36,7 @@ uExist = false;
 private headers = new Headers({ 'Content-Type': 'resources/json'});
 user = [];
 roles = [];
-addRole = [];
+rolesarray = [];
 
 role = '';
 
@@ -51,20 +51,16 @@ p: number = 1;
 
 
 pushAction = function() {
-  if(this.role != '') {
-    let object = {
-      role_id: this.role
-    };
-   this.addRole.push(object);
-   this.role = "";
-  }
-
+  var singlerole = this.role.split(',');
+  this.rolesarray.push({'role_id':singlerole[0],'role_name':singlerole[1]});
+  console.log(this.rolesarray);
+  
 }
 session_id=sessionStorage.getItem('app_id');
 
 
 removeAction = function(index) {
-  this.addRole.splice(index,1);
+  this.rolesarray.splice(index,1);
 }
 
 fetchRoles=function() {
@@ -107,8 +103,6 @@ setDeleteAttribute = (_id, Name) => {
 //Del App
 deleteUser = function(id) {
   let local_id = localStorage.getItem('user_id');
-  console.log("id is " + local_id);
-  console.log("admin_id: "+ id);
   if(local_id === id) {
     this.toastr.error('User is Logged In.');
     $('#deleteModal').modal('toggle');
@@ -124,7 +118,6 @@ deleteUser = function(id) {
       this.fetchData();
       this.toastr.error('User Deleted.');
       $('#deleteModal').modal('toggle');
-    this._router.navigate(['/app/admin-user']);
     
       });
   }
@@ -132,27 +125,27 @@ deleteUser = function(id) {
  
  //Add App
  addNewUser = function(a) {
-  if(a.res_name != "") {
-  this.aObj = {
-    "name":a.name,
-	  "username":a.username,
-    "password":a.password,
-	  "email":a.email,
-	  "role":this.addRole
+  if(a.name == ""||a.name == null||a.name == undefined) {
+    this.toastr.error('User name required.');
   }
-  console.log(this.aObj);
+  else {
+    this.aObj = {
+      "name":a.name,
+      "username":a.username,
+      "password":a.password,
+      "email":a.email,
+      "role":this.rolesarray
+    }
+    this.http.post(user_Add , this.aObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+    this.fetchData();
+    $('#addModal').modal('toggle');
+    this.addRole = [];
+    this.toastr.success('User Added.');
+    })
+   }
   
-  this.http.post(user_Add , this.aObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
-    console.log(res);
-  this.fetchData();
-  $('#addModal').modal('toggle');
-  this.addRole = [];
-  this.toastr.success('User Added.');
-  })
- }
- else{
-  this.isEmpty = true;
- }
+  
+
  }
  
   editUser = function(id) {
@@ -160,10 +153,8 @@ deleteUser = function(id) {
  this.http.get(user+id).subscribe(
   (res: Response) => {
     this.uresource = res.json();
-    console.log(res.json());
     this.uData = this.uresource;
-    this.addRole = this.uData.role;
-    console.log(this.uData);
+    this.rolesarray = this.uData.role;
 
  
  
@@ -181,40 +172,35 @@ deleteUser = function(id) {
  
  updateUser = function(updateData,id)
  {
-   
-   console.log(id);
  
-   if(updateData.name != "") {
-     console.log(updateData.name);
+   if(updateData.name == ""||updateData.name == undefined||updateData.name == null) {
+    this.toastr.error('User name required.');
+   }
    
-	this.editObj = {
-       "name":updateData.name,
-       "username":updateData.username,
-       "password":updateData.password,
-       "email":updateData.email,
-       "role":this.addRole,
-	   "status":updateData.status
-     }
-     //console.log(this.editObj);
+   else {
+    this.editObj = {
+      "name":updateData.name,
+      "username":updateData.username,
+      "password":updateData.password,
+      "email":updateData.email,
+      "role":this.rolesarray,
+    "status":updateData.status
+    }
+     this.http.put(UpdateUser+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+      
+       $('#updateModal').modal('toggle');
+     this.fetchData();
+     this.addRole = [];
+     this.toastr.info('User Updated.');
  
-     if(this.editobj.name != ( '' || undefined ) )
-     {
-      this.http.put(UpdateUser+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
-        console.log(res);
-        $('#updateModal').modal('toggle');
-        this._router.navigate(['/admin-user']);
-      this.fetchData();
-      this.addRole = [];
-      this.toastr.info('User Updated.');
-  
-    
-      })
-     }
-     else{
-       this.toastr.error("name is required !")
-     }
+   
+     })
+   
 
- }
+
+
+   }
+	
  }
  
  

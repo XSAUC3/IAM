@@ -21,6 +21,15 @@ constructor(private authService: AuthService,private router: Router,private toas
     })
    }
 
+   collapse(){
+     if(document.body.className == 'sidebar-mini'){
+      document.body.className = '';
+     }
+     else{
+      document.body.className = 'sidebar-mini';
+     }
+   }
+
    toggleFullScreen() {
 
     var x = document.getElementById("fsi");
