@@ -630,17 +630,23 @@ router.post('/addPolicy', (req, res, next) => {
               if (err) { console.log(err) }
               else{          
                 ResourceType.findById({_id:reso.Resource_typeid}, (err, resotype) => {
-                  let policytargetobj = {
-                    resource_id          : reso._id,
-                    resource_name        : reso.res_name,
-                    resourceType_Id      : resotype._id,
-                    resourceType_actions : resotype.resourceType_actions
-                  } 
-                  Policy.updateOne({"_id":policy._id},
+                  if(reso._id != (undefined || null) && resotype._id != (undefined || null) )
                   {
-                    $push:{"policy_targets" :  policytargetobj}
-                  },
-                  (err, result) => { if(err) {console.log(err);} else { console.log(result) } } )          
+                    let policytargetobj = {
+                      resource_id          : reso._id,
+                      resource_name        : reso.res_name,
+                      resourceType_Id      : resotype._id,
+                      resourceType_actions : resotype.resourceType_actions
+                    } 
+                    Policy.updateOne({"_id":policy._id},
+                    {
+                      $push:{"policy_targets" :  policytargetobj}
+                    },
+                    (err, result) => { if(err) {console.log(err);} else { console.log(result) } } )
+                  }
+                  else{
+                    console.log({"message":"resource"})
+                  }
                 })
               }      
             })
@@ -678,8 +684,7 @@ router.put('/updatePolicy' , (req,res,next) => {
           if ( req.body.policy_targets[i].resource_id === undefined ) console.log("resource Error")
           else{
             Resource.findById({_id : req.body.policy_targets[i].resource_id}, (err,reso) => {
-              if (err) { console.log(err) }
-              else{          
+              if(reso._id != (undefined || null) && resotype._id != (undefined || null) ){         
                 ResourceType.findById({_id:reso.Resource_typeid}, (err, resotype) => {
                   let policytargetobj = {
                     resource_id          : reso._id,
@@ -693,6 +698,9 @@ router.put('/updatePolicy' , (req,res,next) => {
                   },
                   (err, result) => { if(err) {console.log(err);} else{ console.log(result); } } )          
                 })
+              }
+              else{
+                console.log({"message":"resource"})
               }      
             })
           }
