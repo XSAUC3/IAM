@@ -1,4 +1,4 @@
-import {Fetch_Resource,addResource,Resource,Resource_fetchByAppId,UpdateResource,DeleteResource,Applications,resourceTypes,ResourceType_fetchByAppId,allAttributes,attributes_fetchByAppId} from '../../routeConfig';
+import {Fetch_Resource,addResource,Resource,Resource_fetchByAppId,UpdateResource,DeleteResource,Applications,resourceTypes,ResourceType_fetchByAppId,allAttributes,attributes_fetchByAppId,fetchByAppAndType} from '../../routeConfig';
 import { Component, OnInit } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { ActivatedRoute,Router } from '@angular/router';
@@ -108,7 +108,7 @@ fetchApplications=function() {
  }
  //Fetch Attribute
  fetchAttribute=function() {
-  this.http.get("http://localhost:3000/api/attribute/fetchByAppAndType/"+this.session_id)
+  this.http.get(fetchByAppAndType+this.session_id)
   .map(res => res.json() )
   .subscribe(
     res => {

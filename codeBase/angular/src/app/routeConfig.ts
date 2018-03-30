@@ -28,6 +28,7 @@ var allAttributes           = addr + '/attributes/allAttributes/';
 var attributes_fetchByAppId = addr + '/attributes/fetchByAppId/';
 var attributeById           = addr + '/attributes/attributeById';
 var filterAttributes        = addr + '/attributes/filterAttributes';
+var fetchByAppAndType       = addr + '/attribute/fetchByAppAndType/';
 
 var Roles              = addr + '/role/Roles';
 var role               = addr + '/role/';
@@ -75,7 +76,7 @@ export {addr,
 
     resourceTypes,resourceType,ResourceType_fetchByAppId,updateResourceType,delResourceType,addResourceType,
 
-    addAttribute,updateAttribute,deleteAttribute,allAttributes,attributes_fetchByAppId,attributeById,filterAttributes,
+    addAttribute,updateAttribute,deleteAttribute,allAttributes,attributes_fetchByAppId,attributeById,filterAttributes,fetchByAppAndType,
 
     Roles,role,addRole,updateRole,role_fetchByAppId,delRole,
 
