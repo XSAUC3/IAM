@@ -45,6 +45,14 @@ nav {
     background-color: transparent;
 }
 
+.title{
+    color : #fff;
+}
+
+.card{
+    background-color: #353535;
+}
+
 #ol {
     background-color: #353535 !important;
 }

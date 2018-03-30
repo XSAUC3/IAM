@@ -185,7 +185,7 @@ router.get('/attribute/fetchByAppAndType/:app_id', (req,res,next) =>{
   router.post('/attributes/addAttribute', (req, res, next) => {
 
 
-    Attribute.find({Name:req.body.Name}).where('Application_Id').equals(req.body.Application_Id).count((err,data)=>{
+    Attribute.find({'Name':req.body.Name}).where('Application_Id').equals(req.body.Application_Id).count((err,data)=>{
       if(data==0) {
   
     let newAttribute = new Attribute({
@@ -664,49 +664,57 @@ router.post('/addPolicy', (req, res, next) => {
 // edit Policy
 router.put('/updatePolicy' , (req,res,next) => {
 
-      let updtedPolicy = {
-        policy_name       : req.body.policy_name,
-        policy_type       : req.body.policy_type,
-        application_id    : req.body.application_id,
-        policy_constrains : req.body.policy_constrains,
-        policy_principals : req.body.policy_principals,
-        policy_targets    : []
-      };
-      
-      Policy.findByIdAndUpdate({ _id : req.body._id  },{$set:updtedPolicy},(err , result) => {
-        if(err) {console.log(err); res.status(500).send(err); }
-        else { updateTargets(req.body); }
-      });
+  let updPolicy = new Policy({
+    policy_name       : req.body.policy_name,
+    application_id    : req.body.application_id,
+    policy_type       : req.body.policy_type,
+    policy_constrains : req.body.policy_constrains,
+    policy_principals : req.body.policy_principals
+  });
 
-      function updateTargets(policy){
-        for ( let i=0;i< req.body.policy_targets.length;i++)
-        {
-          if ( req.body.policy_targets[i].resource_id === undefined ) console.log("resource Error")
-          else{
-            Resource.findById({_id : req.body.policy_targets[i].resource_id}, (err,reso) => {
-              if(reso._id != (undefined || null) && resotype._id != (undefined || null) ){         
-                ResourceType.findById({_id:reso.Resource_typeid}, (err, resotype) => {
-                  let policytargetobj = {
-                    resource_id          : reso._id,
-                    resource_name        : reso.res_name,
-                    resourceType_Id      : resotype._id,
-                    resourceType_actions : resotype.resourceType_actions
-                  } 
-                  Policy.updateOne({"_id":policy._id},
-                  {
-                    $push:{"policy_targets" :  policytargetobj}
-                  },
-                  (err, result) => { if(err) {console.log(err);} else{ console.log(result); } } )          
-                })
+  Policy.deleteOne({'_id': req.body._id},(err,r ) => {
+    if(err)  {console.log(err);}  
+    else     {
+      updPolicy.save( (err,createdObj ) => {
+        if(err)  {console.log(err);}  
+        else     {addTargets(createdObj) };
+      })
+    };
+   });
+
+  function addTargets(policy){
+    for ( let i=0;i< req.body.policy_targets.length;i++)
+    {
+      if ( req.body.policy_targets[i].resource_id === undefined ) {console.log("resource id is not proper")}
+      else {
+        Resource.findById({_id : req.body.policy_targets[i].resource_id}, (err,reso) => {
+          if (err) { console.log(err) }
+          else{          
+            ResourceType.findById({_id:reso.Resource_typeid}, (err, resotype) => {
+              if(reso._id != (undefined || null) && resotype._id != (undefined || null) )
+              {
+                let policytargetobj = {
+                  resource_id          : reso._id,
+                  resource_name        : reso.res_name,
+                  resourceType_Id      : resotype._id,
+                  resourceType_actions : resotype.resourceType_actions
+                } 
+                Policy.updateOne({"_id":policy._id},
+                {
+                  $push:{"policy_targets" :  policytargetobj}
+                },
+                (err, result) => { if(err) {console.log(err);} else { console.log(result) } } )
               }
               else{
                 console.log({"message":"resource"})
-              }      
+              }
             })
-          }
-        }
-        res.status(200).json({"message":"ok","message":"resource error"})
+          }      
+        })
       }
+    }
+    res.send({"message":"ok"});
+  }
 
 })
 
@@ -719,7 +727,7 @@ router.get('/policy/res_type_actions/:id' , (req,res,next) =>{
 }) 
 
 //add Policy Target Actions
-router.put('/addTarges' , (req,res,next) => {
+router.put('/addTargets' , (req,res,next) => {
   if (req.body != ''){
     Policy.update(
       { '_id' : req.body.policyid },

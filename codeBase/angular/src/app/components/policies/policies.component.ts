@@ -206,6 +206,9 @@ policyNameToBeDeleted : String;
         this.policy_name = this.fetchedpolicy.policy_name;
         this.policy_type = this.fetchedpolicy.policy_type;
         this.policy_constrains = this.fetchedpolicy.policy_constrains;
+        
+        this.principaltype = this.fetchedpolicy.policy_principals[0].type;
+        
         this.principalsarray =  this.fetchedpolicy.policy_principals;
         this.targetsarray = this.fetchedpolicy.policy_targets
       });
@@ -232,6 +235,7 @@ policyNameToBeDeleted : String;
             this.emptyarray();
           }
           else{
+            this.fetchPolicies();
             this.toastr.error("the fields u entered were not propper !")
           }
         }, 

@@ -13,12 +13,9 @@ export class HeaderComponent implements OnInit {
     selected_id = "";
 
     constructor(private authService : AuthService, private router : Router, private toastr : ToastrService, private http : Http) {
-        this
-            .router
-            .events
-            .subscribe(() => {
-                this.fetchApplication();
-            })
+        this.router.events.subscribe(() => {
+            this.fetchApplication();
+        })
     }
 
     collapse() {
@@ -115,5 +112,6 @@ export class HeaderComponent implements OnInit {
         if (this.se_app_id != null) {
             this.selected_id = this.se_app_id;
         }
+        this.fetchApplication();
     }
 }

@@ -100,7 +100,7 @@ appAttr = function(session_id) {
       res => {
         if(res._body=="used"||res._body=="used1") {
           this.appAttr(this.session_id);
-          this.toastr.error('Attribute is already in used.');
+          this.toastr.error('Attribute is already in use.');
           $('#deleteModal').modal('toggle');
         }
        
@@ -113,44 +113,6 @@ appAttr = function(session_id) {
       },
       err => this.toastr.error('Opps! something went wrong.'))
 }
-
-
-  // deleteAttribute = (_id) => {
-
-  //   this.attributeDataService.deleteAttribute(_id).map(res => res.json()).subscribe(
-  //     res => {
-  //       console.log("res");
-  //       // if (data.success === true ) {
-  //       //   this.appAttr(this.session_id);
-  //       //   $('#deleteModal').modal('toggle');
-  //       //   this.toastr.error('Attribute Deleted.');
-  //       //   this._router.navigate(['/attributes']);
-  //       // } else if (data.success === false) {
-  //       //   this.appAttr(this.session_id);
-  //       //   $('#deleteModal').modal('toggle');
-  //       //   this.toastr.error('Attribute Not Found. Refreshing The Attribute List.');
-  //       //   this._router.navigate(['/attributes']);
-  //       // }
-  //       if(res._body=="used") {
-  //         this.appAttr(this.session_id);
-  //         this.toastr.error('Attribute is already in used.');
-  //         $('#deleteModal').modal('toggle');
-  //       }
-  //       else {
-  //         this.appAttr(this.session_id);
-  //         this.toastr.error('Attribute Deleted.');
-  //         $('#deleteModal').modal('toggle');
-  //       }
-  //     },
-  //     err => {
-  //       this.appAttr(this.session_id);
-  //       $('#deleteModal').modal('toggle');
-   
-  //       this._router.navigate(['/attributes']);
-  //     }
-  //   );
-  // }
-
   // Get All Applications
 
   getApplications = () => {
@@ -170,11 +132,13 @@ appAttr = function(session_id) {
   // Add Attribute
   addNewAttribute = (attribute) => {
 
-
-    
     if (attribute.Name===undefined||attribute.Name===null||attribute.Name==='') {
-          this.toastr.error('Attribute name required.');
-    } else {
+          this.toastr.warning('Attribute Name is required !');
+    } 
+    else if (attribute.Type===undefined||attribute.Type===null||attribute.Type==='' ){
+      this.toastr.warning('Attribute Type is required !');
+    }
+    else {
 
        // tslint:disable-next-line:prefer-const
        let Obj_Attribute = {
@@ -189,14 +153,14 @@ appAttr = function(session_id) {
       this.attributeDataService.addAttribute(Obj_Attribute).subscribe(
         res => {
     
-                if(res._body=="unique") {
-                  this.toastr.error('Attribute already exists.');
-                }
-                else {
-                  this.appAttr(this.session_id);
-                  $('#addModal').modal('toggle');
-                  this.toastr.success('Attribute Added.');
-                }
+          if(res._body=="unique") {
+            this.toastr.error('Attribute already exists.');
+          }
+          else {
+            this.appAttr(this.session_id);
+            $('#addModal').modal('toggle');
+            this.toastr.success('Attribute Added.');
+          }
 
         },
         err => {

@@ -139,7 +139,7 @@ deleteRes = function(id) {
     res => {
       if(res._body=="used") {
         this.appRes(this.session_id);
-        this.toastr.error('Resource is already in used.');
+        this.toastr.error('Resource is already in use.');
         $('#deleteModal').modal('toggle');
       }
       else {

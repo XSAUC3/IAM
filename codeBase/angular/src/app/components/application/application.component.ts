@@ -68,7 +68,7 @@ export class ApplicationComponent implements OnInit {
       res => {
         if(res._body=="used") {
           this.fetchData();
-          this.toastr.error('Application is already in used.');
+          this.toastr.error('Application is already in use.');
           $('#deleteModal').modal('toggle');
         }
         else {
@@ -109,11 +109,10 @@ export class ApplicationComponent implements OnInit {
           this.toastr.success('Application Added.');
           
         }
-    
-    
+        
       },
       err=> {
-        //this.toastr.error('Error Please .');
+        this.toastr.error(err);
        })
     }
     

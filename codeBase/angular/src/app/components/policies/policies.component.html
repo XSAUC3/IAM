@@ -120,9 +120,9 @@
                   ngModel></textarea>
               </div>
               <h4>
-                <b>Policy Principals</b>
+                <b>Principals</b>
               </h4>
-              <label>Toggle Between Roles Or Users to Add to the Policy Principals</label>
+              <label>Toggle Between Roles Or Users and press + to Add to the Policy Principals</label>
               <div class="form-check">
                 <a class="toggle-dropdown">
                   <i class="material-icons">supervisor_account</i>
@@ -169,9 +169,9 @@
               </div>
               <div class="form-group">
                 <h4>
-                  <b>Policy Targets</b>
+                  <b>Targets</b>
                 </h4>
-                <label>Select Resources to Add to the Policy Targets</label>
+                <label>Select Resources and press + to Add to the Policy Targets</label>
                 <br>
                 <div style="display:inline-flex;width: 100%;">
                   <select class="form-control" style="width:100%;" name="pt" id="pt" [(ngModel)]="pt">
@@ -241,9 +241,9 @@
                   [(ngModel)]="policy_constrains" ></textarea>
               </div>
               <h4>
-                <b>Policy Principals</b>
+                <b>Principals</b>
               </h4>
-              <label>Toggle Between Roles Or Users to Add to the Policy Principals</label>
+              <label>Toggle Between Roles Or Users and press + to Add to the Policy Principals</label>
               <div class="form-check">
                 <a class="toggle-dropdown">
                   <i class="material-icons">supervisor_account</i>
@@ -290,9 +290,9 @@
               </div>
               <div class="form-group">
                 <h4>
-                  <b>Policy Targets</b>
+                  <b>Targets</b>
                 </h4>
-                <label>Select Resources to Add to the Policy Targets</label>
+                <label>Select Resources and press + to Add to the Policy Targets</label>
                 <br>
                 <div style="display:inline-flex;width: 100%;">
                   <select class="form-control" style="width:100%;" name="pt" id="pt" [(ngModel)]="pt">
@@ -346,7 +346,7 @@
           <span>Policy Type: {{policy_type}}</span>
           <p class="text-muted">Policy Constrains: {{policy_constrains}}</p>
           <hr>
-          <h4>Policy Principals</h4>
+          <h4>Principals</h4>
           <ul class="list-group">
             <li class="list-group-item" *ngFor="let ipp of principalsarray">
               <span class="is-primary">{{ipp.name}}
@@ -355,7 +355,7 @@
             </li>
           </ul>
           <hr>
-          <h4>Policy Targets</h4>
+          <h4>Targets</h4>
           <p>Initial Action States are not set , select action state by clicking the wrench button !</p>
           <ul class="list-group">
             <li class="list-group-item" *ngFor="let ipt of targetsarray">
@@ -402,7 +402,7 @@
                         <p><b>Refer to the current actions state here !</b></p>
                         <ul class="list-group">
                           <li class="list-group-item" style="background-color:transparent" *ngFor="let action of actions"  >
-                            <kbd><b>{{action.action_name}} : {{action.action_state}}</b></kbd>
+                            <kbd><b>{{action.action_name}} : <a *ngIf="action.action_state">enabled</a> <a *ngIf="!action.action_state">disabled</a></b></kbd>
                           </li>
                         </ul>
           </div>

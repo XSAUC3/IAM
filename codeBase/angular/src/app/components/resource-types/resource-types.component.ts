@@ -105,7 +105,7 @@ appResT = function(session_id) {
         res => {
           if(res._body=="used"||res._body=="used1") {
             this.appResT(this.session_id);
-            this.toastr.error('Resource-Type is already in used.');
+            this.toastr.error('Resource-Type is already in use.');
             $('#deleteModal').modal('toggle');
           }
          
