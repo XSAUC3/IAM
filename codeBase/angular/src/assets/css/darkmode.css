@@ -41,6 +41,11 @@ nav {
     color: #fff;
 }
 
+#selectapp{
+    background-color: black;
+    color: #fff;
+}
+
 .list-group-item{
     background-color: transparent;
 }

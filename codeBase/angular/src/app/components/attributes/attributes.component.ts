@@ -1,6 +1,5 @@
-import {addAttribute,updateAttribute,deleteAttribute,allAttributes,attributes_fetchByAppId,attributeById,filterAttributes} from '../../routeConfig';
+import {Applications, addAttribute,updateAttribute,deleteAttribute,allAttributes,attributes_fetchByAppId,attributeById,filterAttributes} from '../../routeConfig';
 import { ResourceTypesComponent } from './../resource-types/resource-types.component';
-import { AttributeDataService } from './services/attribute-data.service';
 import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -20,6 +19,7 @@ declare var $;
 })
 export class AttributesComponent implements OnInit {
   public loading = false;
+  private headers = new Headers({ 'Content-Type': 'application/json'});
   applications = [];
   attributes = [];
   uData = {};
@@ -41,30 +41,11 @@ export class AttributesComponent implements OnInit {
   constructor(private _router: Router,
               private http: Http,
               private route: ActivatedRoute,
-              private toastr: ToastrService,
-              private attributeDataService: AttributeDataService) {}
+              private toastr: ToastrService) {}
 
   ngOnInit() {
-
-  //  this.fetchData();
     this.appAttr(this.session_id);
-  
-
-    //this.fetchData();
-   // this.getApplications();
-
-  }
-
-  // Fetch All Attributes
-  fetchData = () => {
-    this.attributeDataService.getAllAttributes().subscribe(
-      data => {
-        this.attributes = data.Attributes;
-      },
-      err => {
-        this.toastr.error('Something Went Wrong While Fetching Attributes.');
-      }
-    );
+    //this.getApplications();
   }
 
   // Refresh Page
@@ -81,9 +62,8 @@ appAttr = function(session_id) {
     this.loading = false;
      this.attributes = res.json();
 
-  
    }
-  )
+  );
   }  
 
   // Set Delete Attribute
@@ -116,14 +96,15 @@ appAttr = function(session_id) {
   // Get All Applications
 
   getApplications = () => {
-    this.attributeDataService.getAllApplications().subscribe(
+
+    this.http.get(Applications, {headers: this.headers})
+    .map(res => res.json())
+    .subscribe(
       data => {
-  
         this.applications = data;
         //this.toastr.info('Fetched Apllication List Successfully.');
       },
       err => {
-  
         this.toastr.error('Something Went Wrong.');
       }
     );
@@ -133,10 +114,10 @@ appAttr = function(session_id) {
   addNewAttribute = (attribute) => {
 
     if (attribute.Name===undefined||attribute.Name===null||attribute.Name==='') {
-          this.toastr.warning('Attribute Name is required !');
+          this.toastr.error('Attribute Name is required !');
     } 
     else if (attribute.Type===undefined||attribute.Type===null||attribute.Type==='' ){
-      this.toastr.warning('Attribute Type is required !');
+      this.toastr.error('Attribute Type is required !');
     }
     else {
 
@@ -150,49 +131,49 @@ appAttr = function(session_id) {
         Single_Multiple  : attribute.Single_Multiple
     };
 
-      this.attributeDataService.addAttribute(Obj_Attribute).subscribe(
-        res => {
+    this.http.post(addAttribute, Obj_Attribute, {headers: this.headers})
+    .map(res => res.json())
+    .subscribe(
+      res => {
     
-          if(res._body=="unique") {
-            this.toastr.error('Attribute already exists.');
-          }
-          else {
-            this.appAttr(this.session_id);
-            $('#addModal').modal('toggle');
-            this.toastr.success('Attribute Added.');
-          }
-
-        },
-        err => {
-    
+        if(res._body=="unique") {
+          this.toastr.error('Attribute already exists.');
         }
-      );
+        else {
+          this.appAttr(this.session_id);
+          $('#addModal').modal('toggle');
+          this.toastr.success('Attribute Added.');
+        }
+
+      },
+      err => {
+  
+      }
+    );
     }
   }
 
   // Edit Attribute
   editAttribute = (_id) => {
 
-    this.attributeDataService.getAttributeById(_id).subscribe(
+    this.http.get(attributeById + "?_id=" + _id, {headers: this.headers})
+    .map(res => res.json())
+    .subscribe(
       data => {
         if (data.success === true) {
           this.uData = data.Attribute;
         } else if (data.success === false) {
           this.appAttr(this.session_id);
-          //this.fetchData();
           $('#updateModal').modal('toggle');
           this.toastr.error('Attribute Not Found. Refreshing The Attribute List');
         }
       },
       err => {
         this.appAttr(this.session_id);
-        //this.fetchData();
         $('#updateModal').modal('toggle');
         this.toastr.error('Something Went Wrong.');
       }
     );
-
-    // this.getApplications();
   }
 
   // Update Attribute
@@ -214,33 +195,30 @@ appAttr = function(session_id) {
       Single_Multiple  : updateData.Single_Multiple
       };
 
-      this.attributeDataService.updateAttribute(Obj_Attribute).subscribe(
-        data => {
-          if (data.success === true) {
+      this.http.put(updateAttribute, Obj_Attribute, {headers: this.headers})
+        .map(res => res.json())
+        .subscribe(
+          data => {
+            if (data.success === true) {
+              $('#updateModal').modal('toggle');
+              this._router.navigate(['/attributes']);
+              this.appAttr(this.session_id);
+              this.toastr.info('Attribute Updated.');
+            } else if (data.success === false) {
+              $('#updateModal').modal('toggle');
+              this._router.navigate(['/attributes']);
+              this.appAttr(this.session_id);
+              this.toastr.error('Attribute Not Found. Refreshing The Attribute List.');
+            }
+          },
+          err => {
             $('#updateModal').modal('toggle');
             this._router.navigate(['/attributes']);
             this.appAttr(this.session_id);
-            //this.fetchData();
-            this.toastr.info('Attribute Updated.');
-          } else if (data.success === false) {
-            $('#updateModal').modal('toggle');
-            this._router.navigate(['/attributes']);
-            this.appAttr(this.session_id);
-            //this.fetchData();
-            this.toastr.error('Attribute Not Found. Refreshing The Attribute List.');
+            this.toastr.error('Something Went Wrong.');
           }
-        },
-        err => {
-          $('#updateModal').modal('toggle');
-          this._router.navigate(['/attributes']);
-          this.appAttr(this.session_id);
-          //this.fetchData();
-          this.toastr.error('Something Went Wrong.');
-        }
-      );
+        );
     }
   }
-
- 
 
 }

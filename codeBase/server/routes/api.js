@@ -41,8 +41,9 @@ router.post('/addApp', (req, res, next) => {
     app_description : req.body.app_description,
   });
   newApp.save( (err,createdObj ) => {
-    if(err)  res.send("unique");   
-    else     res.status(200).send(createdObj); 
+    if(err)                         res.status(500).send('Application is already Exist..!');   
+    else if(createdObj.length !=0)  res.status(200).send(createdObj);
+    else                            res.status(500).send('Application is already Exist..!');
   })
 });
 
@@ -64,15 +65,15 @@ router.put('/updateApp/:id' , (req,res,next) => {
 router.delete('/delApp/:id' , (req,res,next) => {
   Policy.find({application_id:req.params.id}).count((err,data)=>{
    
-     if(data==0) {
+    if(data==0) {
       App.findByIdAndRemove({_id: req.params.id},function(err, docs){
-      if(err) { res.sendStatus(403); }
-      else    { res.sendStatus(200); }
-    });
-     }
-     else{
-       res.send("used");
-     }
+        if(err) { res.sendStatus(403); }
+        else    { res.sendStatus(200); }
+      });
+      }
+      else{
+        res.status(403).send("used");
+    }
   })
 
 });
@@ -120,7 +121,7 @@ router.post('/addResourceType', (req, res, next) => {
         })
          }
          else {
-          res.send("unique");
+          res.status(500).send("unique"); 
            
          }
    });
@@ -200,14 +201,12 @@ router.get('/attribute/fetchByAppAndType/:app_id', (req,res,next) =>{
     
     newAttribute.save((err, attribute) =>{
      
-      if(err)  res.send(err);  
-       else    res.status(200).send(attribute); 
+      if(err)  res.status(500).send(err);  
+       else    res.status(200).send(attribute);  
          })
           }
              else {
-              res.send("unique");
-              console.log("hello");
-               
+              res.status(500).send("unique");
              }
      });
 
@@ -217,7 +216,7 @@ router.get('/attribute/fetchByAppAndType/:app_id', (req,res,next) =>{
   router.put('/attributes/updateAttribute' , (req,res,next) => {
     Attribute.findByIdAndUpdate({_id: req.body._id }, {$set:req.body}, {new: true}, (err , attribute) => {
       if(err) {res.status(500).json({Error: err["errmsg"]}); console.log(err); }
-      else if(attribute == null) { res.status(404).json({success: false, msg: 'Attribute Not Found'}); } 
+      else if(attribute == null) { res.status(500).json({success: false, msg: 'Attribute Not Found'}); } 
       else    {res.status(200).json({success: true, Attribute: attribute});}
     });
   });
@@ -238,22 +237,8 @@ router.get('/attribute/fetchByAppAndType/:app_id', (req,res,next) =>{
        });
       }
     else {
-      res.send("used");
+      res.status(403).send("used");
     }
-    //////////////
-
-
-  //     if(data==0) {
-  //  Attribute.findByIdAndRemove({_id: req.query._id}, (err, attribute) => {
-  //   if(err) { res.status(500).json({Error: err["errmsg"]}); console.log(err);}
-  //   else if(attribute == null) { res.status(404).json({success: false, msg: 'Attribute Not Found'}); }
-  //   else    { res.status(200).json({success: true, Deleted_Attribute: attribute}); }
-  // });
-  //     }
-  //     else {
-
-  //       res.send("used");
-  //     }
     })
  
   });
@@ -283,120 +268,6 @@ router.get('/attribute/fetchByAppAndType/:app_id', (req,res,next) =>{
     });
   });
 
-  //#endregion
-
-  //#region Filter Attribute By Name And/Or By Type And/Or By DataType
-
-    // Filter Attributes
-    router.get('/attributes/filterAttributes', (req, res, next) => {
-
-      if((req.query.Name !== undefined && req.query.Name !== null) && 
-         (req.query.Type === undefined || req.query.Type === null) &&
-         (req.query.DataType === undefined || req.query.DataType === null)){
-
-          Attribute.find({'Name': {'$regex': req.query.Name, '$options': 'i'}}, (err, attributes) => {
-            if(err){
-              res.status(500).json({Error: err});
-            }else if(attributes == null){
-              res.status(200).json({success: false, msg: 'No Attributes With Matching Name Filter'});
-            }else {
-              res.status(200).json({success: true, Attributes: attributes});
-            }
-          });
-
-      }else if((req.query.Type !== undefined && req.query.Type !== null) && 
-               (req.query.Name === undefined || req.query.Name === null) &&
-               (req.query.DataType === undefined || req.query.DataType === null)) {
-
-                Attribute.find({'Type': {'$regex': req.query.Type, '$options': 'i'}}, (err, attributes) => {
-                  if(err){
-                    res.status(500).json({Error: err});
-                  }else if(attributes == null){
-                    res.status(200).json({success: false, msg: 'No Attributes With Matching Type Filter'});
-                  }else {
-                    res.status(200).json({success: true, Attributes: attributes});
-                  }
-                });
-
-      }else if((req.query.DataType !== undefined && req.query.DataType !== null) && 
-               (req.query.Name === undefined || req.query.Name === null) &&
-               (req.query.Type === undefined || req.query.Type === null)) {
-
-                Attribute.find({'DataType': {'$regex': req.query.DataType, '$options': 'i'}}, (err, attributes) => {
-                  if(err){
-                    res.status(500).json({Error: err});
-                  }else if(attributes == null){
-                    res.status(200).json({success: false, msg: 'No Attributes With Matching DataType Filter'});
-                  }else {
-                    res.status(200).json({success: true, Attributes: attributes});
-                  }
-                });
-      
-      }else if((req.query.Name !== undefined && req.query.Name !== null) &&
-               (req.query.Type !== undefined && req.query.Type !== null) &&
-               (req.query.DataType === undefined || req.query.DataType === null)) {
-
-                Attribute.find({'Name': {'$regex': req.query.Name, '$options': 'i'},
-                                'Type': {'$regex': req.query.Type, '$options': 'i'}}, (err, attributes) => {
-                  if(err){
-                    res.status(500).json({Error: err});
-                  }else if(attributes == null){
-                    res.status(200).json({success: false, msg: 'No Attributes With Matching Name Filter'});
-                  }else {
-                    res.status(200).json({success: true, Attributes: attributes});
-                  }
-                });
-
-      }else if((req.query.Type !== undefined && req.query.Type !== null) &&
-               (req.query.DataType !== undefined && req.query.DataType !== null) &&
-               (req.query.Name === undefined || req.query.Name === null)) {
-
-                Attribute.find({'Type': {'$regex': req.query.Type, '$options': 'i'},
-                                'DataType': {'$regex': req.query.DataType, '$options': 'i'}}, (err, attributes) => {
-                  if(err){
-                    res.status(500).json({Error: err});
-                  }else if(attributes == null){
-                    res.status(200).json({success: false, msg: 'No Attributes With Matching Type Filter'});
-                  }else {
-                    res.status(200).json({success: true, Attributes: attributes});
-                  }
-                });
-
-      }else if((req.query.DataType !== undefined && req.query.DataType !== null) &&
-               (req.query.Name !== undefined && req.query.Name !== null) &&
-               (req.query.Type === undefined || req.query.Type === null)) {
-            
-                Attribute.find({'DataType': {'$regex': req.query.DataType, '$options': 'i'},
-                                'Name': {'$regex': req.query.Name, '$options': 'i'}}, (err, attributes) => {
-                  if(err){
-                    res.status(500).json({Error: err});
-                  }else if(attributes == null){
-                    res.status(200).json({success: false, msg: 'No Attributes With Matching DataType Filter'});
-                  }else {
-                    res.status(200).json({success: true, Attributes: attributes});
-                  }
-                });
-
-      }else if((req.query.Name !== undefined && req.query.Name !== null) &&
-               (req.query.Type !== undefined && req.query.Type !== null) &&
-               (req.query.DataType !== undefined || req.query.DataType !== null)) {
-   
-                Attribute.find({'Name': {'$regex': req.query.Name, '$options': 'i'},
-                                'Type': {'$regex': req.query.Type, '$options': 'i'},
-                                'DataType': {'$regex': req.query.DataType, '$options': 'i'}} , (err, attributes) => {
-                  if(err){
-                    res.status(500).json({Error: err});
-                  }else if(attributes == null){
-                    res.status(200).json({success: false, msg: 'No Attributes With Matching Name Filter'});
-                  }else {
-                    res.status(200).json({success: true, Attributes: attributes});
-                  }
-                });          
-      }
-
-    });
-
-  //#endregion
 //#endregion
 
 
@@ -428,12 +299,12 @@ router.post('/role/addRole', (req, res, next) => {
         Application_id : req.body.Application_id, 
       });
       newRole.save( (err,createdObj ) => {
-        if(err)  res.send(err);  
+        if(err)  res.status(500).send(err);  
         else     res.status(200).send(createdObj); 
       })
          }
          else {
-          res.send("unique");
+          res.status(500).send("unique");
          }
    });
 
@@ -506,8 +377,7 @@ Resource.find({res_name:req.body.res_name}).where('application_id').equals(req.b
     })
        }
        else {
-        res.send("unique");
-         
+        res.status(500).send("unique");
        }
  });
 
@@ -561,7 +431,7 @@ router.delete('/DeleteResource/:id' , (req,res,next) => {
  });
     } 
     else {
-res.send("used");
+res.status(403).send("used");
     }
   })
 });
@@ -652,17 +522,19 @@ router.post('/addPolicy', (req, res, next) => {
             })
           }
         }
-        res.send({"message":"ok"});
+        res.status(200).send({"message":"ok", "data" : newPolicy});
       }
     }
     else{
-      res.json({"message":"unique"});
+      res.status(500).json({"message":"unique"});
     }
   });
 });
 
 // edit Policy
 router.put('/updatePolicy' , (req,res,next) => {
+
+  console.log(req.body);  
 
   let updPolicy = new Policy({
     policy_name       : req.body.policy_name,
@@ -766,9 +638,9 @@ router.post('/user/Add', (req, res, next) => {
   });
   User.addUser(NewUser, (err, user) => {
     if(err) {
-      res.json({success: false, msg: 'Failed to register user'});
+      res.status(500).json({success: false, msg: 'Failed to register user'});
     } else {
-      res.json({success: true, msg: 'User registered'});
+      res.status(200).json({success: true, msg: 'User registered', data: user});
     }
   });
 });
@@ -777,7 +649,7 @@ router.post('/user/Add', (req, res, next) => {
 router.get('/users/all', (req, res, next) => {
   User.find({}, function(err, users) {
     if (err) res.json(err) ;
-    res.json(users);  
+    res.json(users);
   });
 });
 
@@ -795,9 +667,9 @@ router.put('/UpdateUser/:id' , (req,res,next) => {
   
   User.UpdateUser(id, req.body, (err, user) => {
       if(err) {
-        res.json({success: false, msg: 'Failed to register user'});
+        res.status(500).json({success: false, msg: 'Failed to register user'});
       } else {
-        res.json({success: true, msg: 'User registered'});
+        res.status(200).json({success: true, msg: 'User registered'});
       }
     });
 });

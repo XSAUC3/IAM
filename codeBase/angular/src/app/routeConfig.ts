@@ -61,9 +61,10 @@ var user           = addr + '/user/';
 var UpdateUser     = addr + '/UpdateUser/';
 var DelUser        = addr + '/DelUser/';
 
-var connectLDAP             = link + '/connectLDAP'
-var GetLDAPConfiguration    = link + '/configure/GetConfig'
-var SetLDAPConfiguration    = link + '/configure/SetConfig'
+var connectLDAP             = link + '/connectLDAP';
+var CheckPara               = link + '/connectLDAP/Authenticate';
+var GetLDAPConfiguration    = link + '/configure/GetConfig';
+var SetLDAPConfiguration    = link + '/configure/SetConfig';
 
 var authenticate               = usr + '/authenticate';
 var ForgotPassword             = usr + '/ForgotPassword';
@@ -88,5 +89,5 @@ export {addr,
 
     authenticate,ForgotPassword,ForgotPassword_id_token,ChangePassword,
 
-    connectLDAP,GetLDAPConfiguration,SetLDAPConfiguration
+    connectLDAP,GetLDAPConfiguration,SetLDAPConfiguration,CheckPara
 };

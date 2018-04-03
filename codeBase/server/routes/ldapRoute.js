@@ -4,6 +4,32 @@ const ldap = require('ldapjs');
 const ldap_config = require('./../models/LDAPSchema'); 
 
 
+router.post('/Authenticate', (req, res, next) => {
+    console.log(req.body);
+    
+    const client = ldap.createClient({
+        url:req.body.url,
+        // reconnect: true
+    });
+
+    client.on('error', function(err) {
+        console.log('LDAP connection failed, but fear not, it will reconnect OK', err);
+        if(err){
+            res.json({success : false, msg : 'Invalid URL Given by you.'});
+        }
+    });
+
+    client.bind(req.body.admin_uid_basedn, req.body.admin_password, function(err) {
+        if(err) {
+            res.json({success : false, msg : 'Invalid Credentials..!'});
+        } else {
+            res.json({success : true, msg : 'Connect Successfully..!'});
+        }
+    });
+
+});
+
+
 router.get('/', (req, res, next) => {
 
     ldap_config.find({}, (err, obj) => {

@@ -19,7 +19,7 @@
           <li class="navbar-form">
             <a class="dropdown-toggle">
               <i class="material-icons">folder_open</i>
-              <select style="border: none; background: transparent; border:2px solid orange;" (change)="getAppId()" placeholder="app" [(ngModel)]="selected_id">
+              <select id="selectapp" style="border: none; background: transparent; border:2px solid orange;" (change)="getAppId()" placeholder="app" [(ngModel)]="selected_id">
                 <option value="" selected disabled="true">Select Application</option>
                 <option *ngFor="let application of applications" value={{application._id}}>{{application.app_name}}</option>
               </select>

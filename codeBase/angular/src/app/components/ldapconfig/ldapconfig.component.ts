@@ -1,4 +1,4 @@
-import { connectLDAP, GetLDAPConfiguration, SetLDAPConfiguration } from './../../routeConfig';
+import { connectLDAP, GetLDAPConfiguration, SetLDAPConfiguration, CheckPara } from './../../routeConfig';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute,Router } from '@angular/router';
@@ -47,6 +47,37 @@ export class LdapconfigComponent implements OnInit {
     _router: Router, 
     private route: ActivatedRoute
   ) { }
+
+  checkParams = function(){
+    let obj =  {
+      port                :   this.port,
+      url                 :   this.url,
+      admin_uid_basedn    :   this.admin_uid,
+      admin_password :   this.admin_password
+    }
+
+    console.log(obj);    
+
+    if(this.url != (null || undefined || '') && this.port != (null || undefined || '') && this.admin_uid_basedn != (null || undefined || '') && this.admin_password != (null || undefined || '')){
+      this.http.post(CheckPara, obj ,  {Headers : this.headers} ).subscribe(res => {
+        this.ans = res.json();
+        console.log(this.ans);
+        let temp = this.ans['data'];
+        
+        if(this.ans['success'] == true){
+          this.toastr.success(this.ans['msg']);
+        }
+        else if(this.ans['success'] == false){
+          this.toastr.error(this.ans['msg']);
+        }
+      },
+      err=> {
+        console.log(err);
+      });
+    } else {
+      this.toastr.error('All Fields are requered for testing the connection ..!');
+    }
+  }
 
   addconfig = function(data){
     console.log(data);

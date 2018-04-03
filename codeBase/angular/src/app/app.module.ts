@@ -28,7 +28,6 @@ import { PoliciesComponent } from './components/policies/policies.component';
 import { LoginComponent } from './components/login/login.component';
 import { LdapconfigComponent } from './components/ldapconfig/ldapconfig.component';
 
-import { AttributeDataService } from './components/attributes/services/attribute-data.service';
 //login
 import { AuthService } from './components/login/services/auth.service';
 
@@ -80,7 +79,7 @@ import { RouteGuardGuard } from './route-guard/route-guard.guard';
       
     ])
   ],
-  providers: [AttributeDataService,AuthService, RouteGuardGuard],
+  providers: [AuthService, RouteGuardGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
