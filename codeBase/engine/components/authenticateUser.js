@@ -37,14 +37,12 @@ authenticate = function(username, password){
                             }
                         });
                     }).then(() => {
-                        try {
-                            const client = ldap.createClient({
-                                url: LDAPData.Url
-                            });
-                        }
-                        catch(ex){
-                            rejectAuth(false)
-                        }
+                        const client = ldap.createClient({
+                            url: LDAPData.Url
+                        });
+                        client.on('error', () => {
+                            rejectAuth(false); 
+                        });
                         const opts = {
                             filter: LDAPData.UserBase_Filter,
                             scope: LDAPData.UserSearch_Scope

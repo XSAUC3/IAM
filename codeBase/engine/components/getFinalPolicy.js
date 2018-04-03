@@ -12,10 +12,10 @@ getPolicies = function (obj) {
                 let appid = hashTable.get('appid');
                 let roles = hashTable.get('roles');
                 let resname = obj.resource[i].resource_id.split('/')[2];
-
+                
                 Policy.findOne({
                     'policy_type'       : 'grant',
-                    'application_id'    : appid,
+                    'application_id'    : appid._id,
                     'policy_targets'    : { $elemMatch: {'resource_name': resname } },
                     'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': obj.resource[i].action}}}}
                 },
@@ -24,7 +24,6 @@ getPolicies = function (obj) {
                 .where({ $or : [ { 'policy_principals.name' : obj.username } , { 'policy_principals.id' : { $in : roles} } ] })
                 //.where({'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': obj.resource[i].action}}}}})
                 .then(async policy=>{
-                    
                     if ( await IdentifyingAttributes.getPolicyConstraintAttributes(policy.policy_constrains) || policy.policy_constrains == ( null || undefined || '' ) ){
                         var options = {
                             keys: ['resourceType_actions.action_name' , 'resource_name']
