@@ -7,7 +7,7 @@ generateObject = function(obj) {
             for(j=0;j<obj.resource.length;j++){
                 let finalresource = {
                     resource_id : obj.resource[i].resource_id,
-                    actions : obj.resource[i].action[i],
+                    actions : obj.resource[i].action,
                     privilage : hashTable.get('privilage')[i]
                 }
                 finalresourcearray.push(finalresource);
@@ -19,6 +19,7 @@ generateObject = function(obj) {
                 resource : finalresourcearray,
             }
             resolve(finalObject)
+            hashTable.clear();
         })
         
 

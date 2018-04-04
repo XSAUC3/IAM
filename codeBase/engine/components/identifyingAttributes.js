@@ -34,9 +34,10 @@ async function FindAttribute(attribute){
 }
 
 async function checkAttributesInRequestObj(dynamicAttribute) {
-    //console.log("aatr name : " + dynamicAttribute);
+    
   //check in reqObj
-  var obj = hashTable.get('request_object');
+  var obj = hashTable.get('request');
+  //console.log("aatr name : " + dynamicAttribute);
   // hashTable.get('request_object',(obj)=> {
         let requestAttributeArray = [];
                 for(var i=0;i<obj.resource.length;i++) {
@@ -50,7 +51,7 @@ async function checkAttributesInRequestObj(dynamicAttribute) {
                  };
                  var fuseSearch = new Fuse(requestAttributeArray,options);
                  var attributeSearchResult = fuseSearch.search(dynamicAttribute);
-                 //console.log("Search Result  :" + dynamicAttribute  + " : "+ attributeSearchResult);
+                // console.log("Search Result  :" + dynamicAttribute  + " : "+ attributeSearchResult);
                  return(attributeSearchResult)
    // });
 //return attributeSearchResult;
@@ -81,7 +82,7 @@ module.exports.getPolicyConstraintAttributes = async (policy) => {
             var attributeDetails = {};
             attributeDetails = await FindAttribute(attribute);
             if(attributeDetails == null || attributeDetails == undefined){
-                console.log('not found in mongoDB');
+                console.log('Attribute not found in mongoDB');
                 //console.log("req valv : ",await checkAttributesInRequestObj(attribute));
 
                 let DynamicAttribute = {};
@@ -189,4 +190,3 @@ console.log("PIP called - " + pipAttributesToBeFetched+" : "+attributeValue);
 return(attributeValue);
 
     };
-  

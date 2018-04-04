@@ -7,4 +7,3 @@ const AppSchema = mongoose.Schema({
 });
 
 const App = module.exports = mongoose.model('applications', AppSchema);
-

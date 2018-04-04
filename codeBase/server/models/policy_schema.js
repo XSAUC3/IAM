@@ -22,7 +22,7 @@ const PolicySchema = mongoose.Schema(
                                             "resourceType_actions"  : [ 
                                                                         { 
                                                                             "action_name"   : { type : String  },
-                                                                            "action_state"  : { type : Boolean }    
+                                                                            "action_state"  : { type : Boolean, default: false }    
                                                                         }  
                                                                       ]
                                         }

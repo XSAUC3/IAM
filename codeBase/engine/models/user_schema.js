@@ -3,37 +3,71 @@ const config = require('../config/database');
 const bcrypt = require('bcryptjs');
 
 const UserSchema = mongoose.Schema({
-	"name"   :   { type: String,  required: true },
-  	"username"   :   { type: String,  required: true },
-  	"password"   :   { type: String,  required: true },
-	"email"   :   { type: String,  required: true },
+	"name"   :   { type: String},
+  "username"   :   { type: String},
+  "password"   :   { type: String },
+	"email"   :   { type: String, },
 	"role"   :   [
-					{
-						"role_id" : {type:String},
-						"role_name": {type:String}
-					}
+		{
+			"role_id" : {type:String},
+			"role_name": {type:String}
+		}
 	],
 	"status"   :   { type: Boolean,  default: true }
 });
 
+
 const User = module.exports = mongoose.model('users', UserSchema);
 
-module.exports.comparePassword = function(candidatePassword, hash, callback) {
-	bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
-	if(err) console.log(err);
-	callback(null, isMatch);
-	});
-}
-
-module.exports.UpdateUser = function(username, password, callback) {
-	bcrypt.genSalt(10, (err, salt) => {
-		  bcrypt.hash(password, salt, (err, hash) => {
-			  if(err) console.log(err);
-			  password = hash;
-			  User.findOneAndUpdate({username : username}, {password : password}, function (err, data) {
-				  if (err) return handleError(err);
-				  callback(null, data);
-			  });
-		  });
+module.exports.getUserById = function(id, callback) {
+	User.findById(id, callback);
+  }
+  
+  module.exports.getUserByUsername = function(username, callback) {
+	const query = {username: username}
+	User.findOne(query, callback);
+  }
+  
+  module.exports.comparePassword = function(candidatePassword, hash, callback) {
+	  bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
+		if(err) console.log(err);
+		callback(null, isMatch);
 	  });
-}
+	}
+
+	module.exports.addUser = function(newUser, callback) {
+		bcrypt.genSalt(10, (err, salt) => {
+			bcrypt.hash(newUser.password, salt, (err, hash) => {
+				if(err) console.log(err);
+				newUser.password = hash;
+				newUser.save(callback);
+			});
+		});
+	}
+
+	module.exports.changePassword = function(data, callback) {
+	  bcrypt.genSalt(10, (err, salt) => {
+			bcrypt.hash(data.password, salt, (err, hash) => {
+				if(err) console.log(err);
+				data.password = hash;
+				User.findByIdAndUpdate(data.id, { $set: { password: data.password}}, function (err, data) {
+					if (err) return handleError(err);
+					callback(null, data);
+				});
+			});
+		});
+	}
+
+	module.exports.UpdateUser = function(id, UpdateUser, callback) {
+	  bcrypt.genSalt(10, (err, salt) => {
+			bcrypt.hash(UpdateUser.password, salt, (err, hash) => {
+				if(err) console.log(err);
+				UpdateUser.password = hash;
+				User.findByIdAndUpdate(id, UpdateUser, function (err, data) {
+					if (err) return handleError(err);
+					callback(null, data);
+				});
+			});
+		});
+	}
+	

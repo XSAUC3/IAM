@@ -12,36 +12,42 @@ getPolicies = function (obj) {
                 let appid = hashTable.get('appid');
                 let roles = hashTable.get('roles');
                 let resname = obj.resource[i].resource_id.split('/')[2];
-                
+
                 Policy.findOne({
                     'policy_type'       : 'grant',
                     'application_id'    : appid._id,
-                    'policy_targets'    : { $elemMatch: {'resource_name': resname } },
-                    'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': obj.resource[i].action}}}}
+                    'policy_targets'    : { $elemMatch: {'resource_name': resname } }
+                    ,'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': obj.resource[i].action}}}}
                 },
                     {'policy_constrains': 1, 'policy_targets' : 1 , '_id' : 0 },   
                 )
                 .where({ $or : [ { 'policy_principals.name' : obj.username } , { 'policy_principals.id' : { $in : roles} } ] })
                 //.where({'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': obj.resource[i].action}}}}})
                 .then(async policy=>{
-                    if ( await IdentifyingAttributes.getPolicyConstraintAttributes(policy.policy_constrains) || policy.policy_constrains == ( null || undefined || '' ) ){
+                    // console.log('policy : ',policy);
+                    if(policy == null ) reject('no policy found from given data !')
+                    else if ( await IdentifyingAttributes.getPolicyConstraintAttributes(policy.policy_constrains)|| policy.policy_constrains == ( null || undefined || '' ) ){
                         var options = {
-                            keys: ['resourceType_actions.action_name' , 'resource_name']
+                            keys: ['resource_name' ]
                             ,id: 'resourceType_actions'
                             }
                         var fuse = new Fuse(policy.policy_targets, options)
+                        // hashTable.add('privilage',fuse.search(obj.resource[i].action));
+                        var actions = fuse.search(resname)
+                        console.log('act_st: ', fuse.search(resname));
 
-                        console.log(fuse.search(resname)[0].action_state);
-                         
-                        if(fuse.search(resname)[0].action_state == undefined){
-                            hashTable.add('privilage',false);
-                        }
-                        else{
-                            hashTable.add('privilage',fuse.search(resname)[0].action_state);
-                        }
+                        var options2 = {
+                            keys: ['action_name' ]   }
+
+                        var fuse2 = new Fuse(actions,options2)
+
+                        hashTable.add('privilage',fuse2.search(obj.resource[i].action)[0].action_state);
+                      
                     }
                     else{
+                       console.log('in else cond');
                         hashTable.add('privilage',false);
+                    
                     }
                     pass('ok!');
                 })
@@ -55,3 +61,5 @@ getPolicies = function (obj) {
 }
 
 exports.getPolicies = getPolicies;
+
+

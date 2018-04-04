@@ -17,12 +17,10 @@ router.post('/', (req, res) => {
                         .then(() => {
                             activity4.generateObject(obj)
                                 .then((finalObject) => {
-                                    console.log("hi");
-                                    
                                     res.send(finalObject);
                                 })
                         })
-                        .catch(()=>'somthings went wrong with policy constrains !')
+                        .catch((err)=>res.send(err))
                 })
                 .catch((err)=>res.send('username and pass does not match !' + err ))
          })
