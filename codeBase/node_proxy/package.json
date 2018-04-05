@@ -1,0 +1,18 @@
+{
+  "name": "node_proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "cors": "*",
+    "express": "*",
+    "http-proxy-middleware": "^0.18.0",
+    "request": "^2.85.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
