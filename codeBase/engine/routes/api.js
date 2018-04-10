@@ -14,8 +14,8 @@ router.post('/', (req, res) => {
             activity2.authenticate(obj.username, obj.password)
                 .then(() => {
                     activity3.getPolicies(obj)
-                        .then(() => {
-                            activity4.generateObject(obj)
+                        .then((privilege) => {
+                            activity4.generateObject(obj,privilege)
                                 .then((finalObject) => {
                                     res.send(finalObject);
                                 })

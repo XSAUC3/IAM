@@ -7,8 +7,9 @@ var hashTable = require('node-hashtable');
 
 getPolicies = function (obj) {
     return new Promise((resolve, reject) => {
-        return new Promise((pass,fail)=>{
             for (let i = 0; i < obj.resource.length ; i++) {
+
+                var privilegearray = []
 
                 let appid = hashTable.get('appid');
                 let roles = hashTable.get('roles');
@@ -26,8 +27,8 @@ getPolicies = function (obj) {
                 //.where({'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': obj.resource[i].action}}}}})
                 .then(async policy=>{
                     // console.log('policy : ',policy);
-                    if(policy == null ) reject('no policy found from given data !')
-                    else if ( await IdentifyingAttributes.getPolicyConstraintAttributes(policy.policy_constrains,resname)|| policy.policy_constrains == ( null || undefined || '' ) ){
+                    if (policy == null ) reject('no policy found from given data !')
+                    if (policy.policy_constrains == ( null || undefined || '' ) ){
                         console.log("Current Resource : " +resname);
                         var options = {
                             keys: ['resource_name' ]
@@ -42,24 +43,23 @@ getPolicies = function (obj) {
 
                         var fuse2 = new Fuse(actions,options2)
 
-                        hashTable.add('privilage',fuse2.search(obj.resource[i].action)[0].action_state);
+                        privilegearray.push(fuse2.search(obj.resource[i].action)[0].action_state);
+                        console.log('\x1b[36m%s\x1b[0m',fuse2.search(obj.resource[i].action)[0].action_state);
+
                         let resourceAttribute = await resourceAttributes.returnAttributes(obj.resource[i].resource_return_attributes,resname)
                         hashTable.add('resAttr',resourceAttribute);
                       
                     }
                     else{
                        console.log('in else condition');
-                        hashTable.add('privilage',false);
-                    
+                       privilegearray.push(false)
                     }
-                    pass('ok!');
+                    if(i+1 === obj.resource.length){
+                        setTimeout(()=>{ resolve(privilegearray) }, 100);
+                    }
                 })
                 .catch(err=>console.log(err))
             }
-        })
-        .then(()=>{
-            resolve('ok!')
-        })
     })
 }
 
