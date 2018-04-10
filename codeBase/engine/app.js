@@ -24,7 +24,7 @@ const app = express();
 const api = require('./routes/api');
 
 // Port Number
-const port = 7777;
+const port = 4300;
 
 // CORS Middleware
 app.use(cors());

@@ -1,6 +1,6 @@
 var hashTable = require('node-hashtable')
 
-generateObject = function(obj,privilege) {
+generateObject = function(obj) {
     return new Promise((resolve,reject) => {
         let finalresourcearray = [];
         return new Promise((pass,fail)=>{
@@ -8,8 +8,8 @@ generateObject = function(obj,privilege) {
                 let finalresource = {
                     resource_id : obj.resource[i].resource_id,
                     actions : obj.resource[i].action,
-                    //resource_return_attributes:hashTable.get('resAttr')[i],
-                    privilage : privilege[i]
+                    resource_return_attributes:hashTable.get('resAttr')[i],
+                    privilege : hashTable.get('privilege')[i]
                 }
                 finalresourcearray.push(finalresource);
                 if (i+1===obj.resource.length) {

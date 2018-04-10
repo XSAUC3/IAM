@@ -54,95 +54,100 @@ async function checkAttributesInRequestObj(dynamicAttribute) {
 }
 
 module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
-    let resource =resname;
-    var policyArray = [];
-    var regexp = new RegExp('#([^\\s]*)', 'g');
-    var policylist = policy.match(regexp);
-    for (var p in policylist) {
-        var hashSub = policylist[ p ].split('#');
-        for (var x in hashSub) {
-            if (hashSub[x] != "")
-            {
-                if (hashSub[x].substr(hashSub[x].length - 1) == ":")
+    if(policy == ( null || undefined || '')){
+        return true
+    }
+    else{
+        let resource =resname;
+        var policyArray = [];
+        var regexp = new RegExp('#([^\\s]*)', 'g');
+        var policylist = policy.match(regexp);
+        for (var p in policylist) {
+            var hashSub = policylist[ p ].split('#');
+            for (var x in hashSub) {
+                if (hashSub[x] != "")
                 {
-                    hashSub[x] = hashSub[x].slice(0, -1);
-                }
-                if (hashSub[x] != "") {
-                    policyArray.push(hashSub[x]);
+                    if (hashSub[x].substr(hashSub[x].length - 1) == ":")
+                    {
+                        hashSub[x] = hashSub[x].slice(0, -1);
+                    }
+                    if (hashSub[x] != "") {
+                        policyArray.push(hashSub[x]);
+                    }
                 }
             }
         }
-    }
-    //Fetching values for each attribute in policyArray and checking their types
-    var attributeArray = [];
-    for (let attribute of policyArray) {
-            var attributeDetails = {};
-            attributeDetails = await FindAttribute(attribute);
-            if(attributeDetails == null || attributeDetails == undefined){
-                console.log('Attribute not found in mongoDB');
-                let DynamicAttribute = {};
-                if(await checkAttributesInRequestObj(attribute)!=null) {
-                    dynamicAttributeRequestValue = await checkAttributesInRequestObj(attribute);
-                    //console.log('abc : '+ dynamicAttributeRequestValue);
-                    if(dynamicAttributeRequestValue==null||dynamicAttributeRequestValue==''||dynamicAttributeRequestValue==[]||dynamicAttributeRequestValue==undefined) {
-                        console.log('not found in request object.Trying to found in PIP');
-                        dynamicAttributeRequestValue = await retrieveAttributesFromPIP(attribute);
-                        DynamicAttribute["Name"] = attribute;
-                        DynamicAttribute["Value"]= dynamicAttributeRequestValue;
-                        attributeArray.push(DynamicAttribute);
+        //Fetching values for each attribute in policyArray and checking their types
+        var attributeArray = [];
+        for (let attribute of policyArray) {
+                var attributeDetails = {};
+                attributeDetails = await FindAttribute(attribute);
+                if(attributeDetails == null || attributeDetails == undefined){
+                    console.log('Attribute not found in mongoDB');
+                    let DynamicAttribute = {};
+                    if(await checkAttributesInRequestObj(attribute)!=null) {
+                        dynamicAttributeRequestValue = await checkAttributesInRequestObj(attribute);
+                        //console.log('abc : '+ dynamicAttributeRequestValue);
+                        if(dynamicAttributeRequestValue==null||dynamicAttributeRequestValue==''||dynamicAttributeRequestValue==[]||dynamicAttributeRequestValue==undefined) {
+                            console.log('not found in request object.Trying to found in PIP');
+                            dynamicAttributeRequestValue = await retrieveAttributesFromPIP(attribute);
+                            DynamicAttribute["Name"] = attribute;
+                            DynamicAttribute["Value"]= dynamicAttributeRequestValue;
+                            attributeArray.push(DynamicAttribute);
+                        }
+                        else {
+                            console.log('found in Request Object');
+                            DynamicAttribute["Name"] = attribute;
+                            DynamicAttribute["Value"]= dynamicAttributeRequestValue;
+                            attributeArray.push(DynamicAttribute);
+                       }
+                       
                     }
-                    else {
-                        console.log('found in Request Object');
-                        DynamicAttribute["Name"] = attribute;
-                        DynamicAttribute["Value"]= dynamicAttributeRequestValue;
-                        attributeArray.push(DynamicAttribute);
-                   }
+                    else  {
+                        console.log("Attribute not found anywhere.")
+                    }
+    
+                }else if(attributeDetails != null){
+                    if(attributeDetails.Type=="Dynamic") {
+                    let DynamicAttribute = {};
                    
-                }
-                else  {
-                    console.log("Attribute not found anywhere.")
-                }
-
-            }else if(attributeDetails != null){
-                if(attributeDetails.Type=="Dynamic") {
-                let DynamicAttribute = {};
-               
-                    dynamicAttributeValue = await checkAttributesInRequestObj(attributeDetails.Name);
-                    if(dynamicAttributeValue==null||dynamicAttributeValue==''||dynamicAttributeValue==[]||dynamicAttributeValue==undefined) {
-                        console.log('Attribute is defined in mongo as Dynamic, trying to find in PIP as not provided in Request Obj.');
-                        dynamicAttributeRequestValue = await retrieveAttributesFromPIP(attribute);
-                        DynamicAttribute["Name"] = attribute;
-                        DynamicAttribute["Value"]= dynamicAttributeRequestValue;
-                        attributeArray.push(DynamicAttribute);
+                        dynamicAttributeValue = await checkAttributesInRequestObj(attributeDetails.Name);
+                        if(dynamicAttributeValue==null||dynamicAttributeValue==''||dynamicAttributeValue==[]||dynamicAttributeValue==undefined) {
+                            console.log('Attribute is defined in mongo as Dynamic, trying to find in PIP as not provided in Request Obj.');
+                            dynamicAttributeRequestValue = await retrieveAttributesFromPIP(attribute);
+                            DynamicAttribute["Name"] = attribute;
+                            DynamicAttribute["Value"]= dynamicAttributeRequestValue;
+                            attributeArray.push(DynamicAttribute);
+                        }
+                        else {
+                            console.log('Attribute is defined in mongo as Dynamic && value is provided in Request Obj.')
+                            //console.log("valv : " + dynamicAttributeValue);
+                            DynamicAttribute["Name"] = attributeDetails.Name;
+                            DynamicAttribute["Type"] = attributeDetails.Type;
+                            DynamicAttribute["Value"]= dynamicAttributeValue;
+                            attributeArray.push(DynamicAttribute);
+                        }
+                        
+    
+                   
                     }
-                    else {
-                        console.log('Attribute is defined in mongo as Dynamic && value is provided in Request Obj.')
-                        //console.log("valv : " + dynamicAttributeValue);
-                        DynamicAttribute["Name"] = attributeDetails.Name;
-                        DynamicAttribute["Type"] = attributeDetails.Type;
-                        DynamicAttribute["Value"]= dynamicAttributeValue;
-                        attributeArray.push(DynamicAttribute);
-                    }
-                    
-
-               
+                    else{
+                        console.log('found in MongoDb');
+                        let fixedAttributeValue = {};
+                        fixedAttributeValue = await FindResource(attributeDetails._id,resource);
+                        console.log(fixedAttributeValue);
+                        console.log(fixedAttributeValue.attributes[0].attribute_value);
+                        let FixedAttribute = {};
+                        FixedAttribute["Name"] = attributeDetails.Name;
+                        FixedAttribute["Type"] = attributeDetails.Type;
+                        FixedAttribute["Value"] = fixedAttributeValue.attributes[0].attribute_value;
+                        attributeArray.push(FixedAttribute);
+                        }
                 }
-                else{
-                    console.log('found in MongoDb');
-                    let fixedAttributeValue = {};
-                    fixedAttributeValue = await FindResource(attributeDetails._id,resource);
-                    console.log(fixedAttributeValue);
-                    console.log(fixedAttributeValue.attributes[0].attribute_value);
-                    let FixedAttribute = {};
-                    FixedAttribute["Name"] = attributeDetails.Name;
-                    FixedAttribute["Type"] = attributeDetails.Type;
-                    FixedAttribute["Value"] = fixedAttributeValue.attributes[0].attribute_value;
-                    attributeArray.push(FixedAttribute);
-                    }
-            }
+        }
+        console.log(attributeArray);
+         return EvaluatePolicyConstraint.evaluatePolicy(policy,attributeArray);
     }
-    console.log(attributeArray);
-     return EvaluatePolicyConstraint.evaluatePolicy(policy,attributeArray);
     };
 
 

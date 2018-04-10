@@ -5,61 +5,78 @@ const Policy = require('../models/policy_schema');
 const Fuse = require('fuse.js')
 var hashTable = require('node-hashtable');
 
+async function findpolicy(username,roles,appid,resname,action){
+    let policy = await (
+        Policy.findOne({
+            'policy_type'       : 'grant',
+            'application_id'    : appid,
+            'policy_targets'    : { $elemMatch: {'resource_name': resname } }
+            ,'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': action}}}}
+        },
+            {'policy_constrains': 1, 'policy_targets.$.resourceType_actions' : 1 , '_id' : 0 },   
+        )
+        .where({ $or : [ { 'policy_principals.name' : username } , { 'policy_principals.id' : { $in : roles} } ] } , (err,response) => {
+            if(err) console.log(err);
+        })
+        //.where({'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': obj.resource[i].action}}}}})
+        // .then(policy => {
+        //     if (policy == null ) reject('no policy found from given data !')
+        //     else{
+        //         console.log('\x1b[36m%s\x1b[0m',policy);
+        //     }
+        // })
+        // .catch(err => {
+        //     console.log(err);
+        // })
+    )
+    return policy;    
+}
+
 getPolicies = function (obj) {
-    return new Promise((resolve, reject) => {
-            for (let i = 0; i < obj.resource.length ; i++) {
+    return new Promise(async (resolve, reject) => {
+            for (var i = 0; i < obj.resource.length ; i++) {
 
-                var privilegearray = []
+                var appid = hashTable.get('appid');
+                var roles = hashTable.get('roles');
+                var resname = obj.resource[i].resource_id.split('/')[2];
+                var action = obj.resource[i].action;
 
-                let appid = hashTable.get('appid');
-                let roles = hashTable.get('roles');
-                let resname = obj.resource[i].resource_id.split('/')[2];
+                var policy = await (findpolicy(obj.username,roles,appid._id,resname,action))
 
-                Policy.findOne({
-                    'policy_type'       : 'grant',
-                    'application_id'    : appid._id,
-                    'policy_targets'    : { $elemMatch: {'resource_name': resname } }
-                    ,'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': obj.resource[i].action}}}}
-                },
-                    {'policy_constrains': 1, 'policy_targets' : 1 , '_id' : 0 },   
-                )
-                .where({ $or : [ { 'policy_principals.name' : obj.username } , { 'policy_principals.id' : { $in : roles} } ] })
-                //.where({'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': obj.resource[i].action}}}}})
-                .then(async policy=>{
-                    // console.log('policy : ',policy);
-                    if (policy == null ) reject('no policy found from given data !')
-                    if (policy.policy_constrains == ( null || undefined || '' ) ){
-                        console.log("Current Resource : " +resname);
-                        var options = {
-                            keys: ['resource_name' ]
-                            ,id: 'resourceType_actions'
-                            }
-                        var fuse = new Fuse(policy.policy_targets, options)
-                        // hashTable.add('privilage',fuse.search(obj.resource[i].action));
-                        var actions = fuse.search(resname);
+                if (policy == null ) reject('no policy found from given data !')
 
-                        var options2 = {
-                            keys: ['action_name' ]   }
+                else if ( await (IdentifyingAttributes.getPolicyConstraintAttributes(policy.policy_constrains,resname)) ){
 
-                        var fuse2 = new Fuse(actions,options2)
+                    var options = { keys: ['action_name'] }
 
-                        privilegearray.push(fuse2.search(obj.resource[i].action)[0].action_state);
-                        console.log('\x1b[36m%s\x1b[0m',fuse2.search(obj.resource[i].action)[0].action_state);
+                    var fuse = new Fuse(policy.policy_targets[0].resourceType_actions , options)
+                    
+                    var action_obj = fuse.search(action);
 
-                        let resourceAttribute = await resourceAttributes.returnAttributes(obj.resource[i].resource_return_attributes,resname)
-                        hashTable.add('resAttr',resourceAttribute);
-                      
-                    }
-                    else{
-                       console.log('in else condition');
-                       privilegearray.push(false)
-                    }
-                    if(i+1 === obj.resource.length){
-                        setTimeout(()=>{ resolve(privilegearray) }, 100);
-                    }
-                })
-                .catch(err=>console.log(err))
+                    //console.log('\x1b[32m%s\x1b[0m',action_obj);
+                    
+                    hashTable.add('privilege', action_obj[0].action_state)
+                
+                    let resourceAttribute = await resourceAttributes.returnAttributes(obj.resource[i].resource_return_attributes,resname)
+                    hashTable.add('resAttr',resourceAttribute);
+
+                }
+                
+                else{
+                   
+                    console.log('in else condition');
+
+                    hashTable.add('privilege', false)
+                }
+
+                if(i+1 === obj.resource.length){
+                    setTimeout(() => {
+                        resolve('ok')
+                    }, 1000); 
+                }
+
             }
+
     })
 }
 

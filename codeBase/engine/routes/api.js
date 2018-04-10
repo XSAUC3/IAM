@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
                 .then(() => {
                     activity3.getPolicies(obj)
                         .then((privilege) => {
-                            activity4.generateObject(obj,privilege)
+                            activity4.generateObject(obj)
                                 .then((finalObject) => {
                                     res.send(finalObject);
                                 })
