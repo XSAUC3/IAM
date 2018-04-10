@@ -1,4 +1,5 @@
 const IdentifyingAttributes = require('./identifyingAttributes');
+const resourceAttributes = require('./resourceReturnAttributes')
 const Policy = require('../models/policy_schema');
 
 const Fuse = require('fuse.js')
@@ -26,15 +27,15 @@ getPolicies = function (obj) {
                 .then(async policy=>{
                     // console.log('policy : ',policy);
                     if(policy == null ) reject('no policy found from given data !')
-                    else if ( await IdentifyingAttributes.getPolicyConstraintAttributes(policy.policy_constrains)|| policy.policy_constrains == ( null || undefined || '' ) ){
+                    else if ( await IdentifyingAttributes.getPolicyConstraintAttributes(policy.policy_constrains,resname)|| policy.policy_constrains == ( null || undefined || '' ) ){
+                        console.log("Current Resource : " +resname);
                         var options = {
                             keys: ['resource_name' ]
                             ,id: 'resourceType_actions'
                             }
                         var fuse = new Fuse(policy.policy_targets, options)
                         // hashTable.add('privilage',fuse.search(obj.resource[i].action));
-                        var actions = fuse.search(resname)
-                        console.log('act_st: ', fuse.search(resname));
+                        var actions = fuse.search(resname);
 
                         var options2 = {
                             keys: ['action_name' ]   }
@@ -42,10 +43,12 @@ getPolicies = function (obj) {
                         var fuse2 = new Fuse(actions,options2)
 
                         hashTable.add('privilage',fuse2.search(obj.resource[i].action)[0].action_state);
+                        let resourceAttribute = await resourceAttributes.returnAttributes(obj.resource[i].resource_return_attributes,resname)
+                        hashTable.add('resAttr',resourceAttribute);
                       
                     }
                     else{
-                       console.log('in else cond');
+                       console.log('in else condition');
                         hashTable.add('privilage',false);
                     
                     }

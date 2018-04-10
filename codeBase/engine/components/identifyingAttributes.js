@@ -7,6 +7,7 @@ var hashTable = require('node-hashtable');
 
 // load evaluatePolicy function
 const EvaluatePolicyConstraint = require('./evaluatePolicy');
+
 async function FindAttribute(attribute){
     let foundAttribute = await (Attribute.findOne({'Name': attribute},{Name: 1,_id: 1,Type: 1}, function(err, attribute) {
         if(err) console.log(err);
@@ -15,49 +16,45 @@ async function FindAttribute(attribute){
     return foundAttribute;
 }
 
- async function FindResource(_id){
-    // let foundResource = await (Resource.findOne({attributes:{$elemMatch:{'attribute_id':_id}}},{"attributes.attribute_value":1,"_id":0},function(err,data) {
-    //     if(err) console.log(err);
-    //  }));
+ async function FindResource(id,resname){
+    let appid = hashTable.get('appid');
+    let res = resname;
+    let attr_id = id;
+    console.log("Id23 : "+id)
 
-    //let foundResource = await (Resource.findOne({application_id:app_id,_id:res_id'attributes.attribute_id': _id.toString()},{'attributes.attribute_value':1,'_id':0},function(err, result) {
-//         if(err) console.log(err);
-        
-//     }));
-//     return foundResource;
-// }
-    let foundResource = await (Resource.find({'attributes.attribute_id': _id.toString()},{'attributes.attribute_value':1,'_id':0},function(err, result) {
+  //console.log("val : " + appid._id + "--" + res + "--" + attr_id);
+    let foundResource = await (Resource.findOne({'application_id':appid._id,'res_name':res,'attributes':{$elemMatch:{'attribute_id':id.toString()}}},{'attributes.attribute_value':1,'_id':0},function(err, result) {
         if(err) console.log(err);
         
     }));
+    console.log("Found resource : "+foundResource);
+    
     return foundResource;
 }
 
 async function checkAttributesInRequestObj(dynamicAttribute) {
-    
   //check in reqObj
   var obj = hashTable.get('request');
-  //console.log("aatr name : " + dynamicAttribute);
-  // hashTable.get('request_object',(obj)=> {
-        let requestAttributeArray = [];
-                for(var i=0;i<obj.resource.length;i++) {
-                     for(var j=0;j<obj.resource[i].resource_return_attributes.length;j++) {
-                        requestAttributeArray.push(obj.resource[i].resource_return_attributes[j]);
-                     }
-                }
-                 var options = {
-                    keys:['attribute_name'],
-                    id: 'attribute_value'
-                 };
-                 var fuseSearch = new Fuse(requestAttributeArray,options);
-                 var attributeSearchResult = fuseSearch.search(dynamicAttribute);
-                // console.log("Search Result  :" + dynamicAttribute  + " : "+ attributeSearchResult);
-                 return(attributeSearchResult)
+//         let requestAttributeArray = [];
+//                 for(var i=0;i<obj.resource.length;i++) {
+//                      for(var j=0;j<obj.resource[i].resource_return_attributes.length;j++) {
+//                         requestAttributeArray.push(obj.resource[i].resource_return_attributes[j]);
+//                      }
+//                 }
+//                  var options = {
+//                     keys:['attribute_name'],
+//                     id: 'attribute_value'
+//                  };
+//                  var fuseSearch = new Fuse(requestAttributeArray,options);
+//                  var attributeSearchResult = fuseSearch.search(dynamicAttribute);
+//                 // console.log("Search Result  :" + dynamicAttribute  + " : "+ attributeSearchResult);
    // });
 //return attributeSearchResult;
+ return(obj[dynamicAttribute])
 }
 
-module.exports.getPolicyConstraintAttributes = async (policy) => {
+module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
+    let resource =resname;
     var policyArray = [];
     var regexp = new RegExp('#([^\\s]*)', 'g');
     var policylist = policy.match(regexp);
@@ -83,10 +80,7 @@ module.exports.getPolicyConstraintAttributes = async (policy) => {
             attributeDetails = await FindAttribute(attribute);
             if(attributeDetails == null || attributeDetails == undefined){
                 console.log('Attribute not found in mongoDB');
-                //console.log("req valv : ",await checkAttributesInRequestObj(attribute));
-
                 let DynamicAttribute = {};
-                
                 if(await checkAttributesInRequestObj(attribute)!=null) {
                     dynamicAttributeRequestValue = await checkAttributesInRequestObj(attribute);
                     //console.log('abc : '+ dynamicAttributeRequestValue);
@@ -105,7 +99,6 @@ module.exports.getPolicyConstraintAttributes = async (policy) => {
                    }
                    
                 }
-               
                 else  {
                     console.log("Attribute not found anywhere.")
                 }
@@ -137,12 +130,13 @@ module.exports.getPolicyConstraintAttributes = async (policy) => {
                 else{
                     console.log('found in MongoDb');
                     let fixedAttributeValue = {};
-                    fixedAttributeValue = await FindResource(attributeDetails._id);
-                    let valv = fixedAttributeValue[0].attributes;
+                    fixedAttributeValue = await FindResource(attributeDetails._id,resource);
+                    console.log(fixedAttributeValue);
+                    console.log(fixedAttributeValue.attributes[0].attribute_value);
                     let FixedAttribute = {};
                     FixedAttribute["Name"] = attributeDetails.Name;
                     FixedAttribute["Type"] = attributeDetails.Type;
-                    FixedAttribute["Value"] = valv[0].attribute_value
+                    FixedAttribute["Value"] = fixedAttributeValue.attributes[0].attribute_value;
                     attributeArray.push(FixedAttribute);
                     }
             }
@@ -155,7 +149,7 @@ module.exports.getPolicyConstraintAttributes = async (policy) => {
 retrieveAttributesFromPIP = async (pipAttributesToBeFetched) => {
 // Retrieve attributes here & fetch data from PIP database..
 var attributeValue;
-var body = {
+body = {
   "name": "getusersecuritycontextfull",
   "elements": [
     {
@@ -180,13 +174,17 @@ var body = {
       "supervisorFirstName": "Ralph",
       "supervisorLastName": "Mitchell",
       "isClinical": false,
-      "zeroAccessIndicator": 1
+      "zeroAccessIndicator": 1,
+      "f":21
     }
   ]
 }
-attributeValue = body.elements[0].userName;
+attributeValue = body.elements[pipAttributesToBeFetched];
 console.log("PIP called - " + pipAttributesToBeFetched+" : "+attributeValue);
-
+// body[pipAttributesToBeFetched]
 return(attributeValue);
 
     };
+
+exports.FindAttribute = FindAttribute;
+exports.FindResource = FindResource;
