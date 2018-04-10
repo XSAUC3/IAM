@@ -45,6 +45,13 @@ function ldapfunction(res,object){
     const client = ldap.createClient({
         url:object[0].Url
     });
+    
+    client.on('error', function(err) {
+        console.log('LDAP connection failed, but fear not, it will reconnect OK', err);
+        if(err){
+            res.json({success : false, msg : 'Invalid URL Given by you.'});
+        }
+    });
 
     // Filter for Fetching Data of User which is now fetch *.
     const opts = {
