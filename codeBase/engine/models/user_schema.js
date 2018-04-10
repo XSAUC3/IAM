@@ -18,15 +18,6 @@ const UserSchema = mongoose.Schema({
 
 
 const User = module.exports = mongoose.model('users', UserSchema);
-
-module.exports.getUserById = function(id, callback) {
-	User.findById(id, callback);
-  }
-  
-  module.exports.getUserByUsername = function(username, callback) {
-	const query = {username: username}
-	User.findOne(query, callback);
-  }
   
   module.exports.comparePassword = function(candidatePassword, hash, callback) {
 	  bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
@@ -35,35 +26,12 @@ module.exports.getUserById = function(id, callback) {
 	  });
 	}
 
-	module.exports.addUser = function(newUser, callback) {
-		bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(newUser.password, salt, (err, hash) => {
-				if(err) console.log(err);
-				newUser.password = hash;
-				newUser.save(callback);
-			});
-		});
-	}
-
-	module.exports.changePassword = function(data, callback) {
+	module.exports.UpdateUser = function(username, password, callback) {
 	  bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(data.password, salt, (err, hash) => {
+			bcrypt.hash(password, salt, (err, hash) => {
 				if(err) console.log(err);
-				data.password = hash;
-				User.findByIdAndUpdate(data.id, { $set: { password: data.password}}, function (err, data) {
-					if (err) return handleError(err);
-					callback(null, data);
-				});
-			});
-		});
-	}
-
-	module.exports.UpdateUser = function(id, UpdateUser, callback) {
-	  bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(UpdateUser.password, salt, (err, hash) => {
-				if(err) console.log(err);
-				UpdateUser.password = hash;
-				User.findByIdAndUpdate(id, UpdateUser, function (err, data) {
+				password = hash;
+				User.findOneAndUpdate({username : username}, { $set: { password: password }}, function (err, data) {
 					if (err) return handleError(err);
 					callback(null, data);
 				});
