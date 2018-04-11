@@ -11,7 +11,7 @@ async function findpolicy(username,roles,appid,resname,action){
             'policy_type'       : 'grant',
             'application_id'    : appid,
             'policy_targets'    : { $elemMatch: {'resource_name': resname } }
-            ,'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': action}}}}
+            //,'policy_targets'    : { $elemMatch: {'resourceType_actions': { $elemMatch: {'action_name': action}}}}
         },
             {'policy_constrains': 1, 'policy_targets.$.resourceType_actions' : 1 , '_id' : 0 },   
         )
@@ -45,7 +45,7 @@ getPolicies = function (obj) {
 
                 if (policy == null ) reject('no policy found from given data !')
 
-                else if ( await (IdentifyingAttributes.getPolicyConstraintAttributes(policy.policy_constrains,resname)) ){
+                if ( await (IdentifyingAttributes.getPolicyConstraintAttributes(policy.policy_constrains,resname)) ){
 
                     var options = { keys: ['action_name'] }
 
@@ -53,21 +53,22 @@ getPolicies = function (obj) {
                     
                     var action_obj = fuse.search(action);
 
-                    //console.log('\x1b[32m%s\x1b[0m',action_obj);
+                    console.log('\x1b[31m%s\x1b[0m',action_obj);
                     
                     hashTable.add('privilege', action_obj[0].action_state)
-                
-                    let resourceAttribute = await resourceAttributes.returnAttributes(obj.resource[i].resource_return_attributes,resname)
-                    hashTable.add('resAttr',resourceAttribute);
+
+                    console.log('\x1b[35m%s\x1b[0m', action_obj[0].action_state );
 
                 }
                 
                 else{
-                   
+                    hashTable.add('privilege', false);
                     console.log('in else condition');
-
-                    hashTable.add('privilege', false)
                 }
+
+                let resourceAttribute = await resourceAttributes.returnAttributes(obj.resource[i].resource_return_attributes,resname)
+                    if ( resourceAttribute == ( null || undefined ) ) hashTable.add('resAttr', 'null' );
+                    else hashTable.add('resAttr',resourceAttribute);
 
                 if(i+1 === obj.resource.length){
                     setTimeout(() => {

@@ -1,5 +1,5 @@
 module.exports = {
   args: '?authSource=admin',
-  database: 'mongodb://chinmay:kiam@216.218.175.45:27017/KIAM',
+  database: 'mongodb://ronak:ronak123@localhost:27017/KIAM',
   secret: 'yoursecret'
 }

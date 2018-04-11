@@ -23,7 +23,7 @@ async function FindAttribute(attribute){
     console.log("Id23 : "+id)
 
   //console.log("val : " + appid._id + "--" + res + "--" + attr_id);
-    let foundResource = await (Resource.findOne({'application_id':appid._id,'res_name':res,'attributes':{$elemMatch:{'attribute_id':id.toString()}}},{'attributes.attribute_value':1,'_id':0},function(err, result) {
+    let foundResource = await (Resource.findOne({'application_id':appid._id,'res_name':res,'attributes':{$elemMatch:{'attribute_id':id.toString()}}},{'attributes.$.attribute_value':1,'_id':0},function(err, result) {
         if(err) console.log(err);
         
     }));
@@ -79,6 +79,7 @@ module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
         }
         //Fetching values for each attribute in policyArray and checking their types
         var attributeArray = [];
+        var attributeValueArray = [];
         for (let attribute of policyArray) {
                 var attributeDetails = {};
                 attributeDetails = await FindAttribute(attribute);
@@ -87,19 +88,20 @@ module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
                     let DynamicAttribute = {};
                     if(await checkAttributesInRequestObj(attribute)!=null) {
                         dynamicAttributeRequestValue = await checkAttributesInRequestObj(attribute);
-                        //console.log('abc : '+ dynamicAttributeRequestValue);
                         if(dynamicAttributeRequestValue==null||dynamicAttributeRequestValue==''||dynamicAttributeRequestValue==[]||dynamicAttributeRequestValue==undefined) {
                             console.log('not found in request object.Trying to found in PIP');
                             dynamicAttributeRequestValue = await retrieveAttributesFromPIP(attribute);
                             DynamicAttribute["Name"] = attribute;
                             DynamicAttribute["Value"]= dynamicAttributeRequestValue;
                             attributeArray.push(DynamicAttribute);
+                            attributeValueArray.push(dynamicAttributeRequestValue);
                         }
                         else {
                             console.log('found in Request Object');
                             DynamicAttribute["Name"] = attribute;
                             DynamicAttribute["Value"]= dynamicAttributeRequestValue;
                             attributeArray.push(DynamicAttribute);
+                            attributeValueArray.push(dynamicAttributeRequestValue)
                        }
                        
                     }
@@ -118,6 +120,7 @@ module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
                             DynamicAttribute["Name"] = attribute;
                             DynamicAttribute["Value"]= dynamicAttributeRequestValue;
                             attributeArray.push(DynamicAttribute);
+                            attributeValueArray.push(dynamicAttributeRequestValue);
                         }
                         else {
                             console.log('Attribute is defined in mongo as Dynamic && value is provided in Request Obj.')
@@ -126,6 +129,7 @@ module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
                             DynamicAttribute["Type"] = attributeDetails.Type;
                             DynamicAttribute["Value"]= dynamicAttributeValue;
                             attributeArray.push(DynamicAttribute);
+                            attributeValueArray.push(dynamicAttributeValue)
                         }
                         
     
@@ -142,11 +146,13 @@ module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
                         FixedAttribute["Type"] = attributeDetails.Type;
                         FixedAttribute["Value"] = fixedAttributeValue.attributes[0].attribute_value;
                         attributeArray.push(FixedAttribute);
+                        attributeValueArray.push(fixedAttributeValue.attributes[0].attribute_value)
                         }
                 }
         }
-        console.log(attributeArray);
-         return EvaluatePolicyConstraint.evaluatePolicy(policy,attributeArray);
+        console.log("attribute array : => "+attributeArray);
+        console.log("Attribute value array => " + attributeValueArray);
+         return EvaluatePolicyConstraint.evaluatePolicy(policy,attributeValueArray);
     }
     };
 
