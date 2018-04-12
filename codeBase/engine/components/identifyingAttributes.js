@@ -161,6 +161,7 @@ module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
     }
     };
 
+    
 
 retrieveAttributesFromPIP = async (pipAttributesToBeFetched) => {
 // Retrieve attributes here & fetch data from PIP database..
@@ -202,3 +203,4 @@ return(attributeValue);
 
 exports.FindAttribute = FindAttribute;
 exports.FindResource = FindResource;
+exports.retrieveAttributesFromPIP = retrieveAttributesFromPIP;

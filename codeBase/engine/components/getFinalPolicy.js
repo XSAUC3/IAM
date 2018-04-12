@@ -69,10 +69,13 @@ getPolicies = function (obj) {
                     }
     
                     let resourceAttribute = await resourceAttributes.returnAttributes(obj.resource[i].resource_return_attributes,resname)
-                        if ( resourceAttribute == ( null || undefined ) ) hashTable.add('resAttr', 'null' );
-                        else hashTable.add('resAttr',resourceAttribute);
+                    if ( resourceAttribute == ( null || undefined ) ) hashTable.add('resAttr', 'null' );
+                    else hashTable.add('resAttr',resourceAttribute);
+
+                 
     
                 }
+               
 
                 if(i+1 === obj.resource.length){
                     setTimeout(() => {
@@ -81,6 +84,9 @@ getPolicies = function (obj) {
                 }
 
             }
+            let userAttribute = await resourceAttributes.userReturnAttributes(obj.user_return_attributes)
+            if ( userAttribute == ( null || undefined ) ) hashTable.add('userAttr', 'null' );
+            else hashTable.add('userAttr',userAttribute);
 
     })
 }

@@ -9,6 +9,7 @@ generateObject = function(obj) {
                     resource_id : obj.resource[i].resource_id,
                     actions : obj.resource[i].action,
                     resource_return_attributes:hashTable.get('resAttr')[i],
+                    user_return_attributes:hashTable.get('userAttr')[i],
                     privilege : hashTable.get('privilege')[i]
                 }
                 finalresourcearray.push(finalresource);

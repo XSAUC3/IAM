@@ -8,7 +8,7 @@ async function returnAttributes(resourceAttributeArray,resource) {
         }
         else {
             for(i=0;i<resourceAttributeArray.length;i++) {
-                console.log("curr attr : "+ resourceAttributeArray[i]);
+                console.log("curr res attr : "+ resourceAttributeArray[i]);
                 var attributeDetails = {};
                 attributeDetails = await IdentifyingAttributes.FindAttribute(resourceAttributeArray[i]);
                 if(attributeDetails == (null || undefined || '')){
@@ -39,4 +39,33 @@ async function returnAttributes(resourceAttributeArray,resource) {
             return attributeArray; 
         }
 }
+
+async function userReturnAttributes(userAttributeArray) {
+    console.log("userAttributeArray =>" + userAttributeArray);
+    var attributeArray = [];
+    if(userAttributeArray == ''|| userAttributeArray == undefined || userAttributeArray == null ) {
+        return [];
+    }
+    else {
+        for(i=0;i<userAttributeArray.length;i++) {
+            console.log("curr user attr : "+ userAttributeArray[i]);
+            let userAttributeValue = {};
+            userAttributeValue = await IdentifyingAttributes.retrieveAttributesFromPIP(userAttributeArray[i]);
+            let userAttribute = {};
+                if(userAttributeValue) {
+                    userAttribute[userAttributeArray[i]] = userAttributeValue;
+                    attributeArray.push(userAttribute);
+                }
+                else {
+                    userAttribute[userAttributeArray[i]] = "null"; 
+                    attributeArray.push(userAttribute);
+                }
+        }
+        console.log("user Attribute Array =>" +attributeArray)
+        return attributeArray; 
+    }
+
+}  
+
+exports.userReturnAttributes = userReturnAttributes;
 exports.returnAttributes = returnAttributes;
