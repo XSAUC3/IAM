@@ -86,15 +86,20 @@ module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
                 if(attributeDetails == null || attributeDetails == undefined){
                     console.log('Attribute not found in mongoDB');
                     let DynamicAttribute = {};
-                    if(await checkAttributesInRequestObj(attribute)!=null) {
+                    console.log("current Attribute => " + attribute);
+                    if(await checkAttributesInRequestObj(attribute)!=null||attribute!=null) {
                         dynamicAttributeRequestValue = await checkAttributesInRequestObj(attribute);
                         if(dynamicAttributeRequestValue==null||dynamicAttributeRequestValue==''||dynamicAttributeRequestValue==[]||dynamicAttributeRequestValue==undefined) {
                             console.log('not found in request object.Trying to found in PIP');
-                            dynamicAttributeRequestValue = await retrieveAttributesFromPIP(attribute);
-                            DynamicAttribute["Name"] = attribute;
-                            DynamicAttribute["Value"]= dynamicAttributeRequestValue;
-                            attributeArray.push(DynamicAttribute);
-                            attributeValueArray.push(dynamicAttributeRequestValue);
+                            if(await retrieveAttributesFromPIP(attribute)!=(null||undefined)) {
+                                console.log("found in PIP") ;
+                                dynamicAttributeRequestValue = await retrieveAttributesFromPIP(attribute);
+                                DynamicAttribute["Name"] = attribute;
+                                DynamicAttribute["Value"]= dynamicAttributeRequestValue;
+                                attributeArray.push(DynamicAttribute);
+                                attributeValueArray.push(dynamicAttributeRequestValue);
+                            }
+                           
                         }
                         else {
                             console.log('found in Request Object');
@@ -124,7 +129,7 @@ module.exports.getPolicyConstraintAttributes = async (policy,resname) => {
                         }
                         else {
                             console.log('Attribute is defined in mongo as Dynamic && value is provided in Request Obj.')
-                            //console.log("valv : " + dynamicAttributeValue);
+                            console.log("valv : "+attributeDetails.Name + dynamicAttributeValue);
                             DynamicAttribute["Name"] = attributeDetails.Name;
                             DynamicAttribute["Type"] = attributeDetails.Type;
                             DynamicAttribute["Value"]= dynamicAttributeValue;
@@ -166,7 +171,7 @@ body = {
     {
       "userName": "AMUNSHI",
       "teammateId": "009272",
-      "firstName": "Amish",
+      "firstName1": "Amish",
       "lastName": "Munshi",
       "businessEntity": "Health Care",
       "titleEntitlementProfileName": null,
@@ -190,11 +195,9 @@ body = {
     }
   ]
 }
-attributeValue = body.elements[pipAttributesToBeFetched];
+attributeValue =  body.elements[0][pipAttributesToBeFetched];
 console.log("PIP called - " + pipAttributesToBeFetched+" : "+attributeValue);
-// body[pipAttributesToBeFetched]
 return(attributeValue);
-
     };
 
 exports.FindAttribute = FindAttribute;
