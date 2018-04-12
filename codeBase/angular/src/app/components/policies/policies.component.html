@@ -215,7 +215,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title" id="exampleModalLabel">
-            <b>Create Policy</b>
+            <b>Update Policy</b>
           </h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -391,22 +391,31 @@
                     <p><b>Resources Name : {{SingleTargetResourceName}}</b></p>
                         <ul class="list-group">
                           <li class="list-group-item" style="background-color:transparent" *ngFor="let ta of singletargetactions;let i=index;" >
-                          <div class="togglebutton">
+                          <!-- <div class="togglebutton">
                             <label>
                               <kbd><b>{{ta.action_name}}</b></kbd> : <input type="checkbox" data-toggle="toggle" [(ngModel)]="ta._id" (change)="pushtarget(policy_id,SingleTargetResource,ta.action_name,ta._id)" >
                               <kbd><< Click to update the action state ! </kbd>
                             </label>
-                          </div>
+                          </div> -->
+
+                          <div class="checkbox">
+                              <label>
+                                <kbd><b>{{ta.action_name}}</b></kbd> : <input type="checkbox" name="ta[{{i}}]" [(ngModel)]="ta.action_state" [value]="false" (change)="pushtarget(policy_id,SingleTargetResource,ta.action_name,ta.action_state)" >
+                                <kbd><< Click to update the action state ! </kbd>
+                              </label>
+                            </div>
+
                           </li>
                         </ul>
-                        <p><b>Refer to the current actions state here !</b></p>
+                        <!-- <p><b>Refer to the current actions state here !</b></p>
                         <ul class="list-group">
                           <li class="list-group-item" style="background-color:transparent" *ngFor="let action of actions"  >
                             <kbd><b>{{action.action_name}} : <a *ngIf="action.action_state">enabled</a> <a *ngIf="!action.action_state">disabled</a></b></kbd>
                           </li>
-                        </ul>
+                        </ul> -->
           </div>
           <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="loadtargetactions(policy_id);" data-toggle="modal" data-target="#info" data-dismiss="modal">Back</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>

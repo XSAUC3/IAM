@@ -601,15 +601,15 @@ router.get('/policy/res_type_actions/:id' , (req,res,next) =>{
 //add Policy Target Actions
 router.put('/addTargets' , (req,res,next) => {
   if (req.body != ''){
-    Policy.update(
-      { '_id' : req.body.policyid },
-      { $set  : { 'policy_targets.$[i].resourceType_actions.$[j].action_state' : req.body.state } },
-      { arrayFilters : [ {'i.resourceType_Id' : req.body.resourcetypeid }, { 'j.action_name' : req.body.name } ] },(err,ress) =>{
-        if(err) console.log(err)
-        else if (ress.nModified === 1) res.status(200).json({'success':true});
-      } 
-    )
-  }
+     Policy.update(
+    { '_id' : req.body.policyid },
+    { $set  : { 'policy_targets.$[i].resourceType_actions.$[j].action_state' : req.body.state } },
+    { arrayFilters : [ {'i.resource_id' : req.body.resource_id }, { 'j.action_name' : req.body.name } ] },(err,ress) =>{
+      if(err) console.log(err)
+      else if (ress.nModified === 1) res.status(200).json({'success':true});
+    }
+  )
+ }
 })
 
 //Delete Policy

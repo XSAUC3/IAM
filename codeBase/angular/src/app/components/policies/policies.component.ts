@@ -114,7 +114,7 @@ export class PoliciesComponent implements OnInit {
   fetchResources(){
     this._http.get(fetch_resource_url + this.app_id ).map(res => res.json()).subscribe(
       resources => this.allresources = resources,
-      err       => this.toastr.error('erroe fetchingall the resources',err)
+      err       => this.toastr.error('error fetching all the resources',err)
     )
   }
 
@@ -122,7 +122,7 @@ export class PoliciesComponent implements OnInit {
     this.select = true;
     this.selectpp = value;
     this.principalsarray = [] ; 
-    this.targetsarray = [] 
+    //this.targetsarray = [];
   }
 
   pushpolicyprincipal(){
@@ -192,7 +192,7 @@ policyNameToBeDeleted : String;
           this.toastr.error('Policy Deleted !');
           this.fetchPolicies();
         },
-        err => this.toastr.error('Ops! something went wrong.'))
+        err => this.toastr.error('Oops! something went wrong.'))
         this.fetchPolicies();
         this.emptyarray();
         $('#deleteModal').modal('toggle');
@@ -239,7 +239,7 @@ policyNameToBeDeleted : String;
             this.toastr.error("the fields u entered were not propper !")
           }
         }, 
-        err => {this.toastr.error("opps! smthing went wrong with resources !"); this.emptyarray();} )
+        err => {this.toastr.error("opps! something went wrong with resources !"); this.emptyarray();} )
     }
     else{
       this.toastr.error("policy name is required !")
@@ -268,28 +268,29 @@ policyNameToBeDeleted : String;
   }
 
   fetchrestypeactions(id){
-    this._http.get(get_res_type_actions_url + id ).map(res => res.json()).subscribe(
+      this._http.get(get_res_type_actions_url + id ).map(res => res.json()).subscribe(
       res => { this.actions = res.policy_targets[0].resourceType_actions ; } , 
       err => { console.log(err) }
     )
   }
 
-  pushtarget(id,singleresource,name,state){    
-    let data = { 'policyid' : id , 'resourcetypeid' : singleresource.resourceType_Id  , 'name' : name , 'state' : state };
+  pushtarget(id,singleresource,name,state){
+        
+    let data = { 'policyid' : id , 'resource_id' : singleresource.resource_id , 'name' : name , 'state' : state };
     this._http.put(add_targets_url , data , { headers : this.headers } ).subscribe(
       res => {
         let rspns = res.json()
         if (res.status == 200 && rspns.success == true ){
-          this.toastr.success('action status updated !' );
-          // this.fetchPolicies();
+         // this.fetchPolicies();
           this.emptyarray();
-          this.fetchrestypeactions(singleresource.resourceType_Id)
+          this.fetchrestypeactions(singleresource.resourceType_Id);
+          this.toastr.success('action status updated !' );
         }
         else {
           this.toastr.error("actions were not updated !");
         }
       },
-      err => this.toastr.error('ops! there was an error adding the target actions', err)
+      err => this.toastr.error('oops! there was an error adding the target actions', err)
     )
   }
 
