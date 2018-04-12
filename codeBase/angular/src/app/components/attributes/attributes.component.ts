@@ -78,7 +78,7 @@ appAttr = function(session_id) {
     console.log(deleteAttribute+id);
     this.http.delete(deleteAttribute + id).subscribe(
       res => {
-        if(res._body=="used"||res._body=="used1") {
+        if(res._body=="used"||res._body=="used") {
           this.appAttr(this.session_id);
           this.toastr.error('Attribute is already in use.');
           $('#deleteModal').modal('toggle');

@@ -137,6 +137,7 @@ export class PoliciesComponent implements OnInit {
   pushpolicytargets(){
     var fetchedtarget = this.pt.split(',');
     this.targetsarray.push({resource_id:fetchedtarget[0],resource_name:fetchedtarget[1]});
+    this.pt = "";
   }
 
 policyIdToBeDeleted : String;
@@ -224,6 +225,7 @@ policyNameToBeDeleted : String;
       "policy_principals"     :   this.principalsarray,
       "policy_targets"        :   this.targetsarray
     }
+    console.log(this.targetsarray);
     if(updtobj.policy_name != ('' || undefined) ){
       this._http.put(update_policy_url, updtobj, {headers: this.headers})
       .subscribe(

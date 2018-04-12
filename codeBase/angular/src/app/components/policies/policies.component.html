@@ -96,7 +96,7 @@
           <h4 class="modal-title" id="exampleModalLabel">
             <b>Create Policy</b>
           </h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="pform.reset();">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -175,7 +175,7 @@
                 <br>
                 <div style="display:inline-flex;width: 100%;">
                   <select class="form-control" style="width:100%;" name="pt" id="pt" [(ngModel)]="pt">
-                    <option *ngFor="let res of allresources" value="{{res._id}},{{res.res_name}}">{{res.res_name}}</option>
+                    <option *ngFor="let res of allresources; let i=index" value="{{res._id}},{{res.res_name}}">{{res.res_name}}</option>
                   </select>
                   <button type="button" (click)='pushpolicytargets()' class="input-group-text btn-info" id="basic-addon2">
                     <i class="material-icons">add</i>
@@ -186,7 +186,7 @@
                 <ul class="list-group ">
                   <li class="list-group-item" style="background:whitesmoke;" *ngFor="let tn of targetsarray;let i=index">{{tn.resource_name}}
                     <div style="float:right">
-                      <i class="material-icons" (click)="removepolicytarget(index)" >clear</i>
+                      <i class="material-icons" (click)="removepolicytarget(i)" >clear</i>
                     </div>
                   </li>
                 </ul>
@@ -197,7 +197,7 @@
             <!-- /.box-body -->
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="pform.reset();">Close</button>
               <button type="submit" class="btn btn-primary">Add</button>
             </div>
           </form>
@@ -217,7 +217,7 @@
           <h4 class="modal-title" id="exampleModalLabel">
             <b>Update Policy</b>
           </h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="pform.reset();">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -318,7 +318,7 @@
             <!-- /.box-body -->
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="pform.reset();">Close</button>
               <button type="submit" class="btn btn-primary">Update</button>
             </div>
           </form>

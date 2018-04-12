@@ -13,7 +13,7 @@
         <ol id="ol" class="breadcrumb">
           <li class="active">
             <b>
-              <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal">
+              <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal" (click)="actions=[]">
                 <i class="material-icons">add</i>Add</a>
             </b>
           </li>
@@ -86,7 +86,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Create Resource-Type</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="rtData.reset();">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -107,7 +107,7 @@
                     </div>
                    
                     <div class="col-md-12">
-                      <div class="box box-warning">
+                      <div>
                     
                     <div class="row">
                           <div class="col-md-10" >
@@ -127,13 +127,14 @@
                             </li>
                           </ul>
                         </div>
+                        <br>
                       </div>
                     </div>
                   </div>
                   <!-- /.box-body -->
       
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="rtData.reset();">Close</button>
                     <button type="submit" class="btn btn-primary">Add</button>
                   </div>
                 </form>
@@ -152,7 +153,7 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="updateModalLabel">Update Resource-Type</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="rtData.reset();">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
@@ -172,7 +173,7 @@
                             <textarea autocomplete="off" class="form-control" name="uRt_description" id="uRt_description" placeholder="Enter description" [(ngModel)]="uData.resourceType_description"></textarea>
                           </div>
                           <div class="col-md-12">
-                              <div class="box box-warning">
+                              <div>
                             
                             <div class="row">
                                   <div class="col-md-10" >
@@ -192,6 +193,7 @@
                                     </li>
                                   </ul>
                                 </div>
+                                <br>
                               </div>
                             </div>
                         </div>
@@ -199,7 +201,7 @@
             
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Update</button>
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="rtData.reset();">Cancel</button>
                           
                         </div>
                       </form>
