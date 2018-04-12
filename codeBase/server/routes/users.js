@@ -43,7 +43,7 @@ router.post('/authenticate', (req, res, next) => {
             }
           })
         } else {
-          return res.json({success: false, msg: 'Invalid Username & Password...!'});
+          return res.json({success: false, msg: 'Invalid Username or User is not Active...!'});
         }
       });
     });
