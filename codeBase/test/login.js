@@ -2,7 +2,7 @@ const request = require('supertest');
 const chai = require('chai');
 const expect = chai.expect;
 const chaiHttp = require('chai-http');
-const url = 'http://localhost:3000';
+const url = 'http://216.218.175.45:3000';
 
 chai.use(chaiHttp);
 
