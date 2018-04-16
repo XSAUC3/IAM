@@ -182,12 +182,9 @@ deleteUser = function(id) {
       "name":updateData.name,
       "username":updateData.username,
       "email":updateData.email,
+      "password":updateData.password,
       "role":this.rolesarray,
       "status":updateData.status
-    }
-
-    if(updateData.password != (null || undefined || '')){
-      this.editObj.password = updateData.password;
     }
     
     this.http.put(UpdateUser+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
