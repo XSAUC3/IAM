@@ -181,17 +181,21 @@ deleteUser = function(id) {
     this.editObj = {
       "name":updateData.name,
       "username":updateData.username,
-      "password":updateData.password,
       "email":updateData.email,
       "role":this.rolesarray,
-    "status":updateData.status
+      "status":updateData.status
     }
-     this.http.put(UpdateUser+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
+
+    if(updateData.password != (null || undefined || '')){
+      this.editObj.password = updateData.password;
+    }
+    
+    this.http.put(UpdateUser+ id  , this.editObj ,  {Headers : this.headers} ).subscribe((res:Response) => {
       
-       $('#updateModal').modal('toggle');
-     this.fetchData();
-     this.addRole = [];
-     this.toastr.info('User Updated.');
+    $('#updateModal').modal('toggle');
+    this.fetchData();
+    this.addRole = [];
+    this.toastr.info('User Updated.');
  
    
      })

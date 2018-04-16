@@ -59,15 +59,21 @@ module.exports.getUserById = function(id, callback) {
 	}
 
 	module.exports.UpdateUser = function(id, UpdateUser, callback) {
-	  bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(UpdateUser.password, salt, (err, hash) => {
-				if(err) console.log(err);
-				UpdateUser.password = hash;
-				User.findByIdAndUpdate(id, UpdateUser, function (err, data) {
-					if (err) return handleError(err);
-					callback(null, data);
+	  if(UpdateUser.password == (null || undefined || '')){
+			User.findByIdAndUpdate(id, UpdateUser, function (err, data) {
+				if (err) return handleError(err);
+				callback(null, data);
+			});
+		} else {
+			bcrypt.genSalt(10, (err, salt) => {
+				bcrypt.hash(UpdateUser.password, salt, (err, hash) => {
+					if(err) console.log(err);
+					UpdateUser.password = hash;
+					User.findByIdAndUpdate(id, UpdateUser, function (err, data) {
+						if (err) return handleError(err);
+						callback(null, data);
+					});
 				});
 			});
-		});
+		}
 	}
-	
