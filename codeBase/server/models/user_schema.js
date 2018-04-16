@@ -60,7 +60,7 @@ module.exports.getUserById = function(id, callback) {
 
 	module.exports.UpdateUser = function(id, UpdateUser, callback) {
 	  if(UpdateUser.password == (null || undefined || '')){
-			User.findByIdAndUpdate(id, UpdateUser, function (err, data) {
+			User.findByIdAndUpdate(id, {$set : UpdateUser}, function (err, data) {
 				if (err) return handleError(err);
 				callback(null, data);
 			});
