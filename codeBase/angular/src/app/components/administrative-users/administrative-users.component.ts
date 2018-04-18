@@ -114,10 +114,16 @@ deleteUser = function(id) {
   else{
     const url = DelUser+ id;
     return this.http.delete(url, {headers: this.headers}).toPromise()
-      .then(() => {
-      this.fetchData();
-      this.toastr.error('User Deleted.');
-      $('#deleteModal').modal('toggle');
+      .then((res) => {
+        if(res._body=="used") {
+          this.fetchData();
+          this.toastr.error('User is already in use.');
+          $('#deleteModal').modal('toggle');
+        } else {
+          this.fetchData();
+          this.toastr.error('User Deleted.');
+          $('#deleteModal').modal('toggle');
+        }
     
       });
   }
@@ -125,8 +131,8 @@ deleteUser = function(id) {
  
  //Add App
  addNewUser = function(a) {
-  if(a.name == ""||a.name == null||a.name == undefined) {
-    this.toastr.error('User name required.');
+  if(a.name == ("" || null|| undefined) || a.username == ("" || null|| undefined) || a.password == ("" || null|| undefined) || a.email == ("" || null|| undefined) || this.rolesarray == []) {
+  this.toastr.error('All fields required.');
   }
   else {
     this.aObj = {

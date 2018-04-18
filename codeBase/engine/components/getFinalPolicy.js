@@ -43,7 +43,7 @@ getPolicies = function (obj) {
 
                 var policy = await (findpolicy(obj.username,roles,appid._id,resname,action))
 
-                if (policy == null ) hashTable.add('privilege', "false, as no such policy was found for the given data"); //reject('no policy found from given data !')
+                if (policy == null ) hashTable.add('privilege', false); //reject('no policy found from given data !')
 
                 else{
                     
@@ -80,7 +80,7 @@ getPolicies = function (obj) {
                 if(i+1 === obj.resource.length){
                     setTimeout(() => {
                         resolve('ok')
-                    }, 1000); 
+                    }, 500); 
                 }
 
             }

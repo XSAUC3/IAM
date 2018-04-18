@@ -11,7 +11,7 @@
       <ol id="ol" class="breadcrumb">
         <li class="active">
           <b>
-            <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal" (click)="emptyarray()" >
+            <a style="color:#00bcd4;" data-toggle="modal" data-target="#addModal" (click)="emptyarray();" >
               <i class="material-icons">add</i>Add</a>
           </b>
         </li>
@@ -101,7 +101,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form role="form" #pform="ngForm" (ngSubmit)="addPolicy(pform.value);pform.reset();">
+          <form role="form" #pform="ngForm" (ngSubmit)="addPolicy(pform.value); pform.reset();">
             <div class="box-body">
               <div class="form-group">
                 <label for="app_name">Policy Name</label>

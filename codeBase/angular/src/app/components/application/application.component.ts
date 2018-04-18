@@ -78,7 +78,7 @@ export class ApplicationComponent implements OnInit {
         }
        
       },
-      err => this.toastr.error('Ops! something went wrong.'))
+      err => this.toastr.error('Application is already in use.'))
 }
 
 

@@ -156,7 +156,10 @@ policyNameToBeDeleted : String;
   addPolicy(data){
     if ( data.policy_name === null || data.policy_name === undefined || data.policy_name === '' )
     {
-      this.toastr.error("Policy name is requiered ! ")
+      this.toastr.error("Policy name is requiered !");
+    }
+    else if(this.principalsarray.length == 0 || this.targetsarray.length == 0){
+      this.toastr.error("Principals or Targets are requiered !");
     }
     else{
       let obj = {

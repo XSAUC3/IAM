@@ -304,7 +304,7 @@ router.post('/role/addRole', (req, res, next) => {
       })
          }
          else {
-          res.status(500).send("unique");
+          res.send("unique");
          }
    });
 
@@ -332,11 +332,24 @@ router.get('/role/fetchByAppId/:app_id', (req,res,next) =>{
 
 //Delete Role
 router.delete('/role/delRole/:id' , (req,res,next) => {
-  Role.findByIdAndRemove({_id: req.params.id}, 
-  function(err, docs){
- if(err) { res.sendStatus(403); }
- else    { res.sendStatus(200); }
-});
+  let index = 0;
+
+  Policy.find({'policy_principals.id' : req.params.id}).count((err, dt) => {
+    if(dt != 0){
+      res.send('used');
+    } else {
+      User.find({'role.role_id' : req.params.id}).count((err, data) => {
+        if(data != 0){
+          res.send('used');
+        } else {
+          Role.findByIdAndRemove({_id: req.params.id},(err, docs) => {
+            if(err) { res.sendStatus(403); }
+            else    { res.sendStatus(200); }
+          });
+        }
+      });
+    }
+  });
 });
 
 
@@ -684,11 +697,18 @@ router.put('/UpdateUser/:id' , (req,res,next) => {
 
 //Delete user
 router.delete('/DelUser/:id' , (req,res,next) => {
-  User.findByIdAndRemove({_id: req.params.id}, 
-    function(err, docs){
-   if(err) { res.sendStatus(403); }
-   else    { res.sendStatus(200); }
- });
+  Policy.find({'policy_principals.id' : req.params.id}).count((err, dt) => {
+    console.warn(dt);    
+    if(dt == 0){
+      User.findByIdAndRemove({_id: req.params.id}, 
+        function(err, docs){
+       if(err) { res.sendStatus(403); }
+       else    { res.sendStatus(200); }
+      });
+    } else {
+      res.send('used');
+    }
+  });
 });
 
 

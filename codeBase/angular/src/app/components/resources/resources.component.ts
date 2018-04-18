@@ -57,7 +57,7 @@ export class ResourcesComponent implements OnInit {
   }
 
   pushAction = function() {
-    if(this.attribute_id != "") {
+    if(!(this.attribute_id == "" || this.attribute_value == "")) {
       var object = {
         attribute_id : this.attribute_id,
         attribute_value:this.attribute_value
@@ -65,6 +65,8 @@ export class ResourcesComponent implements OnInit {
       this.attributes.push(object);
       this.attribute_id = "";
       this.attribute_value = "";
+    } else {
+      this.toastr.error("Please give attribute and it's value.");
     }
   }
   //get res by app_id

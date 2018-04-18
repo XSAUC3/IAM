@@ -5,15 +5,17 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const config = require('./config/database');
 
+require('./config/logger');
+
 // Connect To Database
 mongoose.connect(config.database+config.args);
 
 // On Connection
 mongoose.connection.on('connected', () => {
-  console.log('Connecting to database ...');
+  console.warn('Connecting to database ...');
 })
 .then(() => { // if all is ok we will be here
-  console.log('Authenticated to the database '+config.database);
+  console.warn('Authenticated to the database '+config.database);
 })
 .catch(err => { // we will not be here...
   console.error('MongoDb Connection Error', err);
@@ -44,5 +46,5 @@ app.get('/', (req, res) => {
 
 // Start Server
 app.listen(port, () => {
-    console.log('engine started on port ' + port);
+    console.warn('engine started on port ' + port);
 });

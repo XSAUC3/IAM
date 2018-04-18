@@ -78,11 +78,16 @@ sort(key){
     
     const url = delRole + id;
     return this.http.delete(url, {headers: this.headers}).toPromise()
-      .then(() => {
-        this.appRole(this.session_id);
-        $('#deleteModal').modal('toggle');
-      this.toastr.error('Role Deleted.');
-        
+      .then((res) => {
+        if(res._body=="used") {
+          this.appRole(this.session_id);
+          this.toastr.error('Role is already in use.');
+          $('#deleteModal').modal('toggle');
+        } else {
+          this.appRole(this.session_id);
+          $('#deleteModal').modal('toggle');
+          this.toastr.error('Role Deleted.');
+        }
       })
   
   }

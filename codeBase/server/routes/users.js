@@ -11,7 +11,7 @@ const Token = require('../models/Token_Schema');
 var address; 
 
 require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-    console.log('Server ip: '+add);
+    console.warn('Server ip: '+add);
     address = "http://"+add+":4200/";
 });
 
