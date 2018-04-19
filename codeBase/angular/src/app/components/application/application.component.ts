@@ -66,6 +66,7 @@ export class ApplicationComponent implements OnInit {
    deleteApp = function(id) {
     this.http.delete(delApp + id).subscribe(
       res => {
+        console.log(res.status);
         if(res._body=="used") {
           this.fetchData();
           this.toastr.error('Application is already in use.');
@@ -78,7 +79,7 @@ export class ApplicationComponent implements OnInit {
         }
        
       },
-      err => this.toastr.error('Application is already in use.'))
+      err => this.toastr.error('Ops! something went wrong.'))
 }
 
 

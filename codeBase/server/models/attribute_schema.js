@@ -17,7 +17,7 @@ const AttributeSchema = mongoose.Schema({
     Description: {
         type: String
     },
-    Application_Id: {
+    application_id: {
         type: String
     },
     Single_Multiple: {
